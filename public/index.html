@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Suede Scan — free 30-second site scan, full audit on demand</title>
+<style>
+  :root {
+    --bg: #0d0b0f; --panel: #17141c; --panel2: #1e1a25; --line: #2c2735;
+    --text: #ede9f2; --muted: #9a92a8; --accent: #c9a84c; --accent-ink: #1a1405;
+    --good: #5ec98a; --bad: #e0655f; --radius: 14px;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body { background: var(--bg); color: var(--text); font: 16px/1.55 -apple-system, "Segoe UI", Inter, sans-serif; min-height: 100vh; }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 48px 20px 80px; }
+  header { text-align: center; margin-bottom: 36px; }
+  .eyebrow { color: var(--accent); font-size: 13px; letter-spacing: .18em; text-transform: uppercase; font-weight: 600; }
+  h1 { font-size: clamp(28px, 5vw, 44px); line-height: 1.15; margin: 10px 0 12px; }
+  .sub { color: var(--muted); max-width: 560px; margin: 0 auto; }
+
+  form { display: flex; gap: 10px; margin: 28px auto 8px; max-width: 620px; }
+  input[type=url], input[type=text] {
+    flex: 1; padding: 14px 16px; border-radius: var(--radius); border: 1px solid var(--line);
+    background: var(--panel); color: var(--text); font-size: 16px; outline: none;
+  }
+  input:focus { border-color: var(--accent); }
+  button {
+    padding: 14px 22px; border-radius: var(--radius); border: none; cursor: pointer;
+    font-size: 15px; font-weight: 700;
+  }
+  .btn-scan { background: var(--accent); color: var(--accent-ink); }
+  .btn-scan:hover { filter: brightness(1.08); }
+  .btn-audit { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
+  .btn-audit:hover { background: rgba(201,168,76,.1); }
+  .hint { text-align: center; color: var(--muted); font-size: 13px; }
+
+  .results { margin-top: 36px; display: none; }
+  .scorecard { display: flex; align-items: center; gap: 24px; background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; }
+  .grade-badge { width: 84px; height: 84px; border-radius: 50%; display: grid; place-items: center; font-size: 40px; font-weight: 800; flex-shrink: 0; }
+  .grade-A, .grade-B { background: rgba(94,201,138,.15); color: var(--good); border: 2px solid var(--good); }
+  .grade-C, .grade-D { background: rgba(201,168,76,.15); color: var(--accent); border: 2px solid var(--accent); }
+  .grade-F { background: rgba(224,101,95,.15); color: var(--bad); border: 2px solid var(--bad); }
+  .score-meta h2 { font-size: 20px; margin-bottom: 4px; word-break: break-all; }
+  .score-meta p { color: var(--muted); font-size: 14px; }
+  .lanes { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+  .lane { font-size: 12px; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--line); background: var(--panel2); color: var(--muted); }
+  .lane b { color: var(--text); }
+
+  table { width: 100%; border-collapse: collapse; margin-top: 20px; background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
+  th, td { text-align: left; padding: 12px 16px; border-bottom: 1px solid var(--line); font-size: 14px; vertical-align: top; }
+  th { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .08em; }
+  tr:last-child td { border-bottom: none; }
+  .pass { color: var(--good); font-weight: 700; }
+  .fail { color: var(--bad); font-weight: 700; }
+  td .advice { color: var(--muted); font-size: 13px; margin-top: 3px; }
+  td .value { color: var(--muted); font-size: 13px; }
+
+  .upsell { margin-top: 24px; padding: 24px; border-radius: var(--radius); background: linear-gradient(135deg, #201a10, #17141c); border: 1px solid var(--accent); display: none; }
+  .upsell h3 { font-size: 19px; margin-bottom: 6px; }
+  .upsell p { color: var(--muted); font-size: 14px; margin-bottom: 14px; }
+
+  .spinner { display: none; text-align: center; color: var(--muted); margin-top: 32px; }
+  .spinner::before { content: ""; display: inline-block; width: 18px; height: 18px; margin-right: 10px; vertical-align: -4px; border: 2px solid var(--line); border-top-color: var(--accent); border-radius: 50%; animation: spin .8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .error { display: none; margin-top: 24px; padding: 16px; border-radius: var(--radius); background: rgba(224,101,95,.1); border: 1px solid var(--bad); color: var(--bad); font-size: 14px; }
+  .tier-tag { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; padding: 3px 9px; border-radius: 999px; margin-bottom: 8px; }
+  .tier-scan { background: rgba(154,146,168,.15); color: var(--muted); }
+  .tier-audit { background: rgba(201,168,76,.2); color: var(--accent); }
+  @media (max-width: 560px) { form { flex-direction: column; } .scorecard { flex-direction: column; text-align: center; } .lanes { justify-content: center; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Suede Labs</div>
+    <h1>Scan your site free.<br>In 30 seconds.</h1>
+    <p class="sub">Instant automated check of the signals search engines and AI answer engines actually read. Want the full story? Run the audit — every lane, graded, with fixes.</p>
+  </header>
+
+  <form id="form">
+    <input type="text" id="url" placeholder="yoursite.com" autocomplete="url" required>
+    <button type="submit" class="btn-scan" id="scanBtn">Free Scan</button>
+  </form>
+  <p class="hint">No signup. No email. Just the scan.</p>
+
+  <div class="spinner" id="spinner">Scanning…</div>
+  <div class="error" id="error"></div>
+
+  <section class="results" id="results">
+    <span class="tier-tag" id="tierTag"></span>
+    <div class="scorecard">
+      <div class="grade-badge" id="gradeBadge">–</div>
+      <div class="score-meta">
+        <h2 id="scannedUrl"></h2>
+        <p id="scoreLine"></p>
+        <div class="lanes" id="lanes"></div>
+      </div>
+    </div>
+
+    <table>
+      <thead><tr><th style="width:52px"></th><th>Check</th><th>Found</th></tr></thead>
+      <tbody id="checksBody"></tbody>
+    </table>
+
+    <div class="upsell" id="upsell">
+      <h3>That was the scan. The audit goes deeper.</h3>
+      <p>Schema &amp; AI-citation readiness, heading structure, internal linking, page weight, social cards, brand signals — every lane graded, every failure with a fix.</p>
+      <button class="btn-audit" id="auditBtn">Run the Full Audit</button>
+    </div>
+  </section>
+</div>
+
+<script>
+  const $ = (id) => document.getElementById(id);
+  let lastUrl = '';
+
+  async function run(tier) {
+    const url = $('url').value.trim();
+    if (!url) return;
+    lastUrl = url;
+    $('results').style.display = 'none';
+    $('error').style.display = 'none';
+    $('spinner').style.display = 'block';
+    $('spinner').childNodes[0].textContent = tier === 'audit' ? 'Running full audit…' : 'Scanning…';
+    try {
+      const res = await fetch('/api/' + tier, {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ url }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Request failed');
+      render(data);
+    } catch (e) {
+      $('error').textContent = e.message;
+      $('error').style.display = 'block';
+    } finally {
+      $('spinner').style.display = 'none';
+    }
+  }
+
+  function render(d) {
+    $('tierTag').textContent = d.tier === 'audit' ? 'Full Audit' : 'Free Scan';
+    $('tierTag').className = 'tier-tag ' + (d.tier === 'audit' ? 'tier-audit' : 'tier-scan');
+    $('gradeBadge').textContent = d.grade;
+    $('gradeBadge').className = 'grade-badge grade-' + d.grade;
+    $('scannedUrl').textContent = d.url;
+    $('scoreLine').textContent = d.passed + ' of ' + d.total + ' checks passed — ' + d.score + '/100';
+    $('lanes').innerHTML = Object.entries(d.laneGrades)
+      .map(([lane, g]) => '<span class="lane">' + lane + ' <b>' + g + '</b></span>').join('');
+    $('checksBody').innerHTML = d.checks.map((c) =>
+      '<tr><td class="' + (c.pass ? 'pass' : 'fail') + '">' + (c.pass ? '✓' : '✗') + '</td>' +
+      '<td>' + c.label + (c.pass ? '' : '<div class="advice">' + c.advice + '</div>') + '</td>' +
+      '<td><span class="value">' + c.value + '</span></td></tr>'
+    ).join('');
+    $('upsell').style.display = d.tier === 'scan' ? 'block' : 'none';
+    $('results').style.display = 'block';
+  }
+
+  $('form').addEventListener('submit', (e) => { e.preventDefault(); run('scan'); });
+  $('auditBtn').addEventListener('click', () => run('audit'));
+</script>
+</body>
+</html>
