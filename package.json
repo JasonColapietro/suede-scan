@@ -1,0 +1,14 @@
+{
+  "name": "suede-scan",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Free 30-second site scan → full graded audit. Suede Labs.",
+  "scripts": {
+    "dev": "node server.mjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/JasonColapietro/suede-scan"
+  }
+}
