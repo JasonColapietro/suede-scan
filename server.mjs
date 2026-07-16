@@ -1,19 +1,24 @@
-// Local dev server. Production runs on Vercel (static index.html + api/ functions).
+// Local server and Vercel root entrypoint.
 import http from 'node:http';
 import { readFile } from 'node:fs/promises';
-import { fileURLToPath } from 'node:url';
-import path from 'node:path';
 import { runTier } from './lib/engine.mjs';
 import { handleTier } from './lib/handler.mjs';
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PORT = process.env.PORT || 3400;
+const [INDEX_HTML, STYLES_CSS, CLIENT_JS, ROBOTS_TXT, LLMS_TXT, SITEMAP_XML] = await Promise.all([
+  readFile(new URL('./index.html', import.meta.url)),
+  readFile(new URL('./styles.css', import.meta.url)),
+  readFile(new URL('./client.js', import.meta.url)),
+  readFile(new URL('./robots.txt', import.meta.url)),
+  readFile(new URL('./llms.txt', import.meta.url)),
+  readFile(new URL('./sitemap.xml', import.meta.url)),
+]);
 const STATIC_FILES = new Map([
-  ['/styles.css', ['styles.css', 'text/css; charset=utf-8']],
-  ['/client.js', ['client.js', 'text/javascript; charset=utf-8']],
-  ['/robots.txt', ['robots.txt', 'text/plain; charset=utf-8']],
-  ['/llms.txt', ['llms.txt', 'text/plain; charset=utf-8']],
-  ['/sitemap.xml', ['sitemap.xml', 'application/xml; charset=utf-8']],
+  ['/styles.css', [STYLES_CSS, 'text/css; charset=utf-8']],
+  ['/client.js', [CLIENT_JS, 'text/javascript; charset=utf-8']],
+  ['/robots.txt', [ROBOTS_TXT, 'text/plain; charset=utf-8']],
+  ['/llms.txt', [LLMS_TXT, 'text/plain; charset=utf-8']],
+  ['/sitemap.xml', [SITEMAP_XML, 'application/xml; charset=utf-8']],
 ]);
 
 const server = http.createServer(async (req, res) => {
@@ -21,14 +26,16 @@ const server = http.createServer(async (req, res) => {
     const url = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
     if (req.method === 'POST' && url.pathname === '/api/scan') return await handleTier('scan', req, res, runTier);
     if (req.method === 'POST' && url.pathname === '/api/audit') return await handleTier('audit', req, res, runTier);
+    if (req.method === 'GET' && url.pathname === '/audit') {
+      res.writeHead(308, { location: '/', 'cache-control': 'public, max-age=0, must-revalidate' });
+      return res.end();
+    }
     if (req.method === 'GET' && (url.pathname === '/' || url.pathname === '/index.html' || url.pathname.startsWith('/report/'))) {
-      const page = await readFile(path.join(__dirname, 'index.html'));
       res.writeHead(200, { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-cache' });
-      return res.end(page);
+      return res.end(INDEX_HTML);
     }
     if (req.method === 'GET' && STATIC_FILES.has(url.pathname)) {
-      const [file, contentType] = STATIC_FILES.get(url.pathname);
-      const asset = await readFile(path.join(__dirname, file));
+      const [asset, contentType] = STATIC_FILES.get(url.pathname);
       res.writeHead(200, { 'content-type': contentType, 'cache-control': 'no-cache' });
       return res.end(asset);
     }

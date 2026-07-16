@@ -20,7 +20,7 @@ The report inspects public HTML, `robots.txt`, `llms.txt`, and `sitemap.xml`. It
 
 ## Stack
 
-Node (`server.mjs`), a small `api/` layer, and a static HTML, CSS, and JavaScript front end. No framework build step.
+Node (`server.mjs`) serves the static HTML, CSS, JavaScript, and crawl files alongside the small audit API. The public assets are loaded through literal file URLs so Vercel includes them in the production function bundle. No framework build step.
 
 ## Run locally
 
