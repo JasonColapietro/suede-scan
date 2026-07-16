@@ -1,5 +1,8 @@
 {
   "ignoreCommand": "[ \"$VERCEL_ENV\" != \"production\" ] && exit 0 || exit 1",
+  "redirects": [
+    { "source": "/audit", "destination": "/", "permanent": true }
+  ],
   "rewrites": [
     { "source": "/report/:domain", "destination": "/index.html" }
   ],
