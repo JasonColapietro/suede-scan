@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Privacy | Suede Audit</title>
+  <meta name="description" content="What Suede Audit does with the domain you submit: what is fetched, what is logged, how abuse is prevented, and how to reach us.">
+  <link rel="canonical" href="https://audit.suedeai.ai/privacy">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Suede Audit">
+  <meta property="og:title" content="Privacy | Suede Audit">
+  <meta property="og:description" content="What Suede Audit fetches, what it logs, and how to reach us with questions.">
+  <meta property="og:url" content="https://audit.suedeai.ai/privacy">
+  <meta property="og:image" content="https://raw.githubusercontent.com/JasonColapietro/suede-creator-skills/cbd192309580a32da375881e0eeb4b2450a554c2/docs/assets/suede-ai-logo-transparent.png">
+  <meta property="og:image:alt" content="Suede Labs AI logo">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Privacy | Suede Audit">
+  <meta name="twitter:description" content="What Suede Audit fetches, what it logs, and how to reach us with questions.">
+  <meta name="twitter:image" content="https://raw.githubusercontent.com/JasonColapietro/suede-creator-skills/cbd192309580a32da375881e0eeb4b2450a554c2/docs/assets/suede-ai-logo-transparent.png">
+  <link rel="icon" href="https://raw.githubusercontent.com/JasonColapietro/suede-creator-skills/cbd192309580a32da375881e0eeb4b2450a554c2/docs/assets/suede-ai-logo-transparent.png">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-bar">
+    <div class="container bar-inner">
+      <a class="brand" href="/" aria-label="Suede Audit home">
+        <img src="https://raw.githubusercontent.com/JasonColapietro/suede-creator-skills/cbd192309580a32da375881e0eeb4b2450a554c2/docs/assets/suede-ai-logo-transparent.png" alt="" width="36" height="36">
+        <span>Suede <b>Audit</b></span>
+      </a>
+      <nav class="primary-nav" aria-label="Primary navigation">
+        <a href="/#checks">What it checks</a>
+        <a href="/#method">Method</a>
+        <a href="/#faq">FAQ</a>
+        <a href="https://github.com/JasonColapietro/suede-scan" target="_blank" rel="noreferrer">Source</a>
+      </nav>
+      <a class="button button-primary button-small" href="/">Run your free audit</a>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="doc-page">
+      <div class="container">
+        <div class="doc-prose">
+          <a class="text-link" href="/"><span aria-hidden="true">&#8592;</span> Back to the audit</a>
+          <p class="eyebrow" style="margin-top:28px;"><span class="live-dot" aria-hidden="true"></span> Privacy</p>
+          <h1>What happens when you run a free audit.</h1>
+
+          <p>This page explains what Suede Audit does with the domain you submit at audit.suedeai.ai.</p>
+
+          <h2>What the audit fetches</h2>
+          <p>Suede Audit fetches the public homepage, robots.txt, llms.txt, and sitemap.xml of the domain you submit. It does not log in, does not access private or authenticated pages, and rejects private IP addresses, internal hostnames, and non-public destinations as a target.</p>
+
+          <h2>What is logged</h2>
+          <p>Each completed audit logs the submitted domain, the resulting score, and how long the check took, to server logs used for monitoring and debugging. Failed audits log the domain and an error message. These are operational records for keeping the service running, not a public or shared database.</p>
+
+          <h2>Abuse prevention</h2>
+          <p>A short-lived, in-memory counter limits how many audits a single IP address can run per minute. This counter is not written to disk and resets automatically.</p>
+
+          <h2>Your browser</h2>
+          <p>A cookie named <code>suede_audit_used</code> records that this browser has already used its one free audit; it expires after one year. Your finished report is cached in your browser's local storage so you can reopen it without running another scan. Suede Audit does not require an account, an email address, or a signup to run the free audit.</p>
+
+          <h2>Third parties</h2>
+          <p>Suede Audit does not sell submitted domains or audit results to third parties.</p>
+
+          <h2>Contact</h2>
+          <p>Questions about this page, or a request about logged data: <a href="mailto:info@suedeai.org">info@suedeai.org</a>.</p>
+
+          <p class="doc-meta">Suede Audit is part of <a href="https://suedeai.ai/">Suede Labs AI</a>. Read the audit source on <a href="https://github.com/JasonColapietro/suede-scan" target="_blank" rel="noreferrer">GitHub</a>.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <span>Suede Audit</span>
+        <p>Public-site evidence for search and answer-engine readiness.</p>
+      </div>
+      <div><b>Product</b><a href="https://scan.suedeai.ai/">Suede Scan service</a><a href="https://suedeai.ai/">Suede Labs AI</a><a href="https://suedeai.ai/founder">About the founder</a></div>
+      <div><b>Evidence</b><a href="https://github.com/JasonColapietro/suede-scan">Source code</a><a href="/method">Method</a></div>
+      <div><b>Company</b><a href="/privacy">Privacy</a><a href="mailto:info@suedeai.org">Contact</a></div>
+      <div class="footer-note"><span>Point-in-time public signals</span><span>No citation or ranking guarantee</span></div>
+    </div>
+  </footer>
+</body>
+</html>

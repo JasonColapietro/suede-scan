@@ -5,13 +5,15 @@ import { runTier } from './lib/engine.mjs';
 import { handleTier } from './lib/handler.mjs';
 
 const PORT = process.env.PORT || 3400;
-const [INDEX_HTML, STYLES_CSS, CLIENT_JS, ROBOTS_TXT, LLMS_TXT, SITEMAP_XML] = await Promise.all([
+const [INDEX_HTML, STYLES_CSS, CLIENT_JS, ROBOTS_TXT, LLMS_TXT, SITEMAP_XML, METHOD_HTML, PRIVACY_HTML] = await Promise.all([
   readFile(new URL('./index.html', import.meta.url)),
   readFile(new URL('./styles.css', import.meta.url)),
   readFile(new URL('./client.js', import.meta.url)),
   readFile(new URL('./robots.txt', import.meta.url)),
   readFile(new URL('./llms.txt', import.meta.url)),
   readFile(new URL('./sitemap.xml', import.meta.url)),
+  readFile(new URL('./method.html', import.meta.url)),
+  readFile(new URL('./privacy.html', import.meta.url)),
 ]);
 const STATIC_FILES = new Map([
   ['/styles.css', [STYLES_CSS, 'text/css; charset=utf-8']],
@@ -19,6 +21,10 @@ const STATIC_FILES = new Map([
   ['/robots.txt', [ROBOTS_TXT, 'text/plain; charset=utf-8']],
   ['/llms.txt', [LLMS_TXT, 'text/plain; charset=utf-8']],
   ['/sitemap.xml', [SITEMAP_XML, 'application/xml; charset=utf-8']],
+  ['/method', [METHOD_HTML, 'text/html; charset=utf-8']],
+  ['/method/', [METHOD_HTML, 'text/html; charset=utf-8']],
+  ['/privacy', [PRIVACY_HTML, 'text/html; charset=utf-8']],
+  ['/privacy/', [PRIVACY_HTML, 'text/html; charset=utf-8']],
 ]);
 
 const server = http.createServer(async (req, res) => {
