@@ -54,7 +54,7 @@
         <a href="#method">Method</a>
         <a href="https://github.com/JasonColapietro/suede-scan" target="_blank" rel="noreferrer">Source</a>
       </nav>
-      <button class="button button-primary button-small" type="button" data-run-another>Run an audit</button>
+      <button class="button button-primary button-small" type="button" data-audit-entry>Run your free audit</button>
     </div>
   </header>
 
@@ -69,12 +69,14 @@
 
             <form id="audit-form" class="audit-form" novalidate>
               <label for="audit-url">Website to inspect</label>
+              <label class="audit-honeypot" for="company-fax" aria-hidden="true">Company fax number</label>
+              <input class="audit-honeypot" id="company-fax" name="company_fax" type="text" tabindex="-1" autocomplete="off" aria-hidden="true">
               <div class="form-row">
                 <input id="audit-url" name="url" type="text" inputmode="url" autocomplete="url" spellcheck="false" placeholder="suedeai.ai" required aria-describedby="form-note form-error">
                 <button id="submit-button" class="button button-primary" type="submit">Run the audit</button>
               </div>
               <p id="form-error" class="form-error" role="alert" hidden></p>
-              <p id="form-note" class="form-note">No signup. Public websites only. The report does not run prompts inside AI chat products.</p>
+              <p id="form-note" class="form-note">One free audit per browser. Public websites only. No signup.</p>
             </form>
 
             <div id="loading-panel" class="loading-panel" aria-live="polite" hidden>
@@ -150,7 +152,7 @@
             </div>
             <div class="report-actions">
               <button id="copy-report" class="button button-secondary" type="button">Copy report link</button>
-              <button class="button button-primary" type="button" data-run-another>Run another audit</button>
+              <a class="button button-primary" href="https://scan.suedeai.ai/#offers">Need another audit?</a>
             </div>
             <p id="report-timestamp" class="report-timestamp"></p>
           </div>
@@ -266,7 +268,7 @@
           <div id="share-score" class="share-score"><strong>0</strong><span>Readiness score</span></div>
           <div>
             <h2>Share the evidence trail.</h2>
-            <p>The link runs a fresh audit for the same public domain, so the report reflects current site signals.</p>
+            <p>The link reopens this browser's saved result. A first-time visitor can use their one free audit on the same domain.</p>
             <button id="copy-report-bottom" class="button button-primary" type="button">Copy report link</button>
           </div>
         </div>

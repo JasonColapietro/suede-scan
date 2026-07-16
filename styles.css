@@ -281,6 +281,17 @@ p { overflow-wrap: anywhere; }
 .audit-form {
   max-width: 690px;
   margin-top: 34px;
+  position: relative;
+}
+
+.audit-honeypot {
+  position: absolute !important;
+  left: -10000px !important;
+  width: 1px !important;
+  height: 1px !important;
+  overflow: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
 }
 
 .audit-form label {

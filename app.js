@@ -4,16 +4,19 @@ fontStylesheet.href = 'https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wg
 document.head.append(fontStylesheet);
 
 const byId = (id) => document.getElementById(id);
+const FREE_REPORT_KEY = 'suede_audit_free_report_v1';
 const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const landingShell = byId('landing-shell');
 const report = byId('report');
 const form = byId('audit-form');
 const urlInput = byId('audit-url');
 const submitButton = byId('submit-button');
+const honeypot = byId('company-fax');
 const formError = byId('form-error');
 const loadingPanel = byId('loading-panel');
 const loadingDetail = byId('loading-detail');
 const navLinks = [...document.querySelectorAll('.primary-nav a')];
+const auditEntry = document.querySelector('[data-audit-entry]');
 
 let currentReport = null;
 let loadingTimer = null;
@@ -27,6 +30,36 @@ const escapeHtml = (value) => String(value ?? '').replace(/[&<>'"]/g, (character
 }[character]));
 
 const clampScore = (value) => Math.max(0, Math.min(100, Number(value) || 0));
+
+function readStoredReport() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(FREE_REPORT_KEY));
+    if (!saved || typeof saved.host !== 'string' || !Array.isArray(saved.checks) || !Number.isFinite(saved.score)) {
+      localStorage.removeItem(FREE_REPORT_KEY);
+      return null;
+    }
+    return saved;
+  } catch {
+    return null;
+  }
+}
+
+function storeReport(data) {
+  try { localStorage.setItem(FREE_REPORT_KEY, JSON.stringify(data)); } catch { /* server cookie remains the fallback */ }
+}
+
+function inputHost(value) {
+  try {
+    const normalized = /^[a-z][a-z\d+.-]*:\/\//i.test(value) ? value : `https://${value}`;
+    return new URL(normalized).hostname.toLowerCase();
+  } catch {
+    return null;
+  }
+}
+
+function showUsedAudit(saved) {
+  showError(`This browser's free audit has already been used for ${saved.host}. Open the saved audit above or use Suede Scan for another site.`);
+}
 function setLoading(active) {
   clearInterval(loadingTimer);
   loadingTimer = null;
@@ -189,6 +222,7 @@ function renderReport(data) {
   const reportTitle = `${data.host} Public-Site Audit | Suede Audit`;
 
   document.title = reportTitle;
+  auditEntry.textContent = 'View saved audit';
   byId('report-title').textContent = data.host;
   byId('report-subtitle').textContent = 'Public-site discovery and answer-readiness report';
   byId('stat-checks').textContent = data.total;
@@ -225,17 +259,36 @@ async function runAudit(rawUrl, { updateHistory = true } = {}) {
     return;
   }
 
+  const saved = readStoredReport();
+  if (saved) {
+    if (inputHost(value) === saved.host.toLowerCase()) {
+      renderReport(saved);
+      const path = reportPath(saved.host);
+      if (updateHistory && window.location.pathname !== path) history.pushState({ host: saved.host }, '', path);
+      return;
+    }
+    showUsedAudit(saved);
+    urlInput.focus();
+    return;
+  }
+
   setLoading(true);
   try {
     const response = await fetch('/api/audit', {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ url: value }),
+      body: JSON.stringify({ url: value, companyFax: honeypot.value }),
     });
     const payload = await response.json().catch(() => ({}));
-    if (!response.ok) throw new Error(payload.error || 'The audit could not inspect that URL.');
+    if (!response.ok) {
+      const fallback = response.status === 429
+        ? 'This network has already used its free audit. Open the saved report or use Suede Scan for another site.'
+        : 'The audit could not inspect that URL.';
+      throw new Error(payload.error || fallback);
+    }
 
     renderReport(payload);
+    storeReport(payload);
     urlInput.value = payload.host;
     const path = reportPath(payload.host);
     if (updateHistory) history.pushState({ host: payload.host }, '', path);
@@ -290,15 +343,16 @@ form.addEventListener('submit', (event) => {
   runAudit(urlInput.value);
 });
 
-document.querySelectorAll('[data-run-another]').forEach((button) => {
-  button.addEventListener('click', () => {
-    if (report.hidden) {
-      urlInput.scrollIntoView({ block: 'center', behavior: reduceMotion ? 'auto' : 'smooth' });
-      window.setTimeout(() => urlInput.focus(), reduceMotion ? 0 : 250);
-    } else {
-      resetAudit();
-    }
-  });
+auditEntry.addEventListener('click', () => {
+  const saved = readStoredReport();
+  if (saved) {
+    renderReport(saved);
+    const path = reportPath(saved.host);
+    if (window.location.pathname !== path) history.pushState({ host: saved.host }, '', path);
+    return;
+  }
+  urlInput.scrollIntoView({ block: 'center', behavior: reduceMotion ? 'auto' : 'smooth' });
+  window.setTimeout(() => urlInput.focus(), reduceMotion ? 0 : 250);
 });
 
 [byId('copy-report'), byId('copy-report-bottom')].forEach((button) => {
@@ -312,7 +366,17 @@ window.addEventListener('popstate', () => {
 });
 
 const initialDomain = domainFromLocation();
-if (initialDomain) {
+const storedReport = readStoredReport();
+if (storedReport && initialDomain && inputHost(initialDomain) === storedReport.host.toLowerCase()) {
+  renderReport(storedReport);
+} else if (storedReport && initialDomain) {
+  auditEntry.textContent = 'View saved audit';
+  history.replaceState({}, '', '/');
+  showUsedAudit(storedReport);
+} else if (initialDomain) {
   urlInput.value = initialDomain;
   runAudit(initialDomain, { updateHistory: false });
+} else if (storedReport) {
+  auditEntry.textContent = 'View saved audit';
+  urlInput.value = storedReport.host;
 }

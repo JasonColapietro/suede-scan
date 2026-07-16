@@ -110,8 +110,8 @@ The target rejects the reference's unsupported implication that a crawler-policy
 
 | Component | Default | Focus or hover | Loading | Success | Error | Disabled |
 | --- | --- | --- | --- | --- | --- | --- |
-| Domain input | visible label and example hint | 3px cobalt focus ring | value remains readable | normalized domain remains | inline message below field | never disabled by default |
-| Run button | cobalt, action label | darker cobalt and 1px lift | spinner plus `Inspecting` | returns to `Run another audit` | returns to `Run the audit` | disabled only during request |
+| Domain input | visible label and example hint | 3px cobalt focus ring | value remains readable | normalized domain remains | inline message below field | gated after the browser's first successful audit |
+| Run button | cobalt, action label | darker cobalt and 1px lift | spinner plus `Inspecting` | header becomes `View saved audit` | returns to `Run the audit` | disabled during request; subsequent domains route to the saved-audit message |
 | Report shell | empty-state proof preview | section links underline and weight | skeleton rails with status copy | full report visible | hidden, error stays near form | not applicable |
 | Finding row | summary, measured value, priority | row background changes | not applicable | pass uses icon plus text | fail shows repair copy | not applicable |
 | Share control | `Copy report link` | outline strengthens | `Copying` | `Link copied` for two seconds | `Copy this URL` fallback | disabled until a report route exists |

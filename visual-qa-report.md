@@ -1,6 +1,6 @@
 # Visual QA Report
 
-Date: 2026-07-15
+Date: 2026-07-16
 
 ## Comparison Contract
 
@@ -17,6 +17,7 @@ Date: 2026-07-15
 3. Put the approved transparent Suede mark on a dark identity tile so it remains legible without altering the asset.
 4. Rebalanced the landing hero so the first evidence section enters the desktop viewport.
 5. Added explicit `Unknown` crawler policy styling when robots.txt cannot be inspected.
+6. Added a one-free-audit state that reopens the saved result and sends additional work to the paid service.
 
 ## Verification
 
@@ -24,7 +25,7 @@ Date: 2026-07-15
 - Mobile landing and report: passed visual inspection with no horizontal overflow at 390px.
 - Full report: passed section-rhythm, findings-ledger, service handoff, share state, and footer inspection.
 - Axe: no serious or critical violations on the landing page or completed report.
-- Interaction: audit, shareable route, reset, error recovery, and mobile containment passed.
+- Interaction: first audit, saved-report reload, second-audit gate, shareable route, error recovery, and mobile containment passed.
 - Live custom-domain readback: pending production deployment.
 
 ## Open Findings
