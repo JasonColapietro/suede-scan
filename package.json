@@ -5,7 +5,8 @@
   "type": "module",
   "description": "Free 30-second site scan → full graded audit. Suede Labs.",
   "scripts": {
-    "dev": "node server.mjs"
+    "dev": "node server.mjs",
+    "test": "node --test"
   },
   "repository": {
     "type": "git",

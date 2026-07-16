@@ -1,167 +1,289 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Suede Scan — free 30-second site scan, full audit on demand</title>
-<style>
-  :root {
-    --bg: #0d0b0f; --panel: #17141c; --panel2: #1e1a25; --line: #2c2735;
-    --text: #ede9f2; --muted: #9a92a8; --accent: #c9a84c; --accent-ink: #1a1405;
-    --good: #5ec98a; --bad: #e0655f; --radius: 14px;
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Suede Audit | AI Discovery and SEO Readiness</title>
+  <meta name="description" content="Run a public-site audit for crawler access, entity schema, metadata, content structure, and answer-engine discovery signals. Get a score and prioritized repairs.">
+  <link rel="canonical" href="https://audit.suedeai.ai/">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Suede Audit">
+  <meta property="og:title" content="Suede Audit | AI Discovery and SEO Readiness">
+  <meta property="og:description" content="Inspect public-site discovery signals, see every failed check, and leave with a prioritized repair list.">
+  <meta property="og:url" content="https://audit.suedeai.ai/">
+  <meta property="og:image" content="https://raw.githubusercontent.com/JasonColapietro/suede-creator-skills/cbd192309580a32da375881e0eeb4b2450a554c2/docs/assets/suede-ai-logo-transparent.png">
+  <meta property="og:image:alt" content="Approved Suede mark">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Suede Audit | AI Discovery and SEO Readiness">
+  <meta name="twitter:description" content="A scored public-site audit with crawler, entity, content, and technical evidence.">
+  <meta name="twitter:image" content="https://raw.githubusercontent.com/JasonColapietro/suede-creator-skills/cbd192309580a32da375881e0eeb4b2450a554c2/docs/assets/suede-ai-logo-transparent.png">
+  <link rel="icon" href="https://raw.githubusercontent.com/JasonColapietro/suede-creator-skills/cbd192309580a32da375881e0eeb4b2450a554c2/docs/assets/suede-ai-logo-transparent.png">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="/styles.css">
+  <script defer src="/app.js"></script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Suede Audit",
+    "url": "https://audit.suedeai.ai/",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Web",
+    "description": "A public-site audit for crawler access, entity schema, metadata, content structure, and answer-engine discovery signals.",
+    "isPartOf": {
+      "@type": "Organization",
+      "name": "Suede Labs AI",
+      "url": "https://suedeai.ai/"
+    },
+    "codeRepository": "https://github.com/JasonColapietro/suede-scan"
   }
-  * { box-sizing: border-box; margin: 0; }
-  body { background: var(--bg); color: var(--text); font: 16px/1.55 -apple-system, "Segoe UI", Inter, sans-serif; min-height: 100vh; }
-  .wrap { max-width: 880px; margin: 0 auto; padding: 48px 20px 80px; }
-  header { text-align: center; margin-bottom: 36px; }
-  .eyebrow { color: var(--accent); font-size: 13px; letter-spacing: .18em; text-transform: uppercase; font-weight: 600; }
-  h1 { font-size: clamp(28px, 5vw, 44px); line-height: 1.15; margin: 10px 0 12px; }
-  .sub { color: var(--muted); max-width: 560px; margin: 0 auto; }
-
-  form { display: flex; gap: 10px; margin: 28px auto 8px; max-width: 620px; }
-  input[type=url], input[type=text] {
-    flex: 1; padding: 14px 16px; border-radius: var(--radius); border: 1px solid var(--line);
-    background: var(--panel); color: var(--text); font-size: 16px; outline: none;
-  }
-  input:focus { border-color: var(--accent); }
-  button {
-    padding: 14px 22px; border-radius: var(--radius); border: none; cursor: pointer;
-    font-size: 15px; font-weight: 700;
-  }
-  .btn-scan { background: var(--accent); color: var(--accent-ink); }
-  .btn-scan:hover { filter: brightness(1.08); }
-  .btn-audit { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
-  .btn-audit:hover { background: rgba(201,168,76,.1); }
-  .hint { text-align: center; color: var(--muted); font-size: 13px; }
-
-  .results { margin-top: 36px; display: none; }
-  .scorecard { display: flex; align-items: center; gap: 24px; background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 24px; }
-  .grade-badge { width: 84px; height: 84px; border-radius: 50%; display: grid; place-items: center; font-size: 40px; font-weight: 800; flex-shrink: 0; }
-  .grade-A, .grade-B { background: rgba(94,201,138,.15); color: var(--good); border: 2px solid var(--good); }
-  .grade-C, .grade-D { background: rgba(201,168,76,.15); color: var(--accent); border: 2px solid var(--accent); }
-  .grade-F { background: rgba(224,101,95,.15); color: var(--bad); border: 2px solid var(--bad); }
-  .score-meta h2 { font-size: 20px; margin-bottom: 4px; word-break: break-all; }
-  .score-meta p { color: var(--muted); font-size: 14px; }
-  .lanes { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
-  .lane { font-size: 12px; padding: 4px 10px; border-radius: 999px; border: 1px solid var(--line); background: var(--panel2); color: var(--muted); }
-  .lane b { color: var(--text); }
-
-  table { width: 100%; border-collapse: collapse; margin-top: 20px; background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); overflow: hidden; }
-  th, td { text-align: left; padding: 12px 16px; border-bottom: 1px solid var(--line); font-size: 14px; vertical-align: top; }
-  th { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: .08em; }
-  tr:last-child td { border-bottom: none; }
-  .pass { color: var(--good); font-weight: 700; }
-  .fail { color: var(--bad); font-weight: 700; }
-  td .advice { color: var(--muted); font-size: 13px; margin-top: 3px; }
-  td .value { color: var(--muted); font-size: 13px; }
-
-  .upsell { margin-top: 24px; padding: 24px; border-radius: var(--radius); background: linear-gradient(135deg, #201a10, #17141c); border: 1px solid var(--accent); display: none; }
-  .upsell h3 { font-size: 19px; margin-bottom: 6px; }
-  .upsell p { color: var(--muted); font-size: 14px; margin-bottom: 14px; }
-
-  .spinner { display: none; text-align: center; color: var(--muted); margin-top: 32px; }
-  .spinner::before { content: ""; display: inline-block; width: 18px; height: 18px; margin-right: 10px; vertical-align: -4px; border: 2px solid var(--line); border-top-color: var(--accent); border-radius: 50%; animation: spin .8s linear infinite; }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  .error { display: none; margin-top: 24px; padding: 16px; border-radius: var(--radius); background: rgba(224,101,95,.1); border: 1px solid var(--bad); color: var(--bad); font-size: 14px; }
-  .tier-tag { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; padding: 3px 9px; border-radius: 999px; margin-bottom: 8px; }
-  .tier-scan { background: rgba(154,146,168,.15); color: var(--muted); }
-  .tier-audit { background: rgba(201,168,76,.2); color: var(--accent); }
-  footer { text-align: center; margin-top: 56px; color: var(--muted); font-size: 13px; }
-  @media (max-width: 560px) { form { flex-direction: column; } .scorecard { flex-direction: column; text-align: center; } .lanes { justify-content: center; } }
-</style>
+  </script>
 </head>
 <body>
-<div class="wrap">
-  <header>
-    <div class="eyebrow">Suede Labs</div>
-    <h1>Scan your site free.<br>In 30 seconds.</h1>
-    <p class="sub">Instant automated check of the signals search engines and AI answer engines actually read. Want the full story? Run the audit — every lane, graded, with fixes.</p>
+  <a class="skip-link" href="#main">Skip to audit</a>
+
+  <header class="site-bar">
+    <div class="container bar-inner">
+      <a class="brand" href="/" aria-label="Suede Audit home">
+        <img src="https://raw.githubusercontent.com/JasonColapietro/suede-creator-skills/cbd192309580a32da375881e0eeb4b2450a554c2/docs/assets/suede-ai-logo-transparent.png" alt="" width="36" height="36">
+        <span>Suede <b>Audit</b></span>
+      </a>
+      <nav class="primary-nav" aria-label="Primary navigation">
+        <a href="#checks">What it checks</a>
+        <a href="#method">Method</a>
+        <a href="https://github.com/JasonColapietro/suede-scan" target="_blank" rel="noreferrer">Source</a>
+      </nav>
+      <button class="button button-primary button-small" type="button" data-run-another>Run an audit</button>
+    </div>
   </header>
 
-  <form id="form">
-    <input type="text" id="url" placeholder="yoursite.com" autocomplete="url" required>
-    <button type="submit" class="btn-scan" id="scanBtn">Free Scan</button>
-  </form>
-  <p class="hint">No signup. No email. Just the scan.</p>
+  <main id="main">
+    <div id="landing-shell">
+      <section class="landing-hero" aria-labelledby="landing-title">
+        <div class="container landing-grid">
+          <div class="landing-copy">
+            <p class="eyebrow"><span class="live-dot" aria-hidden="true"></span> Public-signal audit</p>
+            <h1 id="landing-title">See what answer engines can actually read.</h1>
+            <p class="landing-subhead">Suede inspects public HTML, crawler rules, entity schema, sitemap coverage, metadata, and content structure. Every failed check points to a repair.</p>
 
-  <div class="spinner" id="spinner">Scanning…</div>
-  <div class="error" id="error"></div>
+            <form id="audit-form" class="audit-form" novalidate>
+              <label for="audit-url">Website to inspect</label>
+              <div class="form-row">
+                <input id="audit-url" name="url" type="text" inputmode="url" autocomplete="url" spellcheck="false" placeholder="suedeai.ai" required aria-describedby="form-note form-error">
+                <button id="submit-button" class="button button-primary" type="submit">Run the audit</button>
+              </div>
+              <p id="form-error" class="form-error" role="alert" hidden></p>
+              <p id="form-note" class="form-note">No signup. Public websites only. The report does not run prompts inside AI chat products.</p>
+            </form>
 
-  <section class="results" id="results">
-    <span class="tier-tag" id="tierTag"></span>
-    <div class="scorecard">
-      <div class="grade-badge" id="gradeBadge">–</div>
-      <div class="score-meta">
-        <h2 id="scannedUrl"></h2>
-        <p id="scoreLine"></p>
-        <div class="lanes" id="lanes"></div>
+            <div id="loading-panel" class="loading-panel" aria-live="polite" hidden>
+              <div class="loading-copy">
+                <span class="spinner" aria-hidden="true"></span>
+                <div><strong>Inspecting public site signals</strong><span id="loading-detail">Checking the homepage and discovery files.</span></div>
+              </div>
+              <div class="loading-rail" aria-hidden="true"><span></span></div>
+            </div>
+          </div>
+
+          <div class="report-preview">
+            <div class="preview-topline"><span>Report preview</span><span class="preview-status"><i></i> Live evidence</span></div>
+            <div class="preview-domain">yourdomain.com</div>
+            <p>Public-site discovery and answer-readiness analysis</p>
+            <div class="preview-score-row">
+              <div class="empty-score" aria-hidden="true"><span>--</span></div>
+              <div class="preview-score-copy"><strong>Readiness score</strong><span>Calculated from weighted public checks</span></div>
+            </div>
+            <div class="preview-ledger">
+              <div><span>01</span><b>Crawler access</b><em>robots.txt</em></div>
+              <div><span>02</span><b>Entity evidence</b><em>JSON-LD</em></div>
+              <div><span>03</span><b>Content clarity</b><em>HTML</em></div>
+            </div>
+            <div class="preview-foot">Every result links an observed signal to a repair.</div>
+          </div>
+        </div>
+      </section>
+
+      <section id="checks" class="signal-band" aria-labelledby="checks-title">
+        <div class="container">
+          <div class="section-heading split-heading">
+            <div>
+              <p class="section-kicker">What it checks</p>
+              <h2 id="checks-title">A report built from inspectable signals.</h2>
+            </div>
+            <p>Suede separates public-site readiness from actual AI recommendations. The score covers what the audit can verify.</p>
+          </div>
+          <div class="signal-list">
+            <article><span>01</span><div><h3>Discovery access</h3><p>HTTP status, HTTPS, indexability, canonical routing, mobile viewport, robots.txt, and sitemap.xml.</p></div><b>Access + Technical</b></article>
+            <article><span>02</span><div><h3>Answer-engine crawl policy</h3><p>Homepage access for OAI-SearchBot, PerplexityBot, and Googlebot, with the exact policy state shown.</p></div><b>AI discovery</b></article>
+            <article><span>03</span><div><h3>Entity and content evidence</h3><p>JSON-LD, primary entity type, sameAs links, headings, internal evidence links, page depth, and social metadata.</p></div><b>Entity + Content</b></article>
+          </div>
+        </div>
+      </section>
+
+      <section id="method" class="method-band" aria-labelledby="method-title">
+        <div class="container method-grid">
+          <div>
+            <p class="section-kicker">Method before score</p>
+            <h2 id="method-title">Truth stays attached to the artifact.</h2>
+          </div>
+          <div class="method-copy">
+            <p>The audit fetches one public page plus root discovery files. It scores weighted checks, shows the measured value, and names the repair for every failed signal.</p>
+            <p>A high score is not proof of an AI citation. Buyer-prompt evidence requires separate, timestamped runs inside each answer engine.</p>
+            <a class="text-link" href="https://github.com/JasonColapietro/suede-scan" target="_blank" rel="noreferrer">Read the audit source <span aria-hidden="true">&#8599;</span></a>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <section id="report" class="report" aria-labelledby="report-title" hidden>
+      <div class="report-hero">
+        <div class="container report-hero-grid">
+          <div class="report-lead">
+            <p class="report-status"><span><i></i> Live report</span><b>Fresh automated audit</b></p>
+            <h1 id="report-title">domain.example</h1>
+            <p id="report-subtitle">Public-site discovery and answer-readiness report</p>
+            <div class="report-stats">
+              <div><strong id="stat-checks">0</strong><span>Weighted checks</span></div>
+              <div><strong id="stat-lanes">0</strong><span>Audit lanes</span></div>
+              <div><strong id="stat-repairs">0</strong><span>Repairs found</span></div>
+            </div>
+            <div class="report-actions">
+              <button id="copy-report" class="button button-secondary" type="button">Copy report link</button>
+              <button class="button button-primary" type="button" data-run-another>Run another audit</button>
+            </div>
+            <p id="report-timestamp" class="report-timestamp"></p>
+          </div>
+
+          <aside class="score-card" aria-label="Overall readiness score">
+            <p>Overall readiness score</p>
+            <div id="score-gauge" class="score-gauge">
+              <div><strong id="score-value">0</strong><span>/ 100</span></div>
+            </div>
+            <div class="grade-row"><span>Weighted grade</span><strong id="grade-value">F</strong></div>
+            <div id="score-platforms" class="score-platforms"></div>
+          </aside>
+        </div>
       </div>
+
+      <nav class="report-nav" aria-label="Report sections">
+        <div class="container">
+          <a href="#overview">Score</a>
+          <a href="#crawler-access">Crawler access</a>
+          <a href="#readiness-field">Signal field</a>
+          <a href="#repairs">Repairs</a>
+          <a href="#findings">All findings</a>
+        </div>
+      </nav>
+
+      <section id="overview" class="report-section" aria-labelledby="overview-title">
+        <div class="container">
+          <div class="section-heading">
+            <p class="section-kicker">Readiness score</p>
+            <h2 id="overview-title">Three pillars. One public evidence trail.</h2>
+            <p>The score weights blockers above polish. A blocked crawler or missing entity outranks a missing social preview.</p>
+          </div>
+          <div id="pillar-grid" class="pillar-grid"></div>
+          <div id="report-insight" class="report-insight"></div>
+        </div>
+      </section>
+
+      <section id="crawler-access" class="report-section section-tint" aria-labelledby="crawler-title">
+        <div class="container">
+          <div class="section-heading split-heading">
+            <div>
+              <p class="section-kicker">Crawler access</p>
+              <h2 id="crawler-title">Who can reach the public homepage.</h2>
+            </div>
+            <p>These cards read robots.txt policy. They do not measure recommendations, rankings, or model answers.</p>
+          </div>
+          <div id="platform-grid" class="platform-grid"></div>
+        </div>
+      </section>
+
+      <section id="readiness-field" class="report-section" aria-labelledby="field-title">
+        <div class="container">
+          <div class="section-heading">
+            <p class="section-kicker">Answer Readiness Field</p>
+            <h2 id="field-title">Every lane, plotted by measured readiness.</h2>
+            <p>Rows move from weak signal to strong signal. High-impact blockers stay visible beside the score.</p>
+          </div>
+          <div class="readiness-field">
+            <div class="field-axis"><span>Weak signal</span><span>Strong signal</span></div>
+            <div id="lane-rows" class="lane-rows"></div>
+          </div>
+        </div>
+      </section>
+
+      <section id="repairs" class="report-section section-tint" aria-labelledby="repairs-title">
+        <div class="container">
+          <div class="section-heading split-heading">
+            <div>
+              <p class="section-kicker">Prioritized repairs</p>
+              <h2 id="repairs-title">Fix the blockers before the polish.</h2>
+            </div>
+            <p>Priority comes from the audit's weighted severity, not from a generic checklist order.</p>
+          </div>
+          <div id="repair-list" class="repair-list"></div>
+        </div>
+      </section>
+
+      <section id="findings" class="report-section" aria-labelledby="findings-title">
+        <div class="container">
+          <div class="section-heading">
+            <p class="section-kicker">Full findings ledger</p>
+            <h2 id="findings-title">Every check, observed value, and priority.</h2>
+          </div>
+          <div class="findings-table-wrap">
+            <table class="findings-table">
+              <thead><tr><th>Status</th><th>Signal</th><th>Observed</th><th>Priority</th></tr></thead>
+              <tbody id="findings-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section class="report-section method-report" aria-labelledby="report-method-title">
+        <div class="container report-method-grid">
+          <div>
+            <p class="section-kicker">Methodology</p>
+            <h2 id="report-method-title">What this score means.</h2>
+            <p id="methodology-copy"></p>
+            <div id="artifact-list" class="artifact-list"></div>
+          </div>
+          <aside class="service-cta" aria-labelledby="service-cta-title">
+            <p class="section-kicker">Need the repairs shipped?</p>
+            <h3 id="service-cta-title">Turn this audit into live changes.</h3>
+            <p>Suede Scan packages implementation-ready fixes or ships the edits with before-and-after evidence.</p>
+            <a class="button button-primary" href="https://scan.suedeai.ai/#offers">Have Suede ship the repairs</a>
+            <a class="text-link" href="https://scan.suedeai.ai/#method">Read the evidence method</a>
+          </aside>
+        </div>
+      </section>
+
+      <section class="share-band" aria-label="Share report">
+        <div class="container share-grid">
+          <div id="share-score" class="share-score"><strong>0</strong><span>Readiness score</span></div>
+          <div>
+            <h2>Share the evidence trail.</h2>
+            <p>The link runs a fresh audit for the same public domain, so the report reflects current site signals.</p>
+            <button id="copy-report-bottom" class="button button-primary" type="button">Copy report link</button>
+          </div>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <span>Suede Audit</span>
+        <p>Public-site evidence for search and answer-engine readiness.</p>
+      </div>
+      <div><b>Product</b><a href="https://scan.suedeai.ai/">Suede Scan service</a><a href="https://suedeai.ai/">Suede Labs AI</a></div>
+      <div><b>Evidence</b><a href="https://github.com/JasonColapietro/suede-scan">Source code</a><a href="https://scan.suedeai.ai/#method">Method</a></div>
+      <div class="footer-note"><span>Point-in-time public signals</span><span>No citation or ranking guarantee</span></div>
     </div>
-
-    <table>
-      <thead><tr><th style="width:52px"></th><th>Check</th><th>Found</th></tr></thead>
-      <tbody id="checksBody"></tbody>
-    </table>
-
-    <div class="upsell" id="upsell">
-      <h3>That was the scan. The audit goes deeper.</h3>
-      <p>Schema &amp; AI-citation readiness, heading structure, internal linking, page weight, social cards, brand signals — every lane graded, every failure with a fix.</p>
-      <button class="btn-audit" id="auditBtn">Run the Full Audit</button>
-    </div>
-  </section>
-
-  <footer>Suede Scan by Jason Colapietro</footer>
-</div>
-
-<script>
-  const $ = (id) => document.getElementById(id);
-  let lastUrl = '';
-
-  async function run(tier) {
-    const url = $('url').value.trim();
-    if (!url) return;
-    lastUrl = url;
-    $('results').style.display = 'none';
-    $('error').style.display = 'none';
-    $('spinner').style.display = 'block';
-    $('spinner').childNodes[0].textContent = tier === 'audit' ? 'Running full audit…' : 'Scanning…';
-    try {
-      const res = await fetch('/api/' + tier, {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ url }),
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Request failed');
-      render(data);
-    } catch (e) {
-      $('error').textContent = e.message;
-      $('error').style.display = 'block';
-    } finally {
-      $('spinner').style.display = 'none';
-    }
-  }
-
-  function render(d) {
-    $('tierTag').textContent = d.tier === 'audit' ? 'Full Audit' : 'Free Scan';
-    $('tierTag').className = 'tier-tag ' + (d.tier === 'audit' ? 'tier-audit' : 'tier-scan');
-    $('gradeBadge').textContent = d.grade;
-    $('gradeBadge').className = 'grade-badge grade-' + d.grade;
-    $('scannedUrl').textContent = d.url;
-    $('scoreLine').textContent = d.passed + ' of ' + d.total + ' checks passed — ' + d.score + '/100';
-    $('lanes').innerHTML = Object.entries(d.laneGrades)
-      .map(([lane, g]) => '<span class="lane">' + lane + ' <b>' + g + '</b></span>').join('');
-    $('checksBody').innerHTML = d.checks.map((c) =>
-      '<tr><td class="' + (c.pass ? 'pass' : 'fail') + '">' + (c.pass ? '✓' : '✗') + '</td>' +
-      '<td>' + c.label + (c.pass ? '' : '<div class="advice">' + c.advice + '</div>') + '</td>' +
-      '<td><span class="value">' + c.value + '</span></td></tr>'
-    ).join('');
-    $('upsell').style.display = d.tier === 'scan' ? 'block' : 'none';
-    $('results').style.display = 'block';
-  }
-
-  $('form').addEventListener('submit', (e) => { e.preventDefault(); run('scan'); });
-  $('auditBtn').addEventListener('click', () => run('audit'));
-</script>
+  </footer>
 </body>
 </html>
