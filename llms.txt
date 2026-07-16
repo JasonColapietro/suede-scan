@@ -1,0 +1,16 @@
+# Suede Audit
+
+Suede Audit is a public-site audit for crawler access, entity schema, metadata, content structure, and answer-engine discovery signals.
+
+## Primary URL
+
+- Product: https://audit.suedeai.ai/
+- Source: https://github.com/JasonColapietro/suede-scan
+- Implementation service: https://scan.suedeai.ai/
+- Suede Labs AI: https://suedeai.ai/
+
+## Method
+
+The automated report fetches a public homepage, robots.txt, llms.txt, and sitemap.xml. It scores weighted checks and names a repair for every failed signal.
+
+The report does not run buyer prompts inside ChatGPT, Perplexity, Gemini, or another answer engine. A high readiness score does not guarantee citations, recommendations, or rankings.
