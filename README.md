@@ -8,7 +8,11 @@ Product URL: [audit.suedeai.ai](https://audit.suedeai.ai/).
 
 Enter a public URL and get a weighted audit of access, crawler policy, entity schema, metadata, content structure, internal evidence links, and response weight. The report shows every observed value and prioritizes repairs by impact.
 
-Shareable `/report/<domain>` routes run a fresh audit when opened. Reports do not store client data.
+Each browser gets one free audit. Its result is cached locally so the shareable `/report/<domain>` route can reopen without spending another scan. A first-time visitor can use their one free audit on that shared domain. The server does not persist report contents.
+
+## Abuse protection
+
+The free audit is protected by a browser-local result gate, a one-year HttpOnly usage cookie, a bot-trap field, Fetch Metadata checks, in-process burst limiting, and Vercel Firewall challenge and rate-limit rules. The firewall is the durable request boundary; the browser controls make the one-audit policy explicit and preserve the saved result.
 
 ## Claim boundary
 

@@ -13,4 +13,6 @@ Suede Audit is a public-site audit for crawler access, entity schema, metadata, 
 
 The automated report fetches a public homepage, robots.txt, llms.txt, and sitemap.xml. It scores weighted checks and names a repair for every failed signal.
 
+Each browser receives one free audit. The result is cached in that browser so its report route can reopen without another scan.
+
 The report does not run buyer prompts inside ChatGPT, Perplexity, Gemini, or another answer engine. A high readiness score does not guarantee citations, recommendations, or rankings.
