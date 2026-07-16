@@ -18,7 +18,7 @@ test('returns the audit envelope with no-store headers', async () => {
   const req = {
     method: 'POST',
     body: { url: 'example.com' },
-    headers: { 'x-forwarded-for': '203.0.113.10' },
+    headers: { 'sec-fetch-site': 'same-origin', 'x-forwarded-for': '203.0.113.10' },
     socket: {},
   };
   const res = responseRecorder();
@@ -32,7 +32,7 @@ test('returns the audit envelope with no-store headers', async () => {
 
 test('rejects missing URLs and unsupported methods', async () => {
   const missing = responseRecorder();
-  await handleTier('audit', { method: 'POST', body: {}, headers: { 'x-forwarded-for': '203.0.113.11' }, socket: {} }, missing, async () => ({}));
+  await handleTier('audit', { method: 'POST', body: {}, headers: { 'sec-fetch-site': 'same-origin', 'x-forwarded-for': '203.0.113.11' }, socket: {} }, missing, async () => ({}));
   assert.equal(missing.statusCode, 400);
 
   const method = responseRecorder();
@@ -54,6 +54,12 @@ test('blocks a browser after its first successful free audit', async () => {
 });
 
 test('rejects cross-site requests and filled bot traps', async () => {
+  const missingHeader = responseRecorder();
+  await handleTier('audit', {
+    method: 'POST', body: { url: 'example.com' }, headers: {}, socket: {},
+  }, missingHeader, async () => ({}));
+  assert.equal(missingHeader.statusCode, 403);
+
   const crossSite = responseRecorder();
   await handleTier('audit', {
     method: 'POST', body: { url: 'example.com' }, headers: { 'sec-fetch-site': 'cross-site' }, socket: {},
@@ -62,7 +68,7 @@ test('rejects cross-site requests and filled bot traps', async () => {
 
   const trapped = responseRecorder();
   await handleTier('audit', {
-    method: 'POST', body: { url: 'example.com', companyFax: '555-0100' }, headers: { 'x-forwarded-for': '203.0.113.14' }, socket: {},
+    method: 'POST', body: { url: 'example.com', companyFax: '555-0100' }, headers: { 'sec-fetch-site': 'same-origin', 'x-forwarded-for': '203.0.113.14' }, socket: {},
   }, trapped, async () => ({}));
   assert.equal(trapped.statusCode, 400);
   assert.equal(JSON.parse(trapped.body).error, 'Request rejected.');
@@ -72,7 +78,7 @@ test('caps repeated requests per process window', async () => {
   const runTier = async () => ({ host: 'example.com', score: 80, elapsedMs: 1 });
   let last;
   for (let index = 0; index < 13; index += 1) {
-    const req = { method: 'POST', body: { url: 'example.com' }, headers: { 'x-forwarded-for': '203.0.113.12' }, socket: {} };
+    const req = { method: 'POST', body: { url: 'example.com' }, headers: { 'sec-fetch-site': 'same-origin', 'x-forwarded-for': '203.0.113.12' }, socket: {} };
     last = responseRecorder();
     await handleTier('audit', req, last, runTier);
   }
