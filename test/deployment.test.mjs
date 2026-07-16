@@ -5,9 +5,15 @@ import test from 'node:test';
 test('keeps the canonical audit intent on the root URL', async () => {
   const config = JSON.parse(await readFile(new URL('../vercel.json', import.meta.url), 'utf8'));
   const auditRedirect = config.redirects?.find((entry) => entry.source === '/audit');
+  const auditSlashRedirect = config.redirects?.find((entry) => entry.source === '/audit/');
 
   assert.deepEqual(auditRedirect, {
     source: '/audit',
+    destination: '/',
+    permanent: true,
+  });
+  assert.deepEqual(auditSlashRedirect, {
+    source: '/audit/',
     destination: '/',
     permanent: true,
   });

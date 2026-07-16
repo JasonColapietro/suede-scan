@@ -26,7 +26,7 @@ const server = http.createServer(async (req, res) => {
     const url = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
     if (req.method === 'POST' && url.pathname === '/api/scan') return await handleTier('scan', req, res, runTier);
     if (req.method === 'POST' && url.pathname === '/api/audit') return await handleTier('audit', req, res, runTier);
-    if (req.method === 'GET' && url.pathname === '/audit') {
+    if (req.method === 'GET' && (url.pathname === '/audit' || url.pathname === '/audit/')) {
       res.writeHead(308, { location: '/', 'cache-control': 'public, max-age=0, must-revalidate' });
       return res.end();
     }
