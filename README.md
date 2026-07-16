@@ -33,6 +33,6 @@ npm run dev
 
 ```bash
 npm test
-node --check app.js
+node --check client.js
 git diff --check
 ```
