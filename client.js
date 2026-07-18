@@ -502,6 +502,16 @@ function domainFromLocation() {
   return new URLSearchParams(window.location.search).get('url');
 }
 
+function renderSharedReportFromLocation() {
+  const domain = domainFromLocation();
+  const sharedSnapshot = readSharedReportSnapshot(domain);
+  if (!sharedSnapshot.present) return false;
+  stripSharedReportFragment();
+  if (sharedSnapshot.report) renderReport(sharedSnapshot.report, { sharedSnapshot: true });
+  else showNonConsumingReportPrompt(domain, true);
+  return true;
+}
+
 form.addEventListener('submit', (event) => {
   event.preventDefault();
   runAudit(urlInput.value);
@@ -538,13 +548,12 @@ window.addEventListener('popstate', () => {
   else showNonConsumingReportPrompt(domain);
 });
 
+window.addEventListener('hashchange', () => {
+  renderSharedReportFromLocation();
+});
+
 const initialDomain = domainFromLocation();
-const sharedSnapshot = readSharedReportSnapshot(initialDomain);
-if (sharedSnapshot.present) {
-  stripSharedReportFragment();
-  if (sharedSnapshot.report) renderReport(sharedSnapshot.report, { sharedSnapshot: true });
-  else showNonConsumingReportPrompt(initialDomain, true);
-} else {
+if (!renderSharedReportFromLocation()) {
   const storedReport = readStoredReport();
   if (storedReport && initialDomain && inputHost(initialDomain) === storedReport.host.toLowerCase()) {
     renderReport(storedReport);
