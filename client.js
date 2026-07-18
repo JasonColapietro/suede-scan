@@ -32,10 +32,20 @@ const escapeHtml = (value) => String(value ?? '').replace(/[&<>'"]/g, (character
 const clampScore = (value) => Math.max(0, Math.min(100, Number(value) || 0));
 
 const COMPANY_OFFER_SEED_CAP = 6144;
+const SHARED_REPORT_PREFIX = '#report=';
+const SHARED_REPORT_VERSION = 1;
+const SHARED_REPORT_MAX_ENCODED = 49152;
 
 function base64UrlEncode(value) {
   const base64 = btoa(unescape(encodeURIComponent(value)));
   return base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
+
+function base64UrlDecode(value) {
+  const base64 = value.replace(/-/g, '+').replace(/_/g, '/');
+  const padded = base64 + '='.repeat((4 - (base64.length % 4)) % 4);
+  const bytes = Uint8Array.from(atob(padded), (character) => character.charCodeAt(0));
+  return new TextDecoder('utf-8', { fatal: true }).decode(bytes);
 }
 
 function companyOfferHref(domain, findings) {
@@ -50,7 +60,9 @@ function companyOfferHref(domain, findings) {
 
 function readStoredReport() {
   try {
-    const saved = JSON.parse(localStorage.getItem(FREE_REPORT_KEY));
+    const raw = localStorage.getItem(FREE_REPORT_KEY);
+    if (!raw) return null;
+    const saved = JSON.parse(raw);
     if (!saved || typeof saved.host !== 'string' || !Array.isArray(saved.checks) || !Number.isFinite(saved.score)) {
       localStorage.removeItem(FREE_REPORT_KEY);
       return null;
@@ -66,12 +78,97 @@ function storeReport(data) {
 }
 
 function inputHost(value) {
+  if (typeof value !== 'string' || !value.trim()) return null;
   try {
     const normalized = /^[a-z][a-z\d+.-]*:\/\//i.test(value) ? value : `https://${value}`;
     return new URL(normalized).hostname.toLowerCase();
   } catch {
     return null;
   }
+}
+
+function isRecord(value) {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+function hasStringFields(value, fields) {
+  return isRecord(value) && fields.every((field) => typeof value[field] === 'string');
+}
+
+function validateSharedReport(value, expectedDomain) {
+  if (!isRecord(value)) return null;
+  if (typeof expectedDomain !== 'string' || typeof value.url !== 'string') return null;
+  const expectedHost = inputHost(expectedDomain);
+  const reportHost = typeof value.host === 'string' ? value.host.toLowerCase() : null;
+  if (!expectedHost || reportHost !== expectedHost || inputHost(value.url) !== expectedHost) return null;
+  if (!Number.isFinite(value.score) || !Number.isFinite(value.total)) return null;
+  if (!hasStringFields(value, ['grade', 'auditedAt', 'methodology'])) return null;
+  if (!Array.isArray(value.checks) || !value.checks.every((check) => (
+    hasStringFields(check, ['label', 'lane', 'value', 'severity']) && typeof check.pass === 'boolean'
+  ))) return null;
+  if (!Array.isArray(value.recommendations) || !value.recommendations.every((repair) => (
+    hasStringFields(repair, ['title', 'action', 'observed', 'lane', 'severity'])
+  ))) return null;
+  if (!Array.isArray(value.pillarScores) || !value.pillarScores.every((pillar) => (
+    hasStringFields(pillar, ['name', 'description'])
+    && Number.isFinite(pillar.score)
+    && Number.isFinite(pillar.passed)
+    && Number.isFinite(pillar.total)
+  ))) return null;
+  if (!Array.isArray(value.platforms) || !value.platforms.every((platform) => (
+    hasStringFields(platform, ['name', 'crawler', 'state', 'detail'])
+  ))) return null;
+  if (!isRecord(value.laneScores) || !Object.values(value.laneScores).every((lane) => (
+    isRecord(lane) && Number.isFinite(lane.score) && Number.isFinite(lane.highImpactOpen)
+  ))) return null;
+  if (!isRecord(value.artifacts) || !Object.values(value.artifacts).every((artifact) => (
+    isRecord(artifact) && typeof artifact.ok === 'boolean' && Number.isFinite(artifact.status)
+  ))) return null;
+  return value;
+}
+
+function sharedReportHref(data) {
+  const encoded = base64UrlEncode(JSON.stringify({ version: SHARED_REPORT_VERSION, report: data }));
+  if (encoded.length > SHARED_REPORT_MAX_ENCODED) {
+    throw new RangeError('The report snapshot is too large to share in a URL.');
+  }
+  return `${new URL(reportPath(data.host), window.location.origin).href}${SHARED_REPORT_PREFIX}${encoded}`;
+}
+
+function readSharedReportSnapshot(expectedDomain) {
+  const hash = window.location.hash;
+  if (!hash.startsWith(SHARED_REPORT_PREFIX)) return { present: false, report: null };
+  const encoded = hash.slice(SHARED_REPORT_PREFIX.length);
+  if (!encoded || encoded.length > SHARED_REPORT_MAX_ENCODED || !/^[A-Za-z0-9_-]+$/.test(encoded)) {
+    return { present: true, report: null };
+  }
+  try {
+    const envelope = JSON.parse(base64UrlDecode(encoded));
+    if (!isRecord(envelope) || envelope.version !== SHARED_REPORT_VERSION) {
+      return { present: true, report: null };
+    }
+    return { present: true, report: validateSharedReport(envelope.report, expectedDomain) };
+  } catch {
+    return { present: true, report: null };
+  }
+}
+
+function stripSharedReportFragment() {
+  history.replaceState(history.state, '', `${window.location.pathname}${window.location.search}`);
+}
+
+function showNonConsumingReportPrompt(domain, invalidSnapshot = false) {
+  currentReport = null;
+  report.hidden = true;
+  landingShell.hidden = false;
+  setReportNavigation(false);
+  clearError();
+  const host = inputHost(domain);
+  urlInput.value = host || '';
+  formError.textContent = invalidSnapshot
+    ? 'This shared report snapshot is invalid or does not match the URL. No audit was run.'
+    : 'This older shared link does not include a report snapshot. No audit was run. Review the domain, then choose Run the audit to use this browser\'s free audit.';
+  formError.hidden = false;
 }
 
 function showUsedAudit(saved) {
@@ -347,8 +444,15 @@ function resetAudit({ updateHistory = true, focus = true } = {}) {
 
 async function copyReport(button) {
   if (!currentReport) return;
-  const url = new URL(reportPath(currentReport.host), window.location.origin).href;
   const original = button.textContent;
+  let url;
+  try {
+    url = sharedReportHref(currentReport);
+  } catch {
+    button.textContent = 'Report too large to share';
+    window.setTimeout(() => { button.textContent = original; }, 3000);
+    return;
+  }
   try {
     await navigator.clipboard.writeText(url);
     button.textContent = 'Link copied';
@@ -390,22 +494,37 @@ auditEntry.addEventListener('click', () => {
 
 window.addEventListener('popstate', () => {
   const domain = domainFromLocation();
-  if (domain) runAudit(domain, { updateHistory: false });
-  else resetAudit({ updateHistory: false, focus: false });
+  if (!domain) {
+    resetAudit({ updateHistory: false, focus: false });
+    return;
+  }
+  if (currentReport && inputHost(domain) === currentReport.host.toLowerCase()) {
+    renderReport(currentReport);
+    return;
+  }
+  const saved = readStoredReport();
+  if (saved && inputHost(domain) === saved.host.toLowerCase()) renderReport(saved);
+  else showNonConsumingReportPrompt(domain);
 });
 
 const initialDomain = domainFromLocation();
-const storedReport = readStoredReport();
-if (storedReport && initialDomain && inputHost(initialDomain) === storedReport.host.toLowerCase()) {
-  renderReport(storedReport);
-} else if (storedReport && initialDomain) {
-  auditEntry.textContent = 'View saved audit';
-  history.replaceState({}, '', '/');
-  showUsedAudit(storedReport);
-} else if (initialDomain) {
-  urlInput.value = initialDomain;
-  runAudit(initialDomain, { updateHistory: false });
-} else if (storedReport) {
-  auditEntry.textContent = 'View saved audit';
-  urlInput.value = storedReport.host;
+const sharedSnapshot = readSharedReportSnapshot(initialDomain);
+if (sharedSnapshot.present) {
+  stripSharedReportFragment();
+  if (sharedSnapshot.report) renderReport(sharedSnapshot.report);
+  else showNonConsumingReportPrompt(initialDomain, true);
+} else {
+  const storedReport = readStoredReport();
+  if (storedReport && initialDomain && inputHost(initialDomain) === storedReport.host.toLowerCase()) {
+    renderReport(storedReport);
+  } else if (storedReport && initialDomain) {
+    auditEntry.textContent = 'View saved audit';
+    history.replaceState({}, '', '/');
+    showUsedAudit(storedReport);
+  } else if (initialDomain) {
+    showNonConsumingReportPrompt(initialDomain);
+  } else if (storedReport) {
+    auditEntry.textContent = 'View saved audit';
+    urlInput.value = storedReport.host;
+  }
 }

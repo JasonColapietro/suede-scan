@@ -8,7 +8,9 @@ Product URL: [audit.suedeai.ai](https://audit.suedeai.ai/).
 
 Enter a public URL and get a weighted audit of access, crawler policy, entity schema, metadata, content structure, internal evidence links, and response weight. The report shows every observed value and prioritizes repairs by impact.
 
-Each browser gets one free audit. Its result is cached locally so the shareable `/report/<domain>` route can reopen without spending another scan. A first-time visitor can use their one free audit on that shared domain. The server does not persist report contents.
+Each browser gets one free audit. Its result is cached locally for reopening, while Copy report creates a self-contained `/report/<domain>#report=...` link. The URL fragment carries a versioned snapshot of the already-rendered public report, is validated against the path domain, and is removed from the address bar after loading. Fragments are not sent to the server, so a first-time visitor can view the shared report and its company offer without spending their free audit. The server does not persist report contents.
+
+Shared snapshots are base64url-encoded, not encrypted; anyone who receives the link can read the public audit data it contains. Copy report refuses snapshots above the defined 48 KiB encoded limit instead of truncating JSON or silently falling back to a new audit. Older fragmentless `/report/<domain>` links never auto-run an audit: they show a prompt and let the visitor explicitly choose whether to spend their free audit.
 
 ## Abuse protection
 
