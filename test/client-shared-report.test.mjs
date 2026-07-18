@@ -160,12 +160,31 @@ test('shared snapshot renders the report and company offer without spending an a
   assert.equal(run.elements.get('report').hidden, false);
   assert.equal(run.elements.get('landing-shell').hidden, true);
   assert.equal(run.elements.get('company-offer').hidden, false);
+  assert.equal(run.elements.get('shared-report-warning').hidden, false);
+  assert.equal(run.elements.get('report-status-label').textContent, 'Shared snapshot');
+  assert.equal(run.elements.get('report-status-detail').textContent, 'Unverified user-provided copy');
+  assert.match(run.elements.get('report-subtitle').textContent, /unverified copy/i);
+  assert.match(run.elements.get('score-card-label').textContent, /unverified/i);
+  assert.match(run.elements.get('grade-label').textContent, /unverified/i);
+  assert.match(run.elements.get('report-timestamp').textContent, /unverified/i);
+  assert.match(run.elements.get('share-report-title').textContent, /unverified/i);
+  assert.match(run.elements.get('share-report-copy').textContent, /user-controlled data/i);
   assert.match(run.elements.get('company-offer-link').href, /^https:\/\/agents\.suedeai\.ai\/founding#seed=/);
   assert.deepEqual(run.historyCalls.at(-1), {
     kind: 'replace',
     state: null,
     url: '/report/example.com',
   });
+});
+
+test('locally stored reports retain verified first-party report framing', () => {
+  const run = runClient({ pathname: '/report/example.com', storedReport: reportFixture() });
+
+  assert.equal(run.elements.get('shared-report-warning').hidden, true);
+  assert.equal(run.elements.get('report-status-label').textContent, 'Live report');
+  assert.equal(run.elements.get('report-status-detail').textContent, 'Fresh automated audit');
+  assert.equal(run.elements.get('score-card-label').textContent, 'Overall readiness score');
+  assert.equal(run.elements.get('grade-label').textContent, 'Weighted grade');
 });
 
 test('host-mismatched and malformed snapshots fail closed without storage or network use', () => {

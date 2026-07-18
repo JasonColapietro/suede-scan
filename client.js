@@ -340,25 +340,52 @@ function renderArtifacts(artifacts) {
   `).join('');
 }
 
-function renderReport(data) {
+function renderReport(data, { sharedSnapshot = false } = {}) {
   currentReport = data;
   const score = clampScore(data.score);
   const laneCount = Object.keys(data.laneScores || {}).length;
-  const reportTitle = `${data.host} Public-Site Audit | Suede Audit`;
+  const reportTitle = sharedSnapshot
+    ? `${data.host} Unverified Shared Snapshot | Suede Audit`
+    : `${data.host} Public-Site Audit | Suede Audit`;
 
   document.title = reportTitle;
-  auditEntry.textContent = 'View saved audit';
+  auditEntry.textContent = sharedSnapshot ? 'View shared snapshot' : 'View saved audit';
+  report.classList[sharedSnapshot ? 'add' : 'remove']('report--shared-snapshot');
   byId('report-title').textContent = data.host;
-  byId('report-subtitle').textContent = 'Public-site discovery and answer-readiness report';
+  byId('shared-report-warning').hidden = !sharedSnapshot;
+  byId('report-status-label').textContent = sharedSnapshot ? 'Shared snapshot' : 'Live report';
+  byId('report-status-detail').textContent = sharedSnapshot
+    ? 'Unverified user-provided copy'
+    : 'Fresh automated audit';
+  byId('report-subtitle').textContent = sharedSnapshot
+    ? 'Unverified copy of user-provided public-site results'
+    : 'Public-site discovery and answer-readiness report';
+  byId('score-card-label').textContent = sharedSnapshot
+    ? 'Shared score — unverified'
+    : 'Overall readiness score';
+  byId('score-card').setAttribute(
+    'aria-label',
+    sharedSnapshot ? 'Unverified shared score' : 'Overall readiness score',
+  );
+  byId('grade-label').textContent = sharedSnapshot ? 'Shared grade — unverified' : 'Weighted grade';
   byId('stat-checks').textContent = data.total;
   byId('stat-lanes').textContent = laneCount;
   byId('stat-repairs').textContent = data.recommendations.length;
-  byId('report-timestamp').textContent = formatTimestamp(data.auditedAt, data.elapsedMs);
+  const timestamp = formatTimestamp(data.auditedAt, data.elapsedMs);
+  byId('report-timestamp').textContent = sharedSnapshot
+    ? `Snapshot claims: ${timestamp} · Unverified`
+    : timestamp;
   byId('score-value').textContent = score;
   byId('grade-value').textContent = data.grade;
   byId('score-gauge').style.setProperty('--score-angle', `${score * 3.6}deg`);
   byId('methodology-copy').textContent = data.methodology;
   byId('share-score').querySelector('strong').textContent = score;
+  byId('share-report-title').textContent = sharedSnapshot
+    ? 'Share this unverified snapshot.'
+    : 'Share the evidence trail.';
+  byId('share-report-copy').textContent = sharedSnapshot
+    ? 'This link carries user-controlled data and must not be treated as a Suede-verified audit.'
+    : 'The link reopens this saved result without consuming a recipient audit.';
 
   renderScorePlatforms(data.platforms || []);
   renderPillars(data.pillarScores || []);
@@ -511,7 +538,7 @@ const initialDomain = domainFromLocation();
 const sharedSnapshot = readSharedReportSnapshot(initialDomain);
 if (sharedSnapshot.present) {
   stripSharedReportFragment();
-  if (sharedSnapshot.report) renderReport(sharedSnapshot.report);
+  if (sharedSnapshot.report) renderReport(sharedSnapshot.report, { sharedSnapshot: true });
   else showNonConsumingReportPrompt(initialDomain, true);
 } else {
   const storedReport = readStoredReport();
