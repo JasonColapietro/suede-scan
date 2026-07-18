@@ -608,6 +608,22 @@ p { overflow-wrap: anywhere; }
   font-size: .8rem;
 }
 
+.shared-report-warning {
+  display: grid;
+  gap: 6px;
+  margin: 0 0 24px;
+  padding: 16px 18px;
+  border: 2px solid var(--color-warning);
+  border-radius: var(--radius-sm);
+  background: #fff5e6;
+  color: #5f3000;
+  box-shadow: var(--shadow-card);
+}
+
+.shared-report-warning[hidden] { display: none; }
+.shared-report-warning strong { font-size: .95rem; }
+.shared-report-warning span { font-size: .84rem; line-height: 1.55; }
+
 .report-status span {
   display: inline-flex;
   align-items: center;
@@ -622,6 +638,7 @@ p { overflow-wrap: anywhere; }
 }
 
 .report-status i { width: 8px; height: 8px; border-radius: 50%; background: var(--color-success); }
+.report--shared-snapshot .report-status i { background: var(--color-warning); }
 .report-status b { font-weight: 400; }
 .report-lead h1,
 .report-lead .report-title { max-width: 13ch; font-size: clamp(3rem, 6vw, 5.7rem); overflow-wrap: anywhere; margin: 0; }
@@ -837,6 +854,9 @@ p { overflow-wrap: anywhere; }
 .service-cta > p:not(.section-kicker) { margin: 12px 0 22px; color: var(--color-text-secondary); }
 .service-cta .button { width: 100%; }
 .service-cta .text-link { margin-top: 18px; font-size: .86rem; }
+
+.company-offer { margin-top: 28px; }
+.company-offer-caption { margin: 14px 0 0; color: var(--color-text-tertiary); font-size: .78rem; }
 
 .share-band { padding-block: 64px; border-top: 1px solid var(--color-border); background: var(--color-surface); }
 .share-grid { display: grid; grid-template-columns: 160px 1fr; gap: 40px; align-items: center; }

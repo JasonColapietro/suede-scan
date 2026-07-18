@@ -169,7 +169,11 @@
       <div class="report-hero">
         <div class="container report-hero-grid">
           <div class="report-lead">
-            <p class="report-status"><span><i></i> Live report</span><b>Fresh automated audit</b></p>
+            <aside id="shared-report-warning" class="shared-report-warning" role="alert" hidden>
+              <strong>Unverified user-provided snapshot</strong>
+              <span>Suede has not verified this copy. Its score, findings, evidence, and date may have been changed. Run a new audit before relying on it.</span>
+            </aside>
+            <p class="report-status"><span><i></i> <span id="report-status-label">Live report</span></span><b id="report-status-detail">Fresh automated audit</b></p>
             <p class="report-title" id="report-title">domain.example</p>
             <p id="report-subtitle">Public-site discovery and answer-readiness report</p>
             <div class="report-stats">
@@ -184,12 +188,12 @@
             <p id="report-timestamp" class="report-timestamp"></p>
           </div>
 
-          <aside class="score-card" aria-label="Overall readiness score">
-            <p>Overall readiness score</p>
+          <aside id="score-card" class="score-card" aria-label="Overall readiness score">
+            <p id="score-card-label">Overall readiness score</p>
             <div id="score-gauge" class="score-gauge">
               <div><strong id="score-value">0</strong><span>/ 100</span></div>
             </div>
-            <div class="grade-row"><span>Weighted grade</span><strong id="grade-value">F</strong></div>
+            <div class="grade-row"><span id="grade-label">Weighted grade</span><strong id="grade-value">F</strong></div>
             <div id="score-platforms" class="score-platforms"></div>
           </aside>
         </div>
@@ -254,6 +258,12 @@
             <p>Priority comes from the audit's weighted severity, not from a generic checklist order.</p>
           </div>
           <div id="repair-list" class="repair-list"></div>
+          <aside id="company-offer" class="service-cta company-offer" aria-labelledby="company-offer-title" hidden>
+            <h3 id="company-offer-title">Put a company on this</h3>
+            <p>Found a Suede company staffed to work on these findings &mdash; you review everything before anything runs.</p>
+            <a id="company-offer-link" class="button button-primary" href="#">See the company</a>
+            <p class="company-offer-caption">Runs on Suede Agent Studio.</p>
+          </aside>
         </div>
       </section>
 
@@ -294,8 +304,8 @@
         <div class="container share-grid">
           <div id="share-score" class="share-score"><strong>0</strong><span>Readiness score</span></div>
           <div>
-            <h2>Share the evidence trail.</h2>
-            <p>The link reopens this browser's saved result. A first-time visitor can use their one free audit on the same domain.</p>
+            <h2 id="share-report-title">Share the evidence trail.</h2>
+            <p id="share-report-copy">The link reopens this browser's saved result. A first-time visitor can use their one free audit on the same domain.</p>
             <button id="copy-report-bottom" class="button button-primary" type="button">Copy report link</button>
           </div>
         </div>
