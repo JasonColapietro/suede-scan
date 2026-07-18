@@ -19,6 +19,7 @@ const navLinks = [...document.querySelectorAll('.primary-nav a')];
 const auditEntry = document.querySelector('[data-audit-entry]');
 
 let currentReport = null;
+let currentReportIsSharedSnapshot = false;
 let loadingTimer = null;
 
 const escapeHtml = (value) => String(value ?? '').replace(/[&<>'"]/g, (character) => ({
@@ -159,6 +160,7 @@ function stripSharedReportFragment() {
 
 function showNonConsumingReportPrompt(domain, invalidSnapshot = false) {
   currentReport = null;
+  currentReportIsSharedSnapshot = false;
   report.hidden = true;
   landingShell.hidden = false;
   setReportNavigation(false);
@@ -342,6 +344,7 @@ function renderArtifacts(artifacts) {
 
 function renderReport(data, { sharedSnapshot = false } = {}) {
   currentReport = data;
+  currentReportIsSharedSnapshot = sharedSnapshot;
   const score = clampScore(data.score);
   const laneCount = Object.keys(data.laneScores || {}).length;
   const reportTitle = sharedSnapshot
@@ -459,6 +462,7 @@ async function runAudit(rawUrl, { updateHistory = true } = {}) {
 
 function resetAudit({ updateHistory = true, focus = true } = {}) {
   currentReport = null;
+  currentReportIsSharedSnapshot = false;
   report.hidden = true;
   landingShell.hidden = false;
   setReportNavigation(false);
@@ -526,7 +530,7 @@ window.addEventListener('popstate', () => {
     return;
   }
   if (currentReport && inputHost(domain) === currentReport.host.toLowerCase()) {
-    renderReport(currentReport);
+    renderReport(currentReport, { sharedSnapshot: currentReportIsSharedSnapshot });
     return;
   }
   const saved = readStoredReport();

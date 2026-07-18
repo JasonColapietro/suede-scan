@@ -93,6 +93,7 @@ function runClient({ pathname = '/', hash = '', storedReport = null } = {}) {
   const network = { fetches: 0 };
   const clipboard = [];
   const historyCalls = [];
+  const windowListeners = new Map();
   const location = { origin: 'https://audit.suedeai.ai', pathname, search: '', hash };
   const history = {
     state: null,
@@ -111,7 +112,7 @@ function runClient({ pathname = '/', hash = '', storedReport = null } = {}) {
     location,
     history,
     matchMedia: () => ({ matches: false }),
-    addEventListener() {},
+    addEventListener(type, listener) { windowListeners.set(type, listener); },
     prompt() {},
     scrollTo() {},
     setInterval: () => 1,
@@ -147,7 +148,7 @@ function runClient({ pathname = '/', hash = '', storedReport = null } = {}) {
     window,
   };
   vm.runInNewContext(clientSource, context);
-  return { auditEntry, clipboard, elements, historyCalls, network, storage };
+  return { auditEntry, clipboard, elements, historyCalls, network, storage, windowListeners };
 }
 
 test('shared snapshot renders the report and company offer without spending an audit', () => {
@@ -185,6 +186,18 @@ test('locally stored reports retain verified first-party report framing', () => 
   assert.equal(run.elements.get('report-status-detail').textContent, 'Fresh automated audit');
   assert.equal(run.elements.get('score-card-label').textContent, 'Overall readiness score');
   assert.equal(run.elements.get('grade-label').textContent, 'Weighted grade');
+});
+
+test('history navigation never upgrades a shared snapshot to verified report framing', () => {
+  const encoded = encodeSnapshot(reportFixture());
+  const run = runClient({ pathname: '/report/example.com', hash: `#report=${encoded}` });
+
+  run.windowListeners.get('popstate')();
+
+  assert.equal(run.elements.get('shared-report-warning').hidden, false);
+  assert.equal(run.elements.get('report-status-label').textContent, 'Shared snapshot');
+  assert.equal(run.elements.get('report-status-detail').textContent, 'Unverified user-provided copy');
+  assert.match(run.elements.get('report-subtitle').textContent, /unverified copy/i);
 });
 
 test('host-mismatched and malformed snapshots fail closed without storage or network use', () => {
