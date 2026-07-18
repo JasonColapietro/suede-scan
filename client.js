@@ -31,6 +31,23 @@ const escapeHtml = (value) => String(value ?? '').replace(/[&<>'"]/g, (character
 
 const clampScore = (value) => Math.max(0, Math.min(100, Number(value) || 0));
 
+const COMPANY_OFFER_SEED_CAP = 6144;
+
+function base64UrlEncode(value) {
+  const base64 = btoa(unescape(encodeURIComponent(value)));
+  return base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
+
+function companyOfferHref(domain, findings) {
+  let list = findings.slice();
+  let encoded = base64UrlEncode(JSON.stringify({ domain, findings: list }));
+  while (encoded.length > COMPANY_OFFER_SEED_CAP && list.length > 0) {
+    list = list.slice(0, -1);
+    encoded = base64UrlEncode(JSON.stringify({ domain, findings: list }));
+  }
+  return `https://agents.suedeai.ai/founding#seed=${encoded}`;
+}
+
 function readStoredReport() {
   try {
     const saved = JSON.parse(localStorage.getItem(FREE_REPORT_KEY));
@@ -198,6 +215,17 @@ function renderRepairs(recommendations) {
     </article>`).join('');
 }
 
+function renderCompanyOffer(host, recommendations) {
+  const offer = byId('company-offer');
+  if (!offer) return;
+  if (!recommendations || recommendations.length === 0) {
+    offer.hidden = true;
+    return;
+  }
+  byId('company-offer-link').href = companyOfferHref(host, recommendations.map((repair) => repair.title));
+  offer.hidden = false;
+}
+
 function renderFindings(checks) {
   byId('findings-body').innerHTML = checks.map((check) => `
     <tr>
@@ -241,6 +269,7 @@ function renderReport(data) {
   renderPlatforms(data.platforms || []);
   renderLanes(data.laneScores || {});
   renderRepairs(data.recommendations || []);
+  renderCompanyOffer(data.host, data.recommendations || []);
   renderFindings(data.checks || []);
   renderArtifacts(data.artifacts || {});
 
