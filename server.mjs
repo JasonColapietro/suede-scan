@@ -5,10 +5,11 @@ import { runTier } from './lib/engine.mjs';
 import { handleTier } from './lib/handler.mjs';
 
 const PORT = process.env.PORT || 3400;
-const [INDEX_HTML, STYLES_CSS, CLIENT_JS, ROBOTS_TXT, LLMS_TXT, SITEMAP_XML, METHOD_HTML, PRIVACY_HTML] = await Promise.all([
+const [INDEX_HTML, STYLES_CSS, CLIENT_JS, THEME_TOGGLE_JS, ROBOTS_TXT, LLMS_TXT, SITEMAP_XML, METHOD_HTML, PRIVACY_HTML] = await Promise.all([
   readFile(new URL('./index.html', import.meta.url)),
   readFile(new URL('./styles.css', import.meta.url)),
   readFile(new URL('./client.js', import.meta.url)),
+  readFile(new URL('./theme-toggle.js', import.meta.url)),
   readFile(new URL('./robots.txt', import.meta.url)),
   readFile(new URL('./llms.txt', import.meta.url)),
   readFile(new URL('./sitemap.xml', import.meta.url)),
@@ -18,6 +19,7 @@ const [INDEX_HTML, STYLES_CSS, CLIENT_JS, ROBOTS_TXT, LLMS_TXT, SITEMAP_XML, MET
 const STATIC_FILES = new Map([
   ['/styles.css', [STYLES_CSS, 'text/css; charset=utf-8']],
   ['/client.js', [CLIENT_JS, 'text/javascript; charset=utf-8']],
+  ['/theme-toggle.js', [THEME_TOGGLE_JS, 'text/javascript; charset=utf-8']],
   ['/robots.txt', [ROBOTS_TXT, 'text/plain; charset=utf-8']],
   ['/llms.txt', [LLMS_TXT, 'text/plain; charset=utf-8']],
   ['/sitemap.xml', [SITEMAP_XML, 'application/xml; charset=utf-8']],
