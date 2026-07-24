@@ -124,7 +124,7 @@
           </div>
           <div class="signal-list">
             <article><span>01</span><div><h3>Discovery access</h3><p>HTTP status, HTTPS, indexability, canonical routing, mobile viewport, robots.txt, and sitemap.xml.</p></div><b>Access + Technical</b></article>
-            <article><span>02</span><div><h3>Answer-engine crawl policy</h3><p>Homepage access for OAI-SearchBot, PerplexityBot, and Googlebot, with the exact policy state shown.</p></div><b>AI discovery</b></article>
+            <article><span>02</span><div><h3>Answer-engine crawl policy</h3><p>Homepage access for OAI-SearchBot, Claude-SearchBot, PerplexityBot, and Googlebot, with the exact policy state shown.</p></div><b>AI discovery</b></article>
             <article><span>03</span><div><h3>Entity and content evidence</h3><p>JSON-LD, primary entity type, sameAs links, headings, internal evidence links, page depth, and social metadata.</p></div><b>Entity + Content</b></article>
           </div>
         </div>
@@ -237,6 +237,16 @@
             <p>These cards read robots.txt policy. They do not measure recommendations, rankings, or model answers.</p>
           </div>
           <div id="platform-grid" class="platform-grid"></div>
+          <div id="control-policy" class="control-policy" hidden>
+            <div class="section-heading split-heading">
+              <div>
+                <p class="section-kicker">Training and AI-use controls</p>
+                <h3>Separate from search access.</h3>
+              </div>
+              <p>GPTBot, ClaudeBot, and Google-Extended control model training or AI use. Blocking them does not block OAI-SearchBot, Claude-SearchBot, or Googlebot from search discovery, so these cards do not change the readiness score.</p>
+            </div>
+            <div id="control-grid" class="platform-grid"></div>
+          </div>
         </div>
       </section>
 

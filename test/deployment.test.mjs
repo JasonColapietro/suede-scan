@@ -36,3 +36,10 @@ test('traces every public asset into the Vercel root function', async () => {
     assert.match(server, new RegExp(`new URL\\('\\./${asset.replace('.', '\\.')}\\', import\\.meta\\.url\\)`));
   }
 });
+
+test('serves HEAD requests through the same public routes as GET', async () => {
+  const server = await readFile(new URL('../server.mjs', import.meta.url), 'utf8');
+
+  assert.match(server, /req\.method === 'GET' \|\| req\.method === 'HEAD'/);
+  assert.match(server, /req\.method === 'HEAD' \? undefined : body/);
+});

@@ -6,6 +6,7 @@ import {
   auditChecks,
   crawlerPolicy,
   isPrivateAddress,
+  modelUseControls,
   normalizeUrl,
   runTier,
   scanChecks,
@@ -126,7 +127,7 @@ test('builds weighted lane scores and prioritized recommendations', () => {
   assert.equal(summary.grade, 'A');
   assert.equal(summary.recommendations.length, 0);
   assert.equal(summary.laneScores['AI discovery'].score, 100);
-  assert.equal(summary.platforms.length, 3);
+  assert.equal(summary.platforms.length, 4);
   assert.equal(summary.pillarScores.length, 3);
 
   const blocked = healthyPage({
@@ -152,6 +153,42 @@ test('builds weighted lane scores and prioritized recommendations', () => {
   assert.equal(unknownSummary.platforms.find((platform) => platform.id === 'openai').detail, 'robots.txt could not be inspected, so crawler access is not confirmed.');
 });
 
+test('separates Reuters-style search access from model-use controls', () => {
+  const page = healthyPage({
+    artifacts: {
+      ...healthyPage().artifacts,
+      robots: {
+        ok: true,
+        status: 200,
+        url: 'https://example.com/robots.txt',
+        text: `
+User-agent: Googlebot
+User-agent: OAI-SearchBot
+User-agent: Claude-SearchBot
+User-agent: PerplexityBot
+Disallow: /search
+
+User-agent: *
+Allow: /plus/
+Disallow: /
+`,
+      },
+    },
+  });
+  const summary = summarize([...scanChecks(page), ...auditChecks(page)]);
+  const controls = modelUseControls(page);
+
+  assert.equal(summary.platforms.find((platform) => platform.id === 'openai').state, 'open');
+  assert.equal(summary.platforms.find((platform) => platform.id === 'anthropic').state, 'open');
+  assert.equal(summary.platforms.find((platform) => platform.id === 'google').state, 'open');
+  assert.deepEqual(controls.map((control) => [control.crawler, control.state]), [
+    ['GPTBot', 'blocked'],
+    ['ClaudeBot', 'blocked'],
+    ['Google-Extended', 'blocked'],
+  ]);
+  assert.equal(summary.laneScores['AI discovery'].score, 100);
+});
+
 test('runs a full audit with deterministic public fetch fixtures', async () => {
   const responses = new Map([
     ['https://example.com/', new Response(healthyHtml(), { status: 200, headers: { 'content-type': 'text/html; charset=utf-8' } })],
@@ -170,7 +207,8 @@ test('runs a full audit with deterministic public fetch fixtures', async () => {
   assert.equal(result.host, 'example.com');
   assert.equal(result.grade, 'A');
   assert.ok(result.total >= 20);
-  assert.equal(result.platforms.length, 3);
+  assert.equal(result.platforms.length, 4);
+  assert.equal(result.controls.length, 3);
   assert.match(result.methodology, /public HTML/i);
   assert.match(result.auditedAt, /^\d{4}-\d{2}-\d{2}T/);
 });
