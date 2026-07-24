@@ -119,6 +119,9 @@ function validateSharedReport(value, expectedDomain) {
   if (!Array.isArray(value.platforms) || !value.platforms.every((platform) => (
     hasStringFields(platform, ['name', 'crawler', 'state', 'detail'])
   ))) return null;
+  if (value.controls !== undefined && (!Array.isArray(value.controls) || !value.controls.every((control) => (
+    hasStringFields(control, ['name', 'crawler', 'state', 'detail'])
+  )))) return null;
   if (!isRecord(value.laneScores) || !Object.values(value.laneScores).every((lane) => (
     isRecord(lane) && Number.isFinite(lane.score) && Number.isFinite(lane.highImpactOpen)
   ))) return null;
@@ -278,6 +281,20 @@ function renderPlatforms(platforms) {
     </article>`).join('');
 }
 
+function renderControls(controls) {
+  const wrapper = byId('control-policy');
+  wrapper.hidden = controls.length === 0;
+  byId('control-grid').innerHTML = controls.map((control) => `
+    <article class="platform-card">
+      <header>
+        <div><h3>${escapeHtml(control.name)}</h3><span class="crawler-name">${escapeHtml(control.crawler)}</span></div>
+        <span class="access-state ${control.state === 'blocked' ? 'blocked' : control.state === 'unknown' ? 'unknown' : ''}">${control.state === 'blocked' ? 'Blocked' : control.state === 'unknown' ? 'Unknown' : 'Allowed'}</span>
+      </header>
+      <p>${escapeHtml(control.detail)}</p>
+      <footer><span>Source: robots.txt</span><span>Non-scoring policy</span></footer>
+    </article>`).join('');
+}
+
 function renderLanes(lanes) {
   byId('lane-rows').innerHTML = Object.entries(lanes).map(([name, lane]) => {
     const score = clampScore(lane.score);
@@ -394,6 +411,7 @@ function renderReport(data, { sharedSnapshot = false } = {}) {
   renderPillars(data.pillarScores || []);
   renderInsight(data);
   renderPlatforms(data.platforms || []);
+  renderControls(data.controls || []);
   renderLanes(data.laneScores || {});
   renderRepairs(data.recommendations || []);
   renderCompanyOffer(data.host, data.recommendations || []);

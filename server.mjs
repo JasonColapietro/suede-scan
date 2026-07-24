@@ -34,21 +34,23 @@ const server = http.createServer(async (req, res) => {
     const url = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
     if (req.method === 'POST' && url.pathname === '/api/scan') return await handleTier('scan', req, res, runTier);
     if (req.method === 'POST' && url.pathname === '/api/audit') return await handleTier('audit', req, res, runTier);
-    if (req.method === 'GET' && (url.pathname === '/audit' || url.pathname === '/audit/')) {
+    const readableMethod = req.method === 'GET' || req.method === 'HEAD';
+    const send = (body) => res.end(req.method === 'HEAD' ? undefined : body);
+    if (readableMethod && (url.pathname === '/audit' || url.pathname === '/audit/')) {
       res.writeHead(308, { location: '/', 'cache-control': 'public, max-age=0, must-revalidate' });
       return res.end();
     }
-    if (req.method === 'GET' && (url.pathname === '/' || url.pathname === '/index.html' || url.pathname.startsWith('/report/'))) {
+    if (readableMethod && (url.pathname === '/' || url.pathname === '/index.html' || url.pathname.startsWith('/report/'))) {
       res.writeHead(200, { 'content-type': 'text/html; charset=utf-8', 'cache-control': 'no-cache' });
-      return res.end(INDEX_HTML);
+      return send(INDEX_HTML);
     }
-    if (req.method === 'GET' && STATIC_FILES.has(url.pathname)) {
+    if (readableMethod && STATIC_FILES.has(url.pathname)) {
       const [asset, contentType] = STATIC_FILES.get(url.pathname);
       res.writeHead(200, { 'content-type': contentType, 'cache-control': 'no-cache' });
-      return res.end(asset);
+      return send(asset);
     }
     res.writeHead(404, { 'content-type': 'text/plain' });
-    res.end('Not found');
+    send('Not found');
   } catch (e) {
     res.writeHead(500, { 'content-type': 'application/json' });
     res.end(JSON.stringify({ error: e.message }));
