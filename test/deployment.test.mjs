@@ -35,6 +35,14 @@ test('traces every public asset into the Vercel root function', async () => {
     assert.ok(body.length > 20, `${asset} should be a non-empty production asset`);
     assert.match(server, new RegExp(`new URL\\('\\./${asset.replace('.', '\\.')}\\', import\\.meta\\.url\\)`));
   }
+
+  const ogImage = await readFile(new URL('../og-suede-audit.png', import.meta.url));
+  assert.deepEqual(ogImage.subarray(0, 8), Buffer.from('\x89PNG\r\n\x1a\n', 'latin1'));
+  assert.equal(ogImage.readUInt32BE(16), 1200);
+  assert.equal(ogImage.readUInt32BE(20), 630);
+  assert.ok(ogImage.byteLength < 250_000, 'OG image should stay compressed below 250 KB');
+  assert.match(server, /new URL\('\.\/og-suede-audit\.png', import\.meta\.url\)/);
+  assert.match(server, /\['\/og-suede-audit\.png', \[OG_IMAGE_PNG, 'image\/png'\]\]/);
 });
 
 test('serves HEAD requests through the same public routes as GET', async () => {
@@ -42,4 +50,21 @@ test('serves HEAD requests through the same public routes as GET', async () => {
 
   assert.match(server, /req\.method === 'GET' \|\| req\.method === 'HEAD'/);
   assert.match(server, /req\.method === 'HEAD' \? undefined : body/);
+});
+
+test('uses one local 1200x630 social card across every public audit document', async () => {
+  const imageUrl = 'https://audit.suedeai.ai/og-suede-audit.png';
+  const legacyLogoUrl = 'https://raw.githubusercontent.com/JasonColapietro/suede-creator-skills/cbd192309580a32da375881e0eeb4b2450a554c2/docs/assets/suede-ai-logo-transparent.png';
+
+  for (const page of ['index.html', 'method.html', 'privacy.html']) {
+    const html = await readFile(new URL(`../${page}`, import.meta.url), 'utf8');
+
+    assert.match(html, new RegExp(`<meta property="og:image" content="${imageUrl.replaceAll('.', '\\.')}">`));
+    assert.match(html, /<meta property="og:image:width" content="1200">/);
+    assert.match(html, /<meta property="og:image:height" content="630">/);
+    assert.match(html, /<meta property="og:image:type" content="image\/png">/);
+    assert.match(html, new RegExp(`<meta name="twitter:image" content="${imageUrl.replaceAll('.', '\\.')}">`));
+    assert.match(html, new RegExp(`<link rel="icon" href="${legacyLogoUrl.replaceAll('.', '\\.')}">`));
+    assert.match(html, new RegExp(`<img src="${legacyLogoUrl.replaceAll('.', '\\.')}" alt="" width="36" height="36">`));
+  }
 });
