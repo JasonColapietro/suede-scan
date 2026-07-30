@@ -94,7 +94,7 @@ function runClient({ pathname = '/', hash = '', storedReport = null } = {}) {
   const clipboard = [];
   const historyCalls = [];
   const windowListeners = new Map();
-  const location = { origin: 'https://audit.suedeai.ai', pathname, search: '', hash };
+  const location = { origin: 'https://optimize.suedeai.ai', pathname, search: '', hash };
   const history = {
     state: null,
     pushState(state, _title, url) { historyCalls.push({ kind: 'push', state, url }); },
@@ -176,7 +176,10 @@ test('shared snapshot renders the report and company offer without spending an a
   assert.match(run.elements.get('report-timestamp').textContent, /unverified/i);
   assert.match(run.elements.get('share-report-title').textContent, /unverified/i);
   assert.match(run.elements.get('share-report-copy').textContent, /user-controlled data/i);
-  assert.match(run.elements.get('company-offer-link').href, /^https:\/\/agents\.suedeai\.ai\/founding#seed=/);
+  assert.match(
+    run.elements.get('company-offer-link').href,
+    /^https:\/\/agents\.suedeai\.ai\/company\/operations\/prospect#scan=/,
+  );
   assert.deepEqual(run.historyCalls.at(-1), {
     kind: 'replace',
     state: null,
@@ -227,10 +230,21 @@ test('same-document shared links replace the rendered snapshot without spending 
   assert.equal(run.elements.get('score-value').textContent, 40);
   assert.equal(run.elements.get('shared-report-warning').hidden, false);
   assert.equal(run.elements.get('report-status-label').textContent, 'Shared snapshot');
-  const offerSeed = new URL(run.elements.get('company-offer-link').href).hash.slice('#seed='.length);
+  const offerSeed = new URL(run.elements.get('company-offer-link').href).hash.slice('#scan='.length);
+  const handoff = JSON.parse(Buffer.from(offerSeed, 'base64url').toString('utf8'));
+  assert.equal(handoff.kind, 'suede.audit.prospect');
+  assert.equal(handoff.source, 'suede-audit');
   assert.deepEqual(
-    JSON.parse(Buffer.from(offerSeed, 'base64url').toString('utf8')).findings,
-    replacement.recommendations.map((repair) => repair.title),
+    handoff.findings.map((finding) => ({
+      kind: finding.kind,
+      title: finding.title,
+      priority: finding.priority,
+    })),
+    replacement.recommendations.map((repair) => ({
+      kind: 'site-integrity',
+      title: repair.title,
+      priority: repair.severity,
+    })),
   );
   assert.deepEqual(run.storage, { gets: 0, sets: 0, removes: 0 });
   assert.equal(run.network.fetches, 0);

@@ -28,4 +28,4 @@ Allow: /
 User-agent: Google-Extended
 Allow: /
 
-Sitemap: https://audit.suedeai.ai/sitemap.xml
+Sitemap: https://optimize.suedeai.ai/sitemap.xml

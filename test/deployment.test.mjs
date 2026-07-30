@@ -19,8 +19,8 @@ test('keeps the canonical audit intent on the root URL', async () => {
   });
 
   const sitemap = await readFile(new URL('../sitemap.xml', import.meta.url), 'utf8');
-  assert.match(sitemap, /<loc>https:\/\/audit\.suedeai\.ai\/<\/loc>/);
-  assert.doesNotMatch(sitemap, /audit\.suedeai\.ai\/audit/);
+  assert.match(sitemap, /<loc>https:\/\/optimize\.suedeai\.ai\/<\/loc>/);
+  assert.doesNotMatch(sitemap, /optimize\.suedeai\.ai\/audit/);
 });
 
 test('traces every public asset into the Vercel root function', async () => {
@@ -53,7 +53,7 @@ test('serves HEAD requests through the same public routes as GET', async () => {
 });
 
 test('uses one local 1200x630 social card across every public audit document', async () => {
-  const imageUrl = 'https://audit.suedeai.ai/og-suede-audit.png';
+  const imageUrl = 'https://optimize.suedeai.ai/og-suede-audit.png';
   const legacyLogoUrl = 'https://raw.githubusercontent.com/JasonColapietro/suede-creator-skills/cbd192309580a32da375881e0eeb4b2450a554c2/docs/assets/suede-ai-logo-transparent.png';
 
   for (const page of ['index.html', 'method.html', 'privacy.html']) {

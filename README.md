@@ -2,7 +2,7 @@
 
 Public-site discovery and answer-readiness audit from Suede Labs AI.
 
-Product URL: [audit.suedeai.ai](https://audit.suedeai.ai/).
+Product URL: [optimize.suedeai.ai](https://optimize.suedeai.ai/).
 
 ## What it does
 
