@@ -33,6 +33,9 @@ const escapeHtml = (value) => String(value ?? '').replace(/[&<>'"]/g, (character
 const clampScore = (value) => Math.max(0, Math.min(100, Number(value) || 0));
 
 const COMPANY_OFFER_SEED_CAP = 6144;
+const COMPANY_OFFER_FINDING_CAP = 6;
+const COMPANY_OFFER_TOTAL_FINDING_CAP = 200;
+const COMPANY_OFFER_PREFIX = '#scan=';
 const SHARED_REPORT_PREFIX = '#report=';
 const SHARED_REPORT_VERSION = 1;
 const SHARED_REPORT_MAX_ENCODED = 49152;
@@ -49,14 +52,110 @@ function base64UrlDecode(value) {
   return new TextDecoder('utf-8', { fatal: true }).decode(bytes);
 }
 
-function companyOfferHref(domain, findings) {
-  let list = findings.slice();
-  let encoded = base64UrlEncode(JSON.stringify({ domain, findings: list }));
-  while (encoded.length > COMPANY_OFFER_SEED_CAP && list.length > 0) {
-    list = list.slice(0, -1);
-    encoded = base64UrlEncode(JSON.stringify({ domain, findings: list }));
+function cleanHandoffText(value, maxLength) {
+  if (typeof value !== 'string') return null;
+  if (/[\u0000-\u001f\u007f-\u009f\u202a-\u202e\u2066-\u2069]/u.test(value)) return null;
+  const text = value.trim();
+  return text && text.length <= maxLength ? text : null;
+}
+
+function cleanHandoffHost(value) {
+  const host = cleanHandoffText(value, 253);
+  if (!host) return null;
+  const normalized = host.toLowerCase().replace(/\.$/, '');
+  return /^(?=.{1,253}$)(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)*[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?$/i.test(normalized)
+    ? normalized
+    : null;
+}
+
+function cleanHandoffUrl(value, domain) {
+  const text = cleanHandoffText(value, 2048);
+  if (!text || !domain) return null;
+  try {
+    const url = new URL(text);
+    const host = url.hostname.toLowerCase().replace(/\.$/, '');
+    if (
+      !['https:', 'http:'].includes(url.protocol) ||
+      url.username ||
+      url.password ||
+      url.search ||
+      url.hash ||
+      host !== domain
+    ) {
+      return null;
+    }
+    return url.href;
+  } catch {
+    return null;
   }
-  return `https://agents.suedeai.ai/founding#seed=${encoded}`;
+}
+
+function cleanHandoffFinding(repair, index) {
+  if (typeof repair !== 'object' || repair === null || Array.isArray(repair)) return null;
+  const lane = cleanHandoffText(repair.lane, 80);
+  const title = cleanHandoffText(repair.title, 160);
+  const observed = cleanHandoffText(repair.observed, 300);
+  const action = cleanHandoffText(repair.action, 300);
+  const priority = ['high', 'medium', 'low'].includes(repair.severity)
+    ? repair.severity
+    : null;
+  if (!lane || !title || !observed || !action || !priority) return null;
+  const rawId = cleanHandoffText(repair.id, 48) || `finding-${index + 1}`;
+  const slug = rawId.toLowerCase().replace(/[^a-z0-9_-]+/g, '-').replace(/^-+|-+$/g, '');
+  return {
+    id: `${slug || 'finding'}-${index + 1}`.slice(0, 64),
+    kind: 'site-integrity',
+    lane,
+    title,
+    priority,
+    observed,
+    action,
+  };
+}
+
+function companyOfferPayload(data) {
+  if (typeof data !== 'object' || data === null || Array.isArray(data) || !Array.isArray(data.recommendations)) return null;
+  if (data.recommendations.length < 1 || data.recommendations.length > COMPANY_OFFER_TOTAL_FINDING_CAP) return null;
+  const domain = cleanHandoffHost(data.host);
+  const auditedUrl = cleanHandoffUrl(data.url, domain);
+  const observedAt = cleanHandoffText(data.auditedAt, 64);
+  const observedTime = observedAt ? Date.parse(observedAt) : NaN;
+  if (!domain || !auditedUrl || !Number.isFinite(observedTime) || observedTime > Date.now()) return null;
+  const validFindings = data.recommendations
+    .map((repair, index) => cleanHandoffFinding(repair, index))
+    .filter(Boolean);
+  if (validFindings.length === 0) return null;
+  const totalFindings = data.recommendations.length;
+  let findings = validFindings.slice(0, COMPANY_OFFER_FINDING_CAP);
+  let payload = {
+    kind: 'suede.audit.prospect',
+    version: 1,
+    source: 'suede-audit',
+    domain,
+    auditedUrl,
+    observedAt: new Date(observedTime).toISOString(),
+    totalFindings,
+    omittedCount: totalFindings - findings.length,
+    findings,
+  };
+  let encoded = base64UrlEncode(JSON.stringify(payload));
+  while (encoded.length > COMPANY_OFFER_SEED_CAP && findings.length > 1) {
+    findings = findings.slice(0, -1);
+    payload = {
+      ...payload,
+      omittedCount: totalFindings - findings.length,
+      findings,
+    };
+    encoded = base64UrlEncode(JSON.stringify(payload));
+  }
+  return encoded.length <= COMPANY_OFFER_SEED_CAP ? payload : null;
+}
+
+function companyOfferHref(data) {
+  const payload = companyOfferPayload(data);
+  if (!payload) return null;
+  const encoded = base64UrlEncode(JSON.stringify(payload));
+  return `https://agents.suedeai.ai/company/operations/prospect${COMPANY_OFFER_PREFIX}${encoded}`;
 }
 
 function readStoredReport() {
@@ -331,14 +430,15 @@ function renderRepairs(recommendations) {
     </article>`).join('');
 }
 
-function renderCompanyOffer(host, recommendations) {
+function renderCompanyOffer(data) {
   const offer = byId('company-offer');
   if (!offer) return;
-  if (!recommendations || recommendations.length === 0) {
+  const href = companyOfferHref(data);
+  if (!href) {
     offer.hidden = true;
     return;
   }
-  byId('company-offer-link').href = companyOfferHref(host, recommendations.map((repair) => repair.title));
+  byId('company-offer-link').href = href;
   offer.hidden = false;
 }
 
@@ -414,7 +514,7 @@ function renderReport(data, { sharedSnapshot = false } = {}) {
   renderControls(data.controls || []);
   renderLanes(data.laneScores || {});
   renderRepairs(data.recommendations || []);
-  renderCompanyOffer(data.host, data.recommendations || []);
+  renderCompanyOffer(data);
   renderFindings(data.checks || []);
   renderArtifacts(data.artifacts || {});
 

@@ -5,7 +5,7 @@ Date: 2026-07-16
 ## Comparison Contract
 
 - Reference: `https://searchfit.ai/report/suedeai.ai?vertical=saas`
-- Implementation: `https://audit.suedeai.ai/` and `/report/<domain>`
+- Implementation: `https://optimize.suedeai.ai/` and `/report/<domain>`
 - Viewports: 1280 by 900 and 390 by 844, plus full-page captures
 - State: unauthenticated, live public audit data, light theme
 - Fidelity target: close match for report hierarchy, density, score presentation, section cadence, and mobile composition; original Suede copy, assets, method, and data

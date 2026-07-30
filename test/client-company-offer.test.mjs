@@ -19,6 +19,7 @@ function offerFunctions() {
     'company-offer-link': { href: '#' },
   };
   const context = {
+    URL,
     btoa: (value) => Buffer.from(value, 'binary').toString('base64'),
     byId: (id) => elements[id] ?? null,
     encodeURIComponent,
@@ -26,54 +27,154 @@ function offerFunctions() {
   };
   vm.runInNewContext(
     `${clientSource.slice(helperStart, helperEnd)}\n${clientSource.slice(renderStart, renderEnd)}\n`
-      + 'globalThis.__offer = { COMPANY_OFFER_SEED_CAP, companyOfferHref, renderCompanyOffer };',
+      + 'globalThis.__offer = { COMPANY_OFFER_SEED_CAP, companyOfferHref, companyOfferPayload, renderCompanyOffer };',
     context,
   );
   return { ...context.__offer, elements };
 }
 
-function decodeSeed(href) {
-  const encoded = href.split('#seed=')[1];
-  const base64 = encoded.replace(/-/g, '+').replace(/_/g, '/');
+function recommendation(index = 0, overrides = {}) {
   return {
-    encoded,
-    payload: JSON.parse(Buffer.from(base64, 'base64').toString('utf8')),
+    id: `metadata-${index}`,
+    lane: 'Metadata',
+    title: `Publish a descriptive title ${index}`,
+    severity: index === 0 ? 'high' : 'medium',
+    observed: 'The public title is generic.',
+    action: 'Publish a unique title that names the service and intended audience.',
+    ...overrides,
   };
 }
 
-test('renders the offer only for findings and seeds ordered repair titles', () => {
+function reportData(recommendations, overrides = {}) {
+  return {
+    host: 'example.com',
+    url: 'https://example.com/pricing',
+    auditedAt: '2026-07-29T18:00:00.000Z',
+    recommendations,
+    ...overrides,
+  };
+}
+
+function decodeHandoff(href) {
+  const url = new URL(href);
+  const encoded = url.hash.slice('#scan='.length);
+  return {
+    encoded,
+    url,
+    payload: JSON.parse(Buffer.from(encoded, 'base64url').toString('utf8')),
+  };
+}
+
+test('renders only for valid findings and carries bounded site-integrity evidence', () => {
   const { renderCompanyOffer, elements } = offerFunctions();
   const recommendations = [
-    { title: 'Add a public entity definition', action: 'Publish an About page.' },
-    { title: 'Expose an llms.txt file', action: 'Add the discovery file.' },
+    recommendation(0),
+    recommendation(1, {
+      id: 'entity',
+      lane: 'Entity',
+      title: 'Add a public entity definition',
+      observed: 'No Organization JSON-LD was found.',
+      action: 'Publish one Organization object with the canonical name, URL, and logo.',
+    }),
   ];
 
-  renderCompanyOffer('example.com', []);
+  renderCompanyOffer(reportData([]));
   assert.equal(elements['company-offer'].hidden, true);
 
-  renderCompanyOffer('example.com', recommendations);
+  renderCompanyOffer(reportData(recommendations));
   assert.equal(elements['company-offer'].hidden, false);
-  assert.deepEqual(decodeSeed(elements['company-offer-link'].href).payload, {
+  const { payload, url } = decodeHandoff(elements['company-offer-link'].href);
+  assert.equal(url.origin, 'https://agents.suedeai.ai');
+  assert.equal(url.pathname, '/company/operations/prospect');
+  assert.deepEqual(payload, {
+    kind: 'suede.audit.prospect',
+    version: 1,
+    source: 'suede-audit',
     domain: 'example.com',
-    findings: recommendations.map((repair) => repair.title),
+    auditedUrl: 'https://example.com/pricing',
+    observedAt: '2026-07-29T18:00:00.000Z',
+    totalFindings: 2,
+    omittedCount: 0,
+    findings: [
+      {
+        id: 'metadata-0-1',
+        kind: 'site-integrity',
+        lane: 'Metadata',
+        title: 'Publish a descriptive title 0',
+        priority: 'high',
+        observed: 'The public title is generic.',
+        action: 'Publish a unique title that names the service and intended audience.',
+      },
+      {
+        id: 'entity-2',
+        kind: 'site-integrity',
+        lane: 'Entity',
+        title: 'Add a public entity definition',
+        priority: 'medium',
+        observed: 'No Organization JSON-LD was found.',
+        action: 'Publish one Organization object with the canonical name, URL, and logo.',
+      },
+    ],
   });
 });
 
-test('caps the encoded seed by dropping findings from the end', () => {
+test('caps the encoded handoff and reports every omitted finding', () => {
   const { COMPANY_OFFER_SEED_CAP, companyOfferHref } = offerFunctions();
-  const findings = Array.from(
-    { length: 200 },
-    (_, index) => `Finding ${String(index).padStart(3, '0')} ${'detail '.repeat(12)}`,
-  );
-  const { encoded, payload } = decodeSeed(companyOfferHref('example.com', findings));
+  const recommendations = Array.from({ length: 30 }, (_, index) => recommendation(index, {
+    title: `Finding ${String(index).padStart(3, '0')} ${'detail '.repeat(16)}`.trim(),
+    observed: `Observed ${'signal '.repeat(24)}`.trim(),
+    action: `Repair ${'instruction '.repeat(22)}`.trim(),
+  }));
+  const href = companyOfferHref(reportData(recommendations));
+  assert.ok(href);
+  const { encoded, payload } = decodeHandoff(href);
 
   assert.ok(encoded.length <= COMPANY_OFFER_SEED_CAP);
   assert.ok(payload.findings.length > 0);
-  assert.ok(payload.findings.length < findings.length);
-  assert.deepEqual(payload.findings, findings.slice(0, payload.findings.length));
+  assert.ok(payload.findings.length <= 6);
+  assert.equal(payload.totalFindings, recommendations.length);
+  assert.equal(payload.omittedCount, recommendations.length - payload.findings.length);
+  assert.deepEqual(
+    payload.findings.map((finding) => finding.title),
+    recommendations.slice(0, payload.findings.length).map((finding) => finding.title),
+  );
 });
 
-test('places claim-safe company copy after the repairs list without persistence', () => {
+test('rejects future, control-character, and oversized evidence', () => {
+  const { companyOfferHref } = offerFunctions();
+  assert.equal(companyOfferHref({
+    ...reportData([recommendation()]),
+    auditedAt: '2999-01-01T00:00:00.000Z',
+  }), null);
+  assert.equal(companyOfferHref(reportData([
+    recommendation(0, { title: 'Visible\u202eHidden' }),
+  ])), null);
+  assert.equal(companyOfferHref(reportData([
+    recommendation(0, { action: 'x'.repeat(301) }),
+  ])), null);
+  assert.equal(companyOfferHref(reportData(
+    [recommendation()],
+    { url: 'https://user:password@example.com/pricing?token=secret#private' },
+  )), null);
+  assert.equal(companyOfferHref(reportData(
+    [recommendation()],
+    { url: 'https://other.example/pricing' },
+  )), null);
+});
+
+test('preserves the exact clean audited scheme and path for operator reproduction', () => {
+  const { companyOfferHref } = offerFunctions();
+  const href = companyOfferHref(reportData(
+    [recommendation()],
+    { url: 'http://example.com/public/pricing/' },
+  ));
+  assert.ok(href);
+  const { payload } = decodeHandoff(href);
+
+  assert.equal(payload.auditedUrl, 'http://example.com/public/pricing/');
+});
+
+test('places proof-first operator copy after repairs without persistence or sending', () => {
   const offerStart = indexSource.indexOf('<aside id="company-offer"');
   const offerEnd = indexSource.indexOf('</aside>', offerStart);
   const offerMarkup = indexSource.slice(offerStart, offerEnd);
@@ -82,8 +183,9 @@ test('places claim-safe company copy after the repairs list without persistence'
   const renderSource = clientSource.slice(renderStart, renderEnd);
 
   assert.ok(indexSource.indexOf('id="repair-list"') < offerStart);
-  assert.match(offerMarkup, /Put a company on this/);
-  assert.match(offerMarkup, /work on these findings/);
-  assert.doesNotMatch(offerMarkup, /\bfix(?:es|ed|ing)?\b|improve your score|guarantee/i);
-  assert.doesNotMatch(renderSource, /fetch|localStorage|sessionStorage/);
+  assert.match(offerMarkup, /Build the private diagnostic/);
+  assert.match(offerMarkup, /one complete prepared repair/);
+  assert.match(offerMarkup, /No email is sent/);
+  assert.doesNotMatch(offerMarkup, /guarantee|improve your score/i);
+  assert.doesNotMatch(renderSource, /fetch|localStorage|sessionStorage|mailto/i);
 });
