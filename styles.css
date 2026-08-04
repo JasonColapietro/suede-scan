@@ -908,6 +908,13 @@ p { overflow-wrap: anywhere; }
 .repair-item::before { content: counter(repairs, decimal-leading-zero); color: var(--color-accent); font: 600 .72rem/1.5 var(--font-data); }
 .repair-item h3 { margin: 0 0 6px; font-family: var(--font-personality); font-size: 1.08rem; }
 .repair-item p { margin: 0; color: var(--color-text-secondary); font-size: .88rem; }
+.repair-item .repair-evidence { margin-top: 12px; color: var(--color-text-tertiary); font: 500 .68rem/1.6 var(--font-data); overflow-wrap: anywhere; }
+.prepared-repair { margin-top: 16px; padding: 16px; border: 1px solid var(--success-border); border-radius: var(--radius-sm); background: var(--success-soft-bg); }
+.prepared-repair strong { display: block; margin-bottom: 7px; color: var(--color-success); font: 600 .7rem/1.4 var(--font-data); text-transform: uppercase; }
+.prepared-repair p { overflow-wrap: anywhere; }
+.prepared-repair p + p { margin-top: 9px; }
+.prepared-repair ol { margin: 10px 0 0; padding-left: 20px; color: var(--color-text-secondary); font-size: .8rem; }
+.prepared-repair li + li { margin-top: 4px; }
 .repair-observed { color: var(--color-text-tertiary); font: 500 .7rem/1.55 var(--font-data); }
 .severity { justify-self: end; padding: 5px 9px; border-radius: 999px; font: 600 .62rem/1 var(--font-data); text-transform: uppercase; }
 .severity-high { background: var(--error-bg); color: var(--color-error); }

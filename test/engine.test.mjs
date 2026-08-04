@@ -4,6 +4,7 @@ import test from 'node:test';
 import {
   assertPublicUrl,
   auditChecks,
+  crawlSiteLinks,
   crawlerPolicy,
   isPrivateAddress,
   modelUseControls,
@@ -118,6 +119,205 @@ Allow: /
   assert.equal(crawlerPolicy(null, 'Googlebot').state, 'open');
 });
 
+test('evaluates crawler policy for the submitted page path', () => {
+  const page = healthyPage({
+    finalUrl: 'https://example.com/private/pricing',
+    artifacts: {
+      ...healthyPage().artifacts,
+      robots: { ...healthyPage().artifacts.robots, text: 'User-agent: OAI-SearchBot\nDisallow: /private\n' },
+    },
+  });
+  const platform = auditChecks(page).find((check) => check.id === 'crawler-openai');
+  assert.equal(platform.pass, false);
+  assert.match(platform.platform.detail, /\/private/);
+});
+
+test('crawls bounded same-origin links and returns structured broken and prepared redirect evidence', async () => {
+  const root = healthyPage({
+    html: '<a href="/ok">Working page</a><a href="/missing">Missing page</a><a href="/old">Old page</a><a href="/escape">Unsafe redirect</a><a href="/query-redirect">Query redirect</a><a href="https://outside.example/x">External</a><a href="/ignored?token=secret">Query</a>',
+  });
+  const requested = [];
+  const responses = new Map([
+    ['https://example.com/ok', new Response('<a href="/nested">Nested</a>', { status: 200, headers: { 'content-type': 'text/html' } })],
+    ['https://example.com/nested', new Response('Nested page', { status: 200, headers: { 'content-type': 'text/html' } })],
+    ['https://example.com/missing', new Response('Not found', { status: 404, headers: { 'content-type': 'text/html' } })],
+    ['https://example.com/old', new Response('', { status: 308, headers: { location: '/new' } })],
+    ['https://example.com/new', new Response('New page', { status: 200, headers: { 'content-type': 'text/html' } })],
+    ['https://example.com/escape', new Response('', { status: 302, headers: { location: 'http://127.0.0.1/private' } })],
+    ['https://example.com/query-redirect', new Response('', { status: 302, headers: { location: '/new?token=secret' } })],
+  ]);
+  const fetchImpl = async (url) => {
+    requested.push(url);
+    return (responses.get(url) || new Response('Not found', { status: 404 })).clone();
+  };
+
+  const crawl = await crawlSiteLinks(root, {
+    fetchImpl,
+    lookupImpl: publicLookup,
+    crawl: { maxPages: 3, maxLinks: 10, maxRequests: 12, maxDepth: 1, maxFindings: 10, maxTotalMs: 5_000 },
+  });
+
+  assert.equal(crawl.brokenLinks, 1);
+  assert.equal(crawl.preparedRepairs, 1);
+  assert.equal(crawl.unknownLinks, 2);
+  assert.ok(crawl.pagesVisited <= 3);
+  assert.ok(crawl.requestsMade <= 12);
+  assert.equal(requested.some((url) => url.includes('outside.example')), false);
+  assert.equal(requested.some((url) => url.includes('token=secret')), false);
+  assert.equal(requested.some((url) => url.includes('127.0.0.1')), false);
+
+  const broken = crawl.findings.find((finding) => finding.kind === 'broken-link');
+  assert.deepEqual(broken.evidence, {
+    sourceUrl: 'https://example.com/',
+    targetUrl: 'https://example.com/missing',
+    finalUrl: 'https://example.com/missing',
+    status: 404,
+    anchorText: 'Missing page',
+    redirectChain: [],
+  });
+  assert.equal(broken.preparedRepair, null);
+
+  const redirect = crawl.findings.find((finding) => finding.kind === 'redirect-link');
+  assert.equal(redirect.preparedRepair.ready, true);
+  assert.equal(redirect.preparedRepair.before, 'https://example.com/old');
+  assert.equal(redirect.preparedRepair.after, 'https://example.com/new');
+  assert.match(redirect.preparedRepair.verification.join(' '), /returns a successful response/);
+});
+
+test('requires two dead responses before calling an internal link confirmed broken', async () => {
+  const root = healthyPage({ html: '<a href="/sometimes-missing">Sometimes missing</a>' });
+  let attempts = 0;
+  const crawl = await crawlSiteLinks(root, {
+    fetchImpl: async () => {
+      attempts += 1;
+      return attempts === 1
+        ? new Response('Not found', { status: 404, headers: { 'content-type': 'text/html' } })
+        : new Response('Recovered', { status: 200, headers: { 'content-type': 'text/html' } });
+    },
+    lookupImpl: publicLookup,
+    crawl: { maxPages: 2, maxLinks: 2, maxRequests: 4, maxDepth: 1, maxFindings: 2, maxTotalMs: 5_000 },
+  });
+  assert.equal(attempts, 2);
+  assert.equal(crawl.brokenLinks, 0);
+  assert.equal(crawl.unknownLinks, 1);
+});
+
+test('counts an unconfirmed dead-link observation as one unknown link', async () => {
+  const root = healthyPage({ html: '<a href="/blocked-after-miss">Blocked after miss</a>' });
+  let attempts = 0;
+  const crawl = await crawlSiteLinks(root, {
+    fetchImpl: async () => new Response(attempts++ === 0 ? 'Not found' : 'Forbidden', {
+      status: attempts === 1 ? 404 : 403,
+      headers: { 'content-type': 'text/html' },
+    }),
+    lookupImpl: publicLookup,
+    crawl: { maxPages: 2, maxLinks: 2, maxRequests: 4, maxDepth: 1, maxFindings: 2, maxTotalMs: 5_000 },
+  });
+  assert.equal(attempts, 2);
+  assert.equal(crawl.brokenLinks, 0);
+  assert.equal(crawl.unknownLinks, 1);
+});
+
+test('does not turn an unstable 404-then-redirect sequence into a prepared repair', async () => {
+  const root = healthyPage({ html: '<a href="/unstable">Unstable</a>' });
+  let first = true;
+  const crawl = await crawlSiteLinks(root, {
+    fetchImpl: async (url) => {
+      if (url === 'https://example.com/unstable' && first) {
+        first = false;
+        return new Response('Not found', { status: 404 });
+      }
+      if (url === 'https://example.com/unstable') return new Response('', { status: 301, headers: { location: '/live' } });
+      return new Response('Live', { status: 200, headers: { 'content-type': 'text/html' } });
+    },
+    lookupImpl: publicLookup,
+    crawl: { maxPages: 2, maxLinks: 2, maxRequests: 4, maxDepth: 1, maxFindings: 2, maxTotalMs: 5_000 },
+  });
+  assert.equal(crawl.unknownLinks, 1);
+  assert.equal(crawl.preparedRepairs, 0);
+  assert.equal(crawl.findings.length, 0);
+});
+
+test('does not call a mixed permanent and temporary redirect chain a deterministic repair', async () => {
+  const root = healthyPage({ html: '<a href="/old">Old</a>' });
+  const responses = new Map([
+    ['https://example.com/old', new Response('', { status: 301, headers: { location: '/middle' } })],
+    ['https://example.com/middle', new Response('', { status: 302, headers: { location: '/current' } })],
+    ['https://example.com/current', new Response('Current', { status: 200, headers: { 'content-type': 'text/html' } })],
+  ]);
+  const crawl = await crawlSiteLinks(root, {
+    fetchImpl: async (url) => responses.get(url).clone(),
+    lookupImpl: publicLookup,
+    crawl: { maxPages: 2, maxLinks: 2, maxRequests: 4, maxDepth: 1, maxFindings: 2, maxTotalMs: 5_000 },
+  });
+  assert.equal(crawl.preparedRepairs, 0);
+  assert.equal(crawl.findings.some((finding) => finding.kind === 'redirect-link'), false);
+});
+
+test('enforces the absolute crawl deadline while a response body is still streaming', async () => {
+  const root = healthyPage({ html: '<a href="/slow">Slow</a>' });
+  const slowBody = new ReadableStream({
+    async pull(controller) {
+      await new Promise((resolve) => setTimeout(resolve, 180));
+      controller.enqueue(new TextEncoder().encode('late'));
+      controller.close();
+    },
+  });
+  const started = Date.now();
+  const crawl = await crawlSiteLinks(root, {
+    fetchImpl: async () => new Response(slowBody, { status: 200, headers: { 'content-type': 'text/html' } }),
+    lookupImpl: publicLookup,
+    crawl: { maxPages: 2, maxLinks: 2, maxRequests: 4, maxDepth: 1, maxFindings: 2, maxTotalMs: 50 },
+  });
+  assert.ok(Date.now() - started < 150);
+  assert.equal(crawl.unknownLinks, 1);
+  assert.equal(crawl.truncated, true);
+});
+
+test('enforces the response deadline while DNS resolution is pending', async () => {
+  const started = Date.now();
+  const outcome = await Promise.race([
+    runTier('audit', 'example.com', {
+      lookupImpl: async () => new Promise(() => {}),
+      responseDeadlineMs: 50,
+    }).then(() => 'resolved', (error) => error.message),
+    new Promise((resolve) => setTimeout(() => resolve('test guard elapsed'), 180)),
+  ]);
+  assert.match(outcome, /response deadline/);
+  assert.ok(Date.now() - started < 150);
+});
+
+test('does not award the integrity pass when link evidence is zero, unknown, or truncated', async () => {
+  const responses = new Map([
+    ['https://example.com/', new Response(healthyHtml().replace(/<a[\s\S]*?<\/a>/g, '<a href="/blocked">Blocked</a>'), { status: 200, headers: { 'content-type': 'text/html' } })],
+    ['https://example.com/robots.txt', new Response('User-agent: *\nAllow: /\n', { status: 200 })],
+    ['https://example.com/llms.txt', new Response('# Example', { status: 200 })],
+    ['https://example.com/sitemap.xml', new Response('<urlset></urlset>', { status: 200 })],
+    ['https://example.com/blocked', new Response('Forbidden', { status: 403, headers: { 'content-type': 'text/html' } })],
+  ]);
+  const result = await runTier('audit', 'example.com', {
+    fetchImpl: async (url) => responses.get(url).clone(),
+    lookupImpl: publicLookup,
+  });
+  const integrity = result.checks.find((check) => check.id === 'site-links');
+  assert.equal(integrity.pass, false);
+  assert.match(integrity.value, /1 unknown/);
+});
+
+test('crawl budgets stop additional requests without labeling unknown links as broken', async () => {
+  const root = healthyPage({ html: '<a href="/one">One</a><a href="/two">Two</a><a href="/three">Three</a>' });
+  let requests = 0;
+  const crawl = await crawlSiteLinks(root, {
+    fetchImpl: async () => { requests += 1; return new Response('ok', { status: 200, headers: { 'content-type': 'text/html' } }); },
+    lookupImpl: publicLookup,
+    crawl: { maxPages: 2, maxLinks: 10, maxRequests: 1, maxDepth: 1, maxFindings: 10, maxTotalMs: 5_000 },
+  });
+  assert.equal(requests, 1);
+  assert.equal(crawl.requestsMade, 1);
+  assert.equal(crawl.brokenLinks, 0);
+  assert.equal(crawl.truncated, true);
+});
+
 test('builds weighted lane scores and prioritized recommendations', () => {
   const page = healthyPage();
   const checks = [...scanChecks(page), ...auditChecks(page)];
@@ -195,6 +395,9 @@ test('runs a full audit with deterministic public fetch fixtures', async () => {
     ['https://example.com/robots.txt', new Response('User-agent: *\nAllow: /\n', { status: 200 })],
     ['https://example.com/llms.txt', new Response('# Example', { status: 200 })],
     ['https://example.com/sitemap.xml', new Response('<urlset></urlset>', { status: 200 })],
+    ['https://example.com/about', new Response('<p>About</p>', { status: 200, headers: { 'content-type': 'text/html' } })],
+    ['https://example.com/docs', new Response('<p>Docs</p>', { status: 200, headers: { 'content-type': 'text/html' } })],
+    ['https://example.com/contact', new Response('<p>Contact</p>', { status: 200, headers: { 'content-type': 'text/html' } })],
   ]);
   const fetchImpl = async (url) => {
     const response = responses.get(url);
@@ -209,6 +412,8 @@ test('runs a full audit with deterministic public fetch fixtures', async () => {
   assert.ok(result.total >= 20);
   assert.equal(result.platforms.length, 4);
   assert.equal(result.controls.length, 3);
+  assert.equal(result.crawl.linksChecked, 3);
+  assert.equal(result.crawl.brokenLinks, 0);
   assert.match(result.methodology, /public HTML/i);
   assert.match(result.auditedAt, /^\d{4}-\d{2}-\d{2}T/);
 });

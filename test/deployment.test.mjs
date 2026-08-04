@@ -52,6 +52,20 @@ test('serves HEAD requests through the same public routes as GET', async () => {
   assert.match(server, /req\.method === 'HEAD' \? undefined : body/);
 });
 
+test('ships the authenticated operator endpoint without weakening the public gate', async () => {
+  const operatorApi = await readFile(new URL('../api/operator-audit.mjs', import.meta.url), 'utf8');
+  const handler = await readFile(new URL('../lib/handler.mjs', import.meta.url), 'utf8');
+  const server = await readFile(new URL('../server.mjs', import.meta.url), 'utf8');
+  const readme = await readFile(new URL('../README.md', import.meta.url), 'utf8');
+
+  assert.match(operatorApi, /handleOperatorAudit/);
+  assert.match(handler, /SUEDE_AUDIT_OPERATOR_TOKEN/);
+  assert.match(handler, /timingSafeEqual/);
+  assert.match(server, /\/api\/operator-audit/);
+  assert.match(readme, /production Vercel project before release/);
+  assert.match(readme, /no email, CRM write, contact scrape, scheduled outreach, or autonomous send/i);
+});
+
 test('uses one local 1200x630 social card across every public audit document', async () => {
   const imageUrl = 'https://optimize.suedeai.ai/og-suede-audit.png';
   const legacyLogoUrl = 'https://raw.githubusercontent.com/JasonColapietro/suede-creator-skills/cbd192309580a32da375881e0eeb4b2450a554c2/docs/assets/suede-ai-logo-transparent.png';

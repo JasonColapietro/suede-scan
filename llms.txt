@@ -1,6 +1,6 @@
 # Suede Audit
 
-Suede Audit is a public-site audit for crawler access, entity schema, metadata, content structure, and answer-engine discovery signals.
+Suede Audit is a bounded public-site audit for same-origin link integrity, crawler access, entity schema, metadata, content structure, and answer-engine discovery signals.
 
 ## Primary URL
 
@@ -11,10 +11,12 @@ Suede Audit is a public-site audit for crawler access, entity schema, metadata, 
 
 ## Method
 
-The automated report fetches a public homepage, robots.txt, llms.txt, and sitemap.xml. It scores weighted checks and names a repair for every failed signal.
+The automated report fetches a submitted public page, robots.txt, llms.txt, sitemap.xml, and a capped set of query-free links on the same origin. It requires two dead responses before confirming a 404 or 410 destination and prepares a direct-link replacement only when every redirect hop is a same-origin 301 or 308.
 
 Search-discovery checks use OAI-SearchBot, Claude-SearchBot, PerplexityBot, and Googlebot. GPTBot, ClaudeBot, and Google-Extended are reported separately as non-scoring training or AI-use controls.
 
 Each browser receives one free audit. The result is cached in that browser so its report route can reopen without another scan.
+
+Unsigned shared snapshots are labeled unverified and cannot create a Prospect Lens handoff. A separate production-token-protected operator endpoint uses larger fixed crawl caps; it does not send email or write to a CRM.
 
 The report does not run buyer prompts inside ChatGPT, Perplexity, Gemini, or another answer engine. A high readiness score does not guarantee citations, recommendations, or rankings.

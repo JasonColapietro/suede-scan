@@ -5,6 +5,7 @@ import vm from 'node:vm';
 
 const clientSource = await readFile(new URL('../client.js', import.meta.url), 'utf8');
 const indexSource = await readFile(new URL('../index.html', import.meta.url), 'utf8');
+const FRESH_AUDIT_TIME = new Date().toISOString();
 
 function offerFunctions() {
   const helperStart = clientSource.indexOf('const COMPANY_OFFER_SEED_CAP');
@@ -49,7 +50,7 @@ function reportData(recommendations, overrides = {}) {
   return {
     host: 'example.com',
     url: 'https://example.com/pricing',
-    auditedAt: '2026-07-29T18:00:00.000Z',
+    auditedAt: FRESH_AUDIT_TIME,
     recommendations,
     ...overrides,
   };
@@ -92,7 +93,7 @@ test('renders only for valid findings and carries bounded site-integrity evidenc
     source: 'suede-audit',
     domain: 'example.com',
     auditedUrl: 'https://example.com/pricing',
-    observedAt: '2026-07-29T18:00:00.000Z',
+    observedAt: FRESH_AUDIT_TIME,
     totalFindings: 2,
     omittedCount: 0,
     findings: [
@@ -140,8 +141,12 @@ test('caps the encoded handoff and reports every omitted finding', () => {
   );
 });
 
-test('rejects future, control-character, and oversized evidence', () => {
+test('rejects stale, future, control-character, and oversized evidence', () => {
   const { companyOfferHref } = offerFunctions();
+  assert.equal(companyOfferHref({
+    ...reportData([recommendation()]),
+    auditedAt: new Date(Date.now() - (25 * 60 * 60 * 1000)).toISOString(),
+  }), null);
   assert.equal(companyOfferHref({
     ...reportData([recommendation()]),
     auditedAt: '2999-01-01T00:00:00.000Z',
@@ -160,6 +165,47 @@ test('rejects future, control-character, and oversized evidence', () => {
     [recommendation()],
     { url: 'https://other.example/pricing' },
   )), null);
+});
+
+test('carries bounded broken-link evidence and a deterministic prepared redirect repair', () => {
+  const { companyOfferHref } = offerFunctions();
+  const href = companyOfferHref(reportData([recommendation(0, {
+    id: 'redirect-link',
+    kind: 'redirect-link',
+    lane: 'Site integrity',
+    title: 'Replace a redirected internal link',
+    observed: 'The old page permanently redirects.',
+    action: 'Link directly to the permanent destination.',
+    evidence: {
+      sourceUrl: 'https://example.com/services',
+      targetUrl: 'https://example.com/old',
+      finalUrl: 'https://example.com/new',
+      status: 200,
+      anchorText: 'Pricing',
+    },
+    preparedRepair: {
+      kind: 'replace-link-target',
+      ready: true,
+      before: 'https://example.com/old',
+      after: 'https://example.com/new',
+      instruction: 'Replace the old target with the permanent destination.',
+      verification: ['Confirm the destination returns 200.', 'Confirm the source links directly to it.'],
+    },
+  })]));
+  assert.ok(href);
+  const finding = decodeHandoff(href).payload.findings[0];
+  assert.equal(finding.kind, 'site-integrity');
+  assert.equal(finding.evidence.sourceUrl, 'https://example.com/services');
+  assert.equal(finding.evidence.status, 200);
+  assert.equal(finding.preparedRepair.ready, true);
+  assert.equal(finding.preparedRepair.after, 'https://example.com/new');
+});
+
+test('never renders Prospect Lens for an untrusted shared snapshot', () => {
+  const { renderCompanyOffer, elements } = offerFunctions();
+  renderCompanyOffer(reportData([recommendation()]), { trusted: false });
+  assert.equal(elements['company-offer'].hidden, true);
+  assert.equal(elements['company-offer-link'].href, '#');
 });
 
 test('preserves the exact clean audited scheme and path for operator reproduction', () => {

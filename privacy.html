@@ -61,19 +61,23 @@
           <p>This page explains what Suede Audit does with the domain you submit at optimize.suedeai.ai.</p>
 
           <h2>What the audit fetches</h2>
-          <p>Suede Audit fetches the public homepage, robots.txt, llms.txt, and sitemap.xml of the domain you submit. It does not log in, does not access private or authenticated pages, and rejects private IP addresses, internal hostnames, and non-public destinations as a target.</p>
+          <p>Suede Audit fetches the public page you submit, root robots.txt, llms.txt, and sitemap.xml, plus a bounded set of query-free links on the same origin. The public audit caps pages, links, redirect hops, response bytes, depth, findings, and total time. It does not log in, does not follow links to another origin, does not access private or authenticated pages, and rejects private IP addresses, internal hostnames, non-public destinations, credentials, and unsupported ports. Every redirect destination is checked again before a request is sent.</p>
 
           <h2>What is logged</h2>
-          <p>Each completed audit logs the submitted domain, the resulting score, and how long the check took, to server logs used for monitoring and debugging. Failed audits log the domain and an error message. These are operational records for keeping the service running, not a public or shared database.</p>
+          <p>Each completed audit logs the resulting hostname, score, and elapsed time to server logs used for monitoring and debugging. Failed audits log the tier and error message, not the submitted URL, discovered link URLs, query strings, fragments, page content, anchor text, report body, or authorization header. These are operational records for keeping the service running, not a public or shared database. Log retention is controlled by the production hosting account.</p>
 
           <h2>Abuse prevention</h2>
-          <p>A short-lived, in-memory counter limits how many audits a single IP address can run per minute. This counter is not written to disk and resets automatically.</p>
+          <p>Short-lived, in-memory counters limit public audits, operator authorization attempts, and authorized operator audits per minute. They use a validated IP from the forwarding header supplied by Vercel, with the connection address as a fallback. A self-hosted reverse proxy must replace untrusted inbound forwarding headers. These counters are not written to disk and reset automatically.</p>
 
           <h2>Your browser</h2>
-          <p>A cookie named <code>suede_audit_used</code> records that this browser has already used its one free audit; it expires after one year. Your finished report is cached in your browser's local storage so you can reopen it without running another scan. Suede Audit does not require an account, an email address, or a signup to run the free audit.</p>
+          <p>A cookie named <code>suede_audit_used</code> records that this browser has already used its one free audit; it expires after one year. Your finished report is cached in your browser's local storage until you clear site data so you can reopen it without running another scan. Suede Audit does not require an account, an email address, or a signup to run the free audit.</p>
+
+          <h2>Shared reports and operator access</h2>
+          <p>Copy report creates an unsigned, readable snapshot in the link fragment. The fragment is not sent to the web server and is removed from the address bar after loading, but anyone who receives it can read or change its public audit data. Shared snapshots are labeled unverified and cannot open Prospect Lens. Fresh first-party reports can create a bounded Prospect Lens handoff for an authenticated Suede operator for up to 24 hours after the audit; the handoff stays in the fragment and sends no email.</p>
+          <p>The separate operator audit endpoint requires a production-only bearer token, uses larger but fixed crawl limits, and never sets the public one-audit cookie. The token is not part of the public website or report.</p>
 
           <h2>Third parties</h2>
-          <p>Suede Audit does not sell submitted domains or audit results to third parties.</p>
+          <p>Suede Audit does not sell submitted domains or audit results to third parties. It does not scrape contact details, write to a CRM, or send outreach.</p>
 
           <h2>Contact</h2>
           <p>Questions about this page, or a request about logged data: <a href="mailto:info@suedeai.org">info@suedeai.org</a>.</p>

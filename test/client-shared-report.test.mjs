@@ -11,7 +11,7 @@ function reportFixture(overrides = {}) {
     url: 'https://example.com/',
     requestedUrl: 'https://example.com/',
     host: 'example.com',
-    auditedAt: '2026-07-18T12:00:00.000Z',
+    auditedAt: new Date().toISOString(),
     elapsedMs: 120,
     methodology: 'Automated inspection of public signals.',
     passed: 0,
@@ -157,7 +157,7 @@ function runClient({ pathname = '/', hash = '', storedReport = null } = {}) {
   return { auditEntry, clipboard, elements, historyCalls, location, network, storage, windowListeners };
 }
 
-test('shared snapshot renders the report and company offer without spending an audit', () => {
+test('shared snapshot renders the report without a trusted Prospect Lens handoff or spending an audit', () => {
   const report = reportFixture();
   const encoded = encodeSnapshot(report);
   const run = runClient({ pathname: '/report/example.com', hash: `#report=${encoded}` });
@@ -166,7 +166,7 @@ test('shared snapshot renders the report and company offer without spending an a
   assert.deepEqual(run.storage, { gets: 0, sets: 0, removes: 0 });
   assert.equal(run.elements.get('report').hidden, false);
   assert.equal(run.elements.get('landing-shell').hidden, true);
-  assert.equal(run.elements.get('company-offer').hidden, false);
+  assert.equal(run.elements.get('company-offer').hidden, true);
   assert.equal(run.elements.get('shared-report-warning').hidden, false);
   assert.equal(run.elements.get('report-status-label').textContent, 'Shared snapshot');
   assert.equal(run.elements.get('report-status-detail').textContent, 'Unverified user-provided copy');
@@ -176,10 +176,7 @@ test('shared snapshot renders the report and company offer without spending an a
   assert.match(run.elements.get('report-timestamp').textContent, /unverified/i);
   assert.match(run.elements.get('share-report-title').textContent, /unverified/i);
   assert.match(run.elements.get('share-report-copy').textContent, /user-controlled data/i);
-  assert.match(
-    run.elements.get('company-offer-link').href,
-    /^https:\/\/agents\.suedeai\.ai\/company\/operations\/prospect#scan=/,
-  );
+  assert.equal(run.elements.get('company-offer-link').href, '#');
   assert.deepEqual(run.historyCalls.at(-1), {
     kind: 'replace',
     state: null,
@@ -196,6 +193,8 @@ test('locally stored reports retain verified first-party report framing', () => 
   assert.equal(run.elements.get('report-status-detail').textContent, 'Fresh automated audit');
   assert.equal(run.elements.get('score-card-label').textContent, 'Overall readiness score');
   assert.equal(run.elements.get('grade-label').textContent, 'Weighted grade');
+  assert.equal(run.elements.get('company-offer').hidden, false);
+  assert.match(run.elements.get('company-offer-link').href, /^https:\/\/agents\.suedeai\.ai\/company\/operations\/prospect#scan=/);
 });
 
 test('history navigation never upgrades a shared snapshot to verified report framing', () => {
@@ -230,22 +229,8 @@ test('same-document shared links replace the rendered snapshot without spending 
   assert.equal(run.elements.get('score-value').textContent, 40);
   assert.equal(run.elements.get('shared-report-warning').hidden, false);
   assert.equal(run.elements.get('report-status-label').textContent, 'Shared snapshot');
-  const offerSeed = new URL(run.elements.get('company-offer-link').href).hash.slice('#scan='.length);
-  const handoff = JSON.parse(Buffer.from(offerSeed, 'base64url').toString('utf8'));
-  assert.equal(handoff.kind, 'suede.audit.prospect');
-  assert.equal(handoff.source, 'suede-audit');
-  assert.deepEqual(
-    handoff.findings.map((finding) => ({
-      kind: finding.kind,
-      title: finding.title,
-      priority: finding.priority,
-    })),
-    replacement.recommendations.map((repair) => ({
-      kind: 'site-integrity',
-      title: repair.title,
-      priority: repair.severity,
-    })),
-  );
+  assert.equal(run.elements.get('company-offer').hidden, true);
+  assert.equal(run.elements.get('company-offer-link').href, '#');
   assert.deepEqual(run.storage, { gets: 0, sets: 0, removes: 0 });
   assert.equal(run.network.fetches, 0);
   assert.equal(run.location.hash, '');
@@ -284,6 +269,20 @@ test('host-mismatched and malformed snapshots fail closed without storage or net
   }
 });
 
+test('malformed optional repair evidence cannot execute or break unsigned snapshot rendering', () => {
+  const report = reportFixture({
+    recommendations: [{
+      ...reportFixture().recommendations[0],
+      evidence: { sourceUrl: '<img src=x onerror=alert(1)>', status: '<script>' },
+      preparedRepair: { ready: true, instruction: '<script>alert(1)</script>', before: '<b>', after: '<i>', verification: 'not-an-array' },
+    }],
+  });
+  const run = runClient({ pathname: '/report/example.com', hash: `#report=${encodeSnapshot(report)}` });
+  assert.equal(run.elements.get('report').hidden, false);
+  assert.doesNotMatch(run.elements.get('repair-list').innerHTML, /<script>|<img/i);
+  assert.equal(run.elements.get('company-offer').hidden, true);
+});
+
 test('legacy fragmentless report links prompt instead of consuming the free audit', () => {
   const run = runClient({ pathname: '/report/example.com' });
 
@@ -307,7 +306,7 @@ test('Copy report produces a host-bound snapshot a new visitor can open without 
   const visitor = runClient({ pathname: copied.pathname, hash: copied.hash });
   assert.equal(visitor.network.fetches, 0);
   assert.deepEqual(visitor.storage, { gets: 0, sets: 0, removes: 0 });
-  assert.equal(visitor.elements.get('company-offer').hidden, false);
+  assert.equal(visitor.elements.get('company-offer').hidden, true);
 });
 
 test('Copy report clearly refuses an oversized snapshot without truncation or fallback', async () => {

@@ -58,7 +58,11 @@
           <p class="eyebrow" style="margin-top:28px;"><span class="live-dot" aria-hidden="true"></span> Method</p>
           <h1>How Suede Audit calculates a readiness score.</h1>
 
-          <p>Every audit fetches one public page — the homepage you submit — plus three discovery files already public on that domain: robots.txt, llms.txt, and sitemap.xml. Suede Audit does not log in, does not crawl beyond those four documents, and does not run prompts inside ChatGPT, Perplexity, Gemini, or any other answer engine.</p>
+          <p>Every audit fetches the public page you submit plus three discovery files already public on that domain: robots.txt, llms.txt, and sitemap.xml. It also follows a bounded set of query-free links on the same origin to inspect dead destinations and permanent redirects. Suede Audit does not log in, does not follow cross-origin or private-network links, and does not run prompts inside ChatGPT, Perplexity, Gemini, or any other answer engine.</p>
+
+          <h2>Bounded site-integrity crawl</h2>
+          <p>The public crawl is capped at 6 pages, 30 unique links, 40 HTTP requests including redirect hops, depth 1, 12 findings, and 20 seconds. An authenticated server-to-server operator audit has an 18-second response deadline and uses separate fixed crawl caps of 20 pages, 120 links, 150 requests, depth 2, 40 findings, and 16 seconds. Timeouts, blocked destinations, and exhausted budgets remain unknown rather than being mislabeled as broken.</p>
+          <p>HTTP 404 and 410 destinations are reported as confirmed broken links only after a second GET also returns 404 or 410. The evidence includes the source page, target, anchor text, status, and redirect chain. A direct-link replacement is prepared only when every same-origin redirect hop is 301 or 308; mixed temporary chains remain observations, not deterministic repairs. A dead link does not receive an invented replacement.</p>
 
           <h2>How the score is weighted</h2>
           <p>Each check carries a severity: high, medium, or low. High-severity checks count five times toward the score, medium-severity checks count three times, and low-severity checks count once. The readiness score is the percentage of weighted checks a site passes, rounded to the nearest whole number.</p>
@@ -82,7 +86,7 @@
           <p>A high score is not proof of an AI citation. Buyer-prompt evidence requires separate, timestamped runs inside each answer engine, which this audit does not run. The score measures whether an answer engine can technically reach and parse a page &mdash; not whether it will recommend, rank, or cite it.</p>
 
           <h2>Limits and caching</h2>
-          <p>Each browser gets one free audit. The finished report is cached in that browser's local storage, so its report link can reopen without using another scan. Suede Audit accepts public HTTP and HTTPS URLs only; it will not inspect private, internal, or non-routable addresses.</p>
+          <p>Each browser gets one free public audit. The finished report is cached in that browser's local storage, so its report link can reopen without using another scan. Suede Audit accepts public HTTP and HTTPS URLs only; it will not inspect private, internal, or non-routable addresses. Unsigned shared snapshots remain unverified and cannot create a Prospect Lens handoff.</p>
 
           <p class="doc-meta">Read the full audit source on <a href="https://github.com/JasonColapietro/suede-scan" target="_blank" rel="noreferrer">GitHub</a>. For a deeper check that runs real buyer prompts inside answer engines, see <a href="https://scan.suedeai.ai/#method">Suede Scan</a>.</p>
         </div>

@@ -35,6 +35,7 @@ const clampScore = (value) => Math.max(0, Math.min(100, Number(value) || 0));
 const COMPANY_OFFER_SEED_CAP = 6144;
 const COMPANY_OFFER_FINDING_CAP = 6;
 const COMPANY_OFFER_TOTAL_FINDING_CAP = 200;
+const COMPANY_OFFER_MAX_AGE_MS = 24 * 60 * 60 * 1000;
 const COMPANY_OFFER_PREFIX = '#scan=';
 const SHARED_REPORT_PREFIX = '#report=';
 const SHARED_REPORT_VERSION = 1;
@@ -102,7 +103,7 @@ function cleanHandoffFinding(repair, index) {
   if (!lane || !title || !observed || !action || !priority) return null;
   const rawId = cleanHandoffText(repair.id, 48) || `finding-${index + 1}`;
   const slug = rawId.toLowerCase().replace(/[^a-z0-9_-]+/g, '-').replace(/^-+|-+$/g, '');
-  return {
+  const finding = {
     id: `${slug || 'finding'}-${index + 1}`.slice(0, 64),
     kind: 'site-integrity',
     lane,
@@ -111,6 +112,51 @@ function cleanHandoffFinding(repair, index) {
     observed,
     action,
   };
+  const evidence = repair.evidence;
+  if (evidence && typeof evidence === 'object' && !Array.isArray(evidence)) {
+    const sourceUrl = cleanHandoffUrl(evidence.sourceUrl, domainFromUrl(evidence.sourceUrl));
+    const targetUrl = cleanHandoffUrl(evidence.targetUrl, domainFromUrl(evidence.targetUrl));
+    const finalUrl = cleanHandoffUrl(evidence.finalUrl, domainFromUrl(evidence.finalUrl));
+    const status = Number(evidence.status);
+    const evidenceDomain = sourceUrl ? new URL(sourceUrl).hostname.toLowerCase() : null;
+    if (sourceUrl && targetUrl && finalUrl && evidenceDomain === new URL(targetUrl).hostname.toLowerCase() && evidenceDomain === new URL(finalUrl).hostname.toLowerCase() && Number.isInteger(status) && status >= 0 && status <= 599) {
+      finding.evidence = {
+        sourceUrl,
+        targetUrl,
+        finalUrl,
+        status,
+        anchorText: cleanHandoffText(evidence.anchorText, 160) || 'Unlabelled link',
+        redirectChain: Array.isArray(evidence.redirectChain)
+          ? evidence.redirectChain.map((item) => {
+            if (!item || typeof item !== 'object' || Array.isArray(item)) return null;
+            const status = Number(item.status);
+            const from = cleanHandoffUrl(item.from, evidenceDomain);
+            const to = cleanHandoffUrl(item.to, evidenceDomain);
+            return Number.isInteger(status) && status >= 100 && status <= 599 && from && to
+              ? { status, from, to }
+              : null;
+          }).filter(Boolean).slice(0, 5)
+          : [],
+      };
+    }
+  }
+  const prepared = repair.preparedRepair;
+  if (prepared?.kind === 'replace-link-target' && prepared.ready === true && finding.evidence) {
+    const before = cleanHandoffUrl(prepared.before, domainFromUrl(finding.evidence.sourceUrl));
+    const after = cleanHandoffUrl(prepared.after, domainFromUrl(finding.evidence.sourceUrl));
+    const instruction = cleanHandoffText(prepared.instruction, 300);
+    const verification = Array.isArray(prepared.verification)
+      ? prepared.verification.map((step) => cleanHandoffText(step, 240)).filter(Boolean).slice(0, 3)
+      : [];
+    if (before && after && before !== after && instruction && verification.length > 0) {
+      finding.preparedRepair = { kind: 'replace-link-target', ready: true, before, after, instruction, verification };
+    }
+  }
+  return finding;
+}
+
+function domainFromUrl(value) {
+  try { return new URL(value).hostname.toLowerCase(); } catch { return ''; }
 }
 
 function companyOfferPayload(data) {
@@ -120,7 +166,8 @@ function companyOfferPayload(data) {
   const auditedUrl = cleanHandoffUrl(data.url, domain);
   const observedAt = cleanHandoffText(data.auditedAt, 64);
   const observedTime = observedAt ? Date.parse(observedAt) : NaN;
-  if (!domain || !auditedUrl || !Number.isFinite(observedTime) || observedTime > Date.now()) return null;
+  const age = Date.now() - observedTime;
+  if (!domain || !auditedUrl || !Number.isFinite(observedTime) || age < 0 || age > COMPANY_OFFER_MAX_AGE_MS) return null;
   const validFindings = data.recommendations
     .map((repair, index) => cleanHandoffFinding(repair, index))
     .filter(Boolean);
@@ -376,7 +423,7 @@ function renderPlatforms(platforms) {
         <span class="access-state ${platform.state === 'blocked' ? 'blocked' : platform.state === 'unknown' ? 'unknown' : ''}">${platform.state === 'blocked' ? 'Blocked' : platform.state === 'unknown' ? 'Unknown' : 'Open'}</span>
       </header>
       <p>${escapeHtml(platform.detail)}</p>
-      <footer><span>Source: robots.txt</span><span>Homepage policy</span></footer>
+      <footer><span>Source: robots.txt</span><span>Submitted-page policy</span></footer>
     </article>`).join('');
 }
 
@@ -422,17 +469,38 @@ function renderRepairs(recommendations) {
   }
 
   byId('repair-list').classList.add('repair-list');
-  byId('repair-list').innerHTML = recommendations.map((repair) => `
-    <article class="repair-item">
-      <div><h3>${escapeHtml(repair.title)}</h3><p>${escapeHtml(repair.action)}</p></div>
-      <div class="repair-observed">Observed: ${escapeHtml(repair.observed)}<br>Lane: ${escapeHtml(repair.lane)}</div>
-      <span class="severity severity-${escapeHtml(repair.severity)}">${escapeHtml(repair.severity)}</span>
-    </article>`).join('');
+  byId('repair-list').innerHTML = recommendations.map((repair) => {
+    const evidence = repair.evidence && typeof repair.evidence === 'object'
+      ? `<p class="repair-evidence">Source: ${escapeHtml(repair.evidence.sourceUrl)}<br>Target: ${escapeHtml(repair.evidence.targetUrl)}<br>Status: HTTP ${escapeHtml(repair.evidence.status)}</p>`
+      : '';
+    const preparedRepair = repair.preparedRepair;
+    const verification = Array.isArray(preparedRepair?.verification)
+      ? preparedRepair.verification.filter((step) => typeof step === 'string').slice(0, 3)
+      : [];
+    const prepared = preparedRepair?.ready === true
+      && typeof preparedRepair.instruction === 'string'
+      && typeof preparedRepair.before === 'string'
+      && typeof preparedRepair.after === 'string'
+      && verification.length > 0
+      ? `<div class="prepared-repair"><strong>Prepared repair</strong><p>${escapeHtml(preparedRepair.instruction)}</p><p><b>Before:</b> ${escapeHtml(preparedRepair.before)}<br><b>After:</b> ${escapeHtml(preparedRepair.after)}</p><ol>${verification.map((step) => `<li>${escapeHtml(step)}</li>`).join('')}</ol></div>`
+      : '';
+    return `
+      <article class="repair-item">
+        <div><h3>${escapeHtml(repair.title)}</h3><p>${escapeHtml(repair.action)}</p>${evidence}${prepared}</div>
+        <div class="repair-observed">Observed: ${escapeHtml(repair.observed)}<br>Lane: ${escapeHtml(repair.lane)}</div>
+        <span class="severity severity-${escapeHtml(repair.severity)}">${escapeHtml(repair.severity)}</span>
+      </article>`;
+  }).join('');
 }
 
-function renderCompanyOffer(data) {
+function renderCompanyOffer(data, { trusted = true } = {}) {
   const offer = byId('company-offer');
   if (!offer) return;
+  if (!trusted) {
+    offer.hidden = true;
+    byId('company-offer-link').href = '#';
+    return;
+  }
   const href = companyOfferHref(data);
   if (!href) {
     offer.hidden = true;
@@ -514,7 +582,7 @@ function renderReport(data, { sharedSnapshot = false } = {}) {
   renderControls(data.controls || []);
   renderLanes(data.laneScores || {});
   renderRepairs(data.recommendations || []);
-  renderCompanyOffer(data);
+  renderCompanyOffer(data, { trusted: !sharedSnapshot });
   renderFindings(data.checks || []);
   renderArtifacts(data.artifacts || {});
 
