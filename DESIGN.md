@@ -156,3 +156,39 @@ The target rejects the reference's unsupported implication that a crawler-policy
 ## Fidelity Level
 
 Close visual match for hierarchy, density, score presentation, section cadence, and mobile composition. Suede-specific copy, assets, data, and product behavior remain original.
+
+---
+
+# Landing Reference: Marketing-Agent Site Pattern
+
+Second reference, reviewed 2026-08-12: https://magistermarketing.com/
+
+That site sells a subscription marketing agent. Suede Audit is a free,
+no-signup, single-shot diagnostic. Only the structural patterns that survive
+that difference were taken. No copy, asset, or visual token came across, and
+the page's own type scale, palette, and section rhythm are unchanged.
+
+## Adoption Log
+
+| Pattern | Status | Reason |
+| --- | --- | --- |
+| Three-step "how it works" strip | ADOPTED | The landing explained method in prose but had no scannable path from URL to repair |
+| Populated example of the deliverable | ADAPTED | The reference embeds product screenshots. Suede shows a labelled sample report instead, marked as illustration and built from the real report's own layout |
+| Old-way / new-way comparison | ADAPTED | Reframed from competitor comparison to method comparison: a generic checklist assumes a state, this audit reports the measured one |
+| Founder credibility block | ADOPTED | The audit's argument is that the method is inspectable. Naming the author and linking the source supports that claim |
+| Repeated closing call to action | ADOPTED | The audit form previously appeared only in the hero |
+| Trust microcopy beside the call to action | ADOPTED | "No signup, no credit card, no email required" was already true and already policy; it was simply not stated at the point of decision |
+| Pricing tier cards | REJECTED | The audit is free with no signup. Tiers would contradict the page's own promise. The paid ladder stays on scan.suedeai.ai |
+| Integrations logo grid | REJECTED | The audit has no integrations |
+| Multi-tab product interior | REJECTED | There is no product interior to show |
+| Terminal / API signup snippet | REJECTED | Verified against production: `/api/audit` requires `sec-fetch-site: same-origin` and returns 403 otherwise. A copy-paste command would not work |
+| Persona segmentation | REJECTED | One tool, one job. Segmenting implies variants that do not exist |
+
+## Constraints Observed
+
+- No inline script was added. `script-src` in `vercel.json` pins two inline
+  hashes, so any new inline block would need a CSP change to run.
+- Every added rule resolves through existing tokens, so the dark theme, the
+  reduced-motion block, and the print sheet continue to apply without edits.
+- All added sections live inside `#landing-shell`, so a rendered report hides
+  them. Sample figures can never appear beside a real audit result.
