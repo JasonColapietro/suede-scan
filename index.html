@@ -56,6 +56,7 @@
       </a>
       <nav class="primary-nav" aria-label="Primary navigation">
         <a href="#checks">What it checks</a>
+        <a href="#example">Example report</a>
         <a href="#method">Method</a>
         <a href="#faq">FAQ</a>
         <a href="https://github.com/JasonColapietro/suede-scan" target="_blank" rel="noreferrer">Source</a>
@@ -116,6 +117,32 @@
         </div>
       </section>
 
+      <section id="how" class="steps-band" aria-labelledby="how-title">
+        <div class="container">
+          <div class="section-heading">
+            <p class="section-kicker">How it works</p>
+            <h2 id="how-title">Three steps. No signup.</h2>
+          </div>
+          <ol class="steps-grid">
+            <li class="step-card">
+              <span class="step-index">01</span>
+              <h3>Enter a public URL</h3>
+              <p>Give the audit any public homepage. Nothing is crawled behind a login, and no account is created.</p>
+            </li>
+            <li class="step-card">
+              <span class="step-index">02</span>
+              <h3>Suede inspects the evidence</h3>
+              <p>It fetches the homepage and root discovery files, then reads crawler policy, entity schema, and content structure.</p>
+            </li>
+            <li class="step-card">
+              <span class="step-index">03</span>
+              <h3>Leave with repairs</h3>
+              <p>Every failed check shows the value we observed and the specific repair that clears it.</p>
+            </li>
+          </ol>
+        </div>
+      </section>
+
       <section id="checks" class="signal-band" aria-labelledby="checks-title">
         <div class="container">
           <div class="section-heading split-heading">
@@ -129,6 +156,92 @@
             <article><span>01</span><div><h3>Discovery access</h3><p>HTTP status, HTTPS, indexability, canonical routing, mobile viewport, robots.txt, and sitemap.xml.</p></div><b>Access + Technical</b></article>
             <article><span>02</span><div><h3>Answer-engine crawl policy</h3><p>Homepage access for OAI-SearchBot, Claude-SearchBot, PerplexityBot, and Googlebot, with the exact policy state shown.</p></div><b>AI discovery</b></article>
             <article><span>03</span><div><h3>Entity and content evidence</h3><p>JSON-LD, primary entity type, sameAs links, headings, internal evidence links, page depth, and social metadata.</p></div><b>Entity + Content</b></article>
+          </div>
+        </div>
+      </section>
+
+      <section id="shift" class="shift-band" aria-labelledby="shift-title">
+        <div class="container">
+          <div class="section-heading split-heading">
+            <div>
+              <p class="section-kicker">Why this differs</p>
+              <h2 id="shift-title">A checklist guesses. An audit observes.</h2>
+            </div>
+            <p>Generic advice assumes a state. Suede reports the state it measured, then names the repair.</p>
+          </div>
+          <div class="shift-table-wrap">
+            <table class="shift-table">
+              <caption class="visually-hidden">Generic SEO checklists compared with the Suede Audit</caption>
+              <thead>
+                <tr><th scope="col">Generic SEO checklist</th><th scope="col">Suede Audit</th></tr>
+              </thead>
+              <tbody>
+                <tr><td>Tells you to add schema.</td><td>Shows the JSON-LD it parsed and the primary entity type it found.</td></tr>
+                <tr><td>Assumes answer engines can reach you.</td><td>Reports the robots.txt policy state for each named answer-engine crawler.</td></tr>
+                <tr><td>Scores every item equally.</td><td>Weights blockers above polish, so a blocked crawler outranks a missing preview image.</td></tr>
+                <tr><td>Ends at a list of problems.</td><td>Ends at one repair per failed signal, with the observed value attached.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <section id="example" class="sample-band" aria-labelledby="example-title">
+        <div class="container">
+          <div class="section-heading split-heading">
+            <div>
+              <p class="section-kicker">Example report</p>
+              <h2 id="example-title">What you get back.</h2>
+            </div>
+            <p>A shortened example of the report layout. Run the audit to see your own measured values.</p>
+          </div>
+
+          <div class="sample-frame">
+            <p class="sample-flag"><b>Sample data</b><span>Illustration only. Not a live audit, and not a real domain.</span></p>
+
+            <div class="sample-head">
+              <div>
+                <p class="sample-domain">example-saas.com</p>
+                <p class="sample-sub">Public-site discovery and answer-readiness report</p>
+              </div>
+              <div class="sample-score">
+                <strong>68</strong><span>/ 100</span>
+                <em>Grade C</em>
+              </div>
+            </div>
+
+            <div class="sample-pillars">
+              <div><span>Discovery access</span><b>82</b></div>
+              <div><span>Crawl policy</span><b>41</b></div>
+              <div><span>Entity evidence</span><b>74</b></div>
+            </div>
+
+            <h3 class="sample-subhead">Crawler access</h3>
+            <ul class="sample-crawlers">
+              <li class="is-pass"><span class="sample-mark" aria-hidden="true">&#10003;</span>Googlebot<em>Allowed</em></li>
+              <li class="is-pass"><span class="sample-mark" aria-hidden="true">&#10003;</span>OAI-SearchBot<em>Allowed</em></li>
+              <li class="is-fail"><span class="sample-mark" aria-hidden="true">&#215;</span>Claude-SearchBot<em>Blocked in robots.txt</em></li>
+              <li class="is-fail"><span class="sample-mark" aria-hidden="true">&#215;</span>PerplexityBot<em>Blocked in robots.txt</em></li>
+            </ul>
+
+            <h3 class="sample-subhead">Prioritized repairs</h3>
+            <ol class="sample-repairs">
+              <li>
+                <b>Claude-SearchBot and PerplexityBot are disallowed.</b>
+                <span>Observed: <code>Disallow: /</code> under both user-agents.</span>
+                <em>Repair: remove those two disallow rules from robots.txt.</em>
+              </li>
+              <li>
+                <b>No Organization JSON-LD on the homepage.</b>
+                <span>Observed: no <code>@type: Organization</code> node.</span>
+                <em>Repair: add Organization schema with name, url, and sameAs links.</em>
+              </li>
+              <li>
+                <b>sitemap.xml is not referenced in robots.txt.</b>
+                <span>Observed: sitemap reachable, no <code>Sitemap:</code> line.</span>
+                <em>Repair: add the absolute sitemap URL to robots.txt.</em>
+              </li>
+            </ol>
           </div>
         </div>
       </section>
@@ -172,6 +285,35 @@
           </div>
         </div>
       </section>
+      <section id="founder" class="founder-band" aria-labelledby="founder-title">
+        <div class="container founder-grid">
+          <div>
+            <p class="section-kicker">Who built this</p>
+            <h2 id="founder-title">The method is public because it should be checkable.</h2>
+            <p>Suede Audit is built by Jason Colapietro, founder of Suede Labs AI. The scoring code is open source, so any result on this page can be traced to the check that produced it.</p>
+            <p>If a score looks wrong, read the source and tell us. That is a better contract than a number you cannot inspect.</p>
+            <div class="founder-links">
+              <a class="text-link" href="https://github.com/JasonColapietro/suede-scan" target="_blank" rel="noreferrer">Read the audit source <span aria-hidden="true">&#8599;</span></a>
+              <a class="text-link" href="https://suedeai.ai/founder">About the founder <span aria-hidden="true">&#8594;</span></a>
+            </div>
+          </div>
+          <ul class="founder-facts">
+            <li><b>Open source</b><span>Every weighted check in this audit is published in the public repository.</span></li>
+            <li><b>21 merged pull requests</b><span>Across 19 open-source projects, including Backstage and Jest.</span></li>
+            <li><b>Suede Labs AI</b><span>Founded 2024. Admitted to Stripe Startups in 2026.</span></li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="closing-band" aria-labelledby="closing-title">
+        <div class="container closing-inner">
+          <p class="section-kicker">Run it</p>
+          <h2 id="closing-title">See what answer engines read on your site.</h2>
+          <p>One free audit per browser. Public websites only. No signup, no credit card, no email required.</p>
+          <a class="button button-primary" href="#audit-url">Run your free audit</a>
+        </div>
+      </section>
+
     </div>
 
     <section id="report" class="report" aria-labelledby="report-title" hidden>
