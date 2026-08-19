@@ -427,6 +427,32 @@ p { overflow-wrap: anywhere; }
 .form-note { color: var(--color-text-tertiary); }
 .form-error { color: var(--color-error); font-weight: 500; }
 
+.form-row--stack { grid-template-columns: 1fr; margin-bottom: 14px; }
+.audit-form .form-row--stack + label { margin-top: 0; }
+
+.code-panel {
+  max-width: 690px;
+  margin-top: 18px;
+  padding: 16px 18px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--panel-translucent);
+}
+
+.code-panel .code-title { margin: 0 0 12px; font-size: .9rem; color: var(--color-text-secondary); }
+.code-panel .code-title strong { color: var(--color-text-primary); }
+.code-panel input { font-variant-numeric: tabular-nums; letter-spacing: .18em; }
+
+.link-button {
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--color-accent);
+  font: inherit;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
 .loading-panel {
   max-width: 690px;
   margin-top: 18px;

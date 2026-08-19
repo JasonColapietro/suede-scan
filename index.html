@@ -82,13 +82,27 @@
               <label for="audit-url">Website to inspect</label>
               <label class="audit-honeypot" for="company-fax" aria-hidden="true">Company fax number</label>
               <input class="audit-honeypot" id="company-fax" name="company_fax" type="text" tabindex="-1" autocomplete="off" aria-hidden="true">
-              <div class="form-row">
+              <div class="form-row form-row--stack">
                 <input id="audit-url" name="url" type="text" inputmode="url" autocomplete="url" spellcheck="false" placeholder="suedeai.ai" required aria-describedby="form-note form-error">
+              </div>
+              <label for="audit-email">Work email — your report unlocks with a code we send here</label>
+              <div class="form-row">
+                <input id="audit-email" name="email" type="email" inputmode="email" autocomplete="email" spellcheck="false" placeholder="you@company.com" required aria-describedby="form-note form-error">
                 <button id="submit-button" class="button button-primary" type="submit">Run the audit</button>
               </div>
               <p id="form-error" class="form-error" role="alert" hidden></p>
-              <p id="form-note" class="form-note">One free audit per browser. Public websites only. No signup.</p>
+              <p id="form-note" class="form-note">One free audit per browser. Public websites only. No account — a working email unlocks the report.</p>
             </form>
+
+            <div id="code-panel" class="code-panel" aria-live="polite" hidden>
+              <p class="code-title"><strong>Check your inbox.</strong> <span id="code-detail">We emailed a 6-digit code.</span></p>
+              <div class="form-row">
+                <input id="audit-code" name="code" type="text" inputmode="numeric" autocomplete="one-time-code" maxlength="6" spellcheck="false" placeholder="000000" aria-label="6-digit verification code" aria-describedby="code-error">
+                <button id="code-button" class="button button-primary" type="button">Unlock the report</button>
+              </div>
+              <p id="code-error" class="form-error" role="alert" hidden></p>
+              <p class="form-note">The code expires in 15 minutes. Nothing arriving? Check spam, or <button type="button" class="link-button" id="code-restart">start over</button> with a different address.</p>
+            </div>
 
             <div id="loading-panel" class="loading-panel" aria-live="polite" hidden>
               <div class="loading-copy">
@@ -121,7 +135,7 @@
         <div class="container">
           <div class="section-heading">
             <p class="section-kicker">How it works</p>
-            <h2 id="how-title">Three steps. No signup.</h2>
+            <h2 id="how-title">Three steps. No account.</h2>
           </div>
           <ol class="steps-grid">
             <li class="step-card">
@@ -276,7 +290,11 @@
             </details>
             <details>
               <summary>How many free audits can I run?</summary>
-              <p>One free audit per browser, on a public website, with no signup required.</p>
+              <p>One free audit per browser, on a public website. No account is created — you confirm a working email with a 6-digit code and the report unlocks on screen.</p>
+            </details>
+            <details>
+              <summary>Why do you ask for my email?</summary>
+              <p>The report unlocks with a one-time code sent to your address, which proves the email is real. We use it to send that code and to know who ran the audit. It is not stored in a database, added to a mailing list, or shared.</p>
             </details>
             <details>
               <summary>What happens after I get my results?</summary>
@@ -309,7 +327,7 @@
         <div class="container closing-inner">
           <p class="section-kicker">Run it</p>
           <h2 id="closing-title">See what answer engines read on your site.</h2>
-          <p>One free audit per browser. Public websites only. No signup, no credit card, no email required.</p>
+          <p>One free audit per browser. Public websites only. No signup, no credit card — a verified email unlocks your report.</p>
           <a class="button button-primary" href="#audit-url">Run your free audit</a>
         </div>
       </section>

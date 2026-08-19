@@ -17,10 +17,20 @@ const loadingPanel = byId('loading-panel');
 const loadingDetail = byId('loading-detail');
 const navLinks = [...document.querySelectorAll('.primary-nav a')];
 const auditEntry = document.querySelector('[data-audit-entry]');
+const emailInput = byId('audit-email');
+const codePanel = byId('code-panel');
+const codeInput = byId('audit-code');
+const codeButton = byId('code-button');
+const codeError = byId('code-error');
+const codeDetail = byId('code-detail');
+const codeRestart = byId('code-restart');
+
+const EMAIL_SHAPE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 
 let currentReport = null;
 let currentReportIsSharedSnapshot = false;
 let loadingTimer = null;
+let pendingChallenge = null;
 
 const escapeHtml = (value) => String(value ?? '').replace(/[&<>'"]/g, (character) => ({
   '&': '&amp;',
@@ -267,6 +277,7 @@ function showNonConsumingReportPrompt(domain, invalidSnapshot = false) {
   landingShell.hidden = false;
   setReportNavigation(false);
   clearError();
+  hideCodePanel();
   const host = inputHost(domain);
   urlInput.value = host || '';
   formError.textContent = invalidSnapshot
@@ -524,9 +535,37 @@ function renderReport(data, { sharedSnapshot = false } = {}) {
   window.scrollTo({ top: 0, behavior: 'auto' });
 }
 
+function showCodePanel(email) {
+  codeDetail.textContent = `We emailed a 6-digit code to ${email}. Enter it to unlock your report.`;
+  codeInput.value = '';
+  codeError.hidden = true;
+  codeError.textContent = '';
+  codePanel.hidden = false;
+  codeInput.focus();
+}
+
+function hideCodePanel() {
+  pendingChallenge = null;
+  codePanel.hidden = true;
+  codeError.hidden = true;
+  codeError.textContent = '';
+  codeInput.value = '';
+}
+
+function finishReport(payload, updateHistory) {
+  hideCodePanel();
+  renderReport(payload);
+  storeReport(payload);
+  urlInput.value = payload.host;
+  const path = reportPath(payload.host);
+  if (updateHistory) history.pushState({ host: payload.host }, '', path);
+  else if (window.location.pathname !== path) history.replaceState({ host: payload.host }, '', path);
+}
+
 async function runAudit(rawUrl, { updateHistory = true } = {}) {
   const value = String(rawUrl || '').trim();
   clearError();
+  hideCodePanel();
   if (!value) {
     showError('Enter a public website URL.');
     urlInput.focus();
@@ -546,12 +585,19 @@ async function runAudit(rawUrl, { updateHistory = true } = {}) {
     return;
   }
 
+  const email = String(emailInput.value || '').trim();
+  if (!EMAIL_SHAPE.test(email)) {
+    showError('Enter the work email where we should send your verification code.');
+    emailInput.focus();
+    return;
+  }
+
   setLoading(true);
   try {
     const response = await fetch('/api/audit', {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ url: value, companyFax: honeypot.value }),
+      body: JSON.stringify({ url: value, email, companyFax: honeypot.value }),
     });
     const payload = await response.json().catch(() => ({}));
     if (!response.ok) {
@@ -561,12 +607,13 @@ async function runAudit(rawUrl, { updateHistory = true } = {}) {
       throw new Error(payload.error || fallback);
     }
 
-    renderReport(payload);
-    storeReport(payload);
-    urlInput.value = payload.host;
-    const path = reportPath(payload.host);
-    if (updateHistory) history.pushState({ host: payload.host }, '', path);
-    else if (window.location.pathname !== path) history.replaceState({ host: payload.host }, '', path);
+    if (payload.pending && typeof payload.token === 'string') {
+      pendingChallenge = { token: payload.token, email, url: value };
+      showCodePanel(email);
+      return;
+    }
+
+    finishReport(payload, updateHistory);
   } catch (error) {
     report.hidden = true;
     landingShell.hidden = false;
@@ -578,6 +625,49 @@ async function runAudit(rawUrl, { updateHistory = true } = {}) {
   }
 }
 
+async function submitCode() {
+  if (!pendingChallenge) return;
+  const code = String(codeInput.value || '').trim();
+  codeError.hidden = true;
+  codeError.textContent = '';
+  if (!/^\d{6}$/.test(code)) {
+    codeError.textContent = 'Enter the 6-digit code from the email.';
+    codeError.hidden = false;
+    codeInput.focus();
+    return;
+  }
+
+  codeButton.disabled = true;
+  codeButton.textContent = 'Checking';
+  try {
+    const response = await fetch('/api/audit', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        url: pendingChallenge.url,
+        email: pendingChallenge.email,
+        code,
+        token: pendingChallenge.token,
+        companyFax: honeypot.value,
+      }),
+    });
+    const payload = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      codeError.textContent = payload.error || 'That did not work. Check the code and try again.';
+      codeError.hidden = false;
+      codeInput.focus();
+      return;
+    }
+    finishReport(payload, true);
+  } catch {
+    codeError.textContent = 'We could not reach the audit service. Try again.';
+    codeError.hidden = false;
+  } finally {
+    codeButton.disabled = false;
+    codeButton.textContent = 'Unlock the report';
+  }
+}
+
 function resetAudit({ updateHistory = true, focus = true } = {}) {
   currentReport = null;
   currentReportIsSharedSnapshot = false;
@@ -585,6 +675,7 @@ function resetAudit({ updateHistory = true, focus = true } = {}) {
   landingShell.hidden = false;
   setReportNavigation(false);
   clearError();
+  hideCodePanel();
   document.title = 'Suede Audit | AI Discovery and SEO Readiness';
   if (updateHistory) history.pushState({}, '', '/');
   window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
@@ -633,6 +724,19 @@ function renderSharedReportFromLocation() {
 form.addEventListener('submit', (event) => {
   event.preventDefault();
   runAudit(urlInput.value);
+});
+
+codeButton.addEventListener('click', submitCode);
+codeInput.addEventListener('keydown', (event) => {
+  if (event.key === 'Enter') {
+    event.preventDefault();
+    submitCode();
+  }
+});
+codeRestart.addEventListener('click', () => {
+  hideCodePanel();
+  emailInput.value = '';
+  emailInput.focus();
 });
 
 auditEntry.addEventListener('click', () => {
