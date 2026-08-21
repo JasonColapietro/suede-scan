@@ -6,7 +6,7 @@ Suede Audit is a public-site audit for crawler access, entity schema, metadata, 
 
 - Product: https://optimize.suedeai.ai/
 - Source: https://github.com/JasonColapietro/suede-scan
-- Implementation service: https://scan.suedeai.ai/
+- Implementation service: https://seo.suedeai.ai/
 - Suede Labs AI: https://suedeai.ai/
 
 ## Method

@@ -287,7 +287,7 @@ function showNonConsumingReportPrompt(domain, invalidSnapshot = false) {
 }
 
 function showUsedAudit(saved) {
-  showError(`This browser's free audit has already been used for ${saved.host}. Open the saved audit above or use Suede Scan for another site.`);
+  showError(`This browser's free audit has already been used for ${saved.host}. Open the saved audit above or use Suede SEO for another site.`);
 }
 function setLoading(active) {
   clearInterval(loadingTimer);
@@ -602,7 +602,7 @@ async function runAudit(rawUrl, { updateHistory = true } = {}) {
     const payload = await response.json().catch(() => ({}));
     if (!response.ok) {
       const fallback = response.status === 429
-        ? 'This network has already used its free audit. Open the saved report or use Suede Scan for another site.'
+        ? 'This network has already used its free audit. Open the saved report or use Suede SEO for another site.'
         : 'The audit could not inspect that URL.';
       throw new Error(payload.error || fallback);
     }
