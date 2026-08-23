@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 
 import {
+  analyzeChunks,
   assertPublicUrl,
   auditChecks,
   crawlerPolicy,
@@ -11,6 +12,7 @@ import {
   runTier,
   scanChecks,
   summarize,
+  summarizeChunking,
 } from '../lib/engine.mjs';
 
 const publicLookup = async () => [{ address: '93.184.216.34', family: 4 }];
@@ -211,4 +213,152 @@ test('runs a full audit with deterministic public fetch fixtures', async () => {
   assert.equal(result.controls.length, 3);
   assert.match(result.methodology, /public HTML/i);
   assert.match(result.auditedAt, /^\d{4}-\d{2}-\d{2}T/);
+});
+
+// --- Retrieval-chunk analysis ------------------------------------------------
+//
+// Discovery Engine retrieves at most 500 tokens (~375 words) per chunk, so a
+// heading section longer than that is split mid-section and a claim inside it
+// can be extracted away from the heading that identifies it. These tests pin
+// the boundary behaviour, not prose quality.
+
+const filler = (n) => Array.from({ length: n }, (_, index) => `w${index}`).join(' ');
+
+test('analyzeChunks splits the document at headings and counts each section body', () => {
+  const analysis = analyzeChunks(`
+    <p>${filler(5)}</p>
+    <h1>Page title</h1>
+    <p>${filler(10)}</p>
+    <h2>Second section</h2>
+    <p>${filler(20)}</p>
+  `);
+
+  assert.equal(analysis.headingCount, 2);
+  assert.deepEqual(
+    analysis.blocks.map((block) => [block.heading, block.words]),
+    [[null, 5], ['Page title', 10], ['Second section', 20]],
+  );
+  assert.equal(analysis.totalWords, 35);
+  assert.equal(analysis.largest.heading, 'Second section');
+  assert.deepEqual(analysis.oversized, []);
+});
+
+test('analyzeChunks ignores script, style and comment content', () => {
+  const analysis = analyzeChunks(`
+    <h1>Real heading</h1>
+    <script type="application/ld+json">{"name":"${filler(400)}"}</script>
+    <style>.a{content:"${filler(400)}"}</style>
+    <!-- ${filler(400)} -->
+    <p>${filler(6)}</p>
+  `);
+
+  assert.equal(analysis.totalWords, 6);
+  assert.deepEqual(analysis.oversized, []);
+});
+
+test('analyzeChunks excludes nav and footer chrome but keeps header content', () => {
+  const analysis = analyzeChunks(`
+    <nav><a href="/a">${filler(400)}</a></nav>
+    <header><h1>Real title</h1></header>
+    <p>${filler(12)}</p>
+    <footer><a href="/b">${filler(400)}</a></footer>
+  `);
+
+  assert.equal(analysis.totalWords, 12);
+  assert.equal(analysis.headingCount, 1);
+  assert.equal(analysis.blocks[0].heading, 'Real title');
+  assert.deepEqual(analysis.oversized, []);
+});
+
+test('summarizeChunking passes a page whose every section fits one chunk', () => {
+  const result = summarizeChunking(`
+    <h1>What this is</h1><p>${filler(120)}</p>
+    <h2>How it works</h2><p>${filler(200)}</p>
+    <h2>Pricing</h2><p>${filler(150)}</p>
+  `);
+
+  assert.equal(result.pass, true);
+  assert.match(result.value, /All 3 heading sections fit/);
+  assert.match(result.value, /200 words under "How it works"/);
+});
+
+test('summarizeChunking does not pass a page with one section past the chunk limit', () => {
+  const result = summarizeChunking(`
+    <h1>Fine</h1><p>${filler(100)}</p>
+    <h2>Too long</h2><p>${filler(600)}</p>
+  `);
+
+  assert.equal(result.pass, false);
+  assert.match(result.value, /1 of 2 heading sections over 375 words/);
+  assert.match(result.value, /600 words under "Too long"/);
+});
+
+// The source implementation graded one or two oversized sections as a warning
+// worth partial credit and three or more as an outright failure. This engine
+// scores checks as a binary pass or repair, so both land identically; only the
+// observed value tells them apart.
+test('summarizeChunking scores many oversized sections the same way it scores one', () => {
+  const many = summarizeChunking(`
+    <h2>A</h2><p>${filler(500)}</p>
+    <h2>B</h2><p>${filler(500)}</p>
+    <h2>C</h2><p>${filler(500)}</p>
+  `);
+  const one = summarizeChunking(`
+    <h2>A</h2><p>${filler(500)}</p>
+    <h2>B</h2><p>${filler(10)}</p>
+    <h2>C</h2><p>${filler(10)}</p>
+  `);
+
+  assert.equal(many.pass, false);
+  assert.equal(one.pass, false);
+  assert.match(many.value, /3 of 3 heading sections over 375 words/);
+  assert.match(one.value, /1 of 3 heading sections over 375 words/);
+});
+
+test('summarizeChunking does not pass a long page that has no headings at all', () => {
+  const result = summarizeChunking(`<div><p>${filler(900)}</p></div>`);
+
+  assert.equal(result.pass, false);
+  assert.match(result.value, /900 words, no headings anywhere/);
+  assert.match(result.advice, /undifferentiated block/);
+});
+
+// A JS-rendered shell has no prose for a retrieval crawler to chunk. Scoring it
+// as "every section fits" would be a false clean, so it reports a repair.
+test('summarizeChunking does not pass when there is too little server-rendered text', () => {
+  const result = summarizeChunking('<h1>App</h1><div id="root"></div>');
+
+  assert.equal(result.pass, false);
+  assert.match(result.value, /too little to evaluate/);
+  assert.match(result.advice, /client-side/);
+});
+
+test('summarizeChunking never reports a clean pass on a truncated body', () => {
+  const html = `
+    <h1>What this is</h1><p>${filler(120)}</p>
+    <h2>How it works</h2><p>${filler(200)}</p>
+  `;
+  const whole = summarizeChunking(html);
+  const cut = summarizeChunking(html, { truncated: true });
+
+  assert.equal(whole.pass, true);
+  assert.equal(cut.pass, false);
+  assert.match(cut.value, /partial document/);
+});
+
+test('auditChecks scores retrieval chunking alongside the existing content checks', () => {
+  const healthy = auditChecks(healthyPage()).find((check) => check.id === 'chunking');
+  assert.equal(healthy.pass, true);
+  assert.equal(healthy.lane, 'Content');
+  assert.equal(healthy.severity, 'medium');
+
+  const bloated = healthyPage({
+    html: healthyHtml().replace('<h2>How to verify it</h2>', `<h2>How to verify it</h2><p>${filler(600)}</p>`),
+  });
+  const checks = [...scanChecks(bloated), ...auditChecks(bloated)];
+  const summary = summarize(checks);
+
+  assert.equal(checks.find((check) => check.id === 'chunking').pass, false);
+  assert.ok(summary.score < 100);
+  assert.ok(summary.recommendations.some((repair) => repair.id === 'chunking'));
 });
