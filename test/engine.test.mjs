@@ -165,6 +165,26 @@ test('prepares a broken-link repair only from a verified same-anchor destination
   assert.match(broken.preparedRepair.verification.join(' '), /no longer links/);
 });
 
+test('never treats unlabelled or generic anchors as semantic replacement matches', async () => {
+  const root = healthyPage({
+    html: '<a href="/missing"><img alt=""></a><a href="/live"><svg></svg></a><a href="/missing-more">See more</a><a href="/live-more">See more</a>',
+  });
+  const responses = new Map([
+    ['https://example.com/missing', new Response('Not found', { status: 404 })],
+    ['https://example.com/live', new Response('Live', { status: 200, headers: { 'content-type': 'text/html' } })],
+    ['https://example.com/missing-more', new Response('Not found', { status: 404 })],
+    ['https://example.com/live-more', new Response('Live', { status: 200, headers: { 'content-type': 'text/html' } })],
+  ]);
+  const crawl = await crawlSiteLinks(root, {
+    fetchImpl: async (url) => responses.get(url).clone(),
+    lookupImpl: publicLookup,
+    crawl: { maxPages: 1, maxLinks: 4, maxRequests: 6, maxDepth: 1, maxFindings: 4, maxTotalMs: 5_000 },
+  });
+  assert.equal(crawl.brokenLinks, 2);
+  assert.equal(crawl.preparedRepairs, 0);
+  assert.ok(crawl.findings.filter((finding) => finding.kind === 'broken-link').every((finding) => finding.preparedRepair === null));
+});
+
 test('does not prepare a broken-link replacement to a non-successful audited page', async () => {
   const root = healthyPage({ status: 500, html: '<a href="/missing">Missing page</a>' });
   const crawl = await crawlSiteLinks(root, {
