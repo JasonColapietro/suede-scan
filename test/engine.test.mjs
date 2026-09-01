@@ -167,20 +167,24 @@ test('prepares a broken-link repair only from a verified same-anchor destination
 
 test('never treats unlabelled or generic anchors as semantic replacement matches', async () => {
   const root = healthyPage({
-    html: '<a href="/missing"><img alt=""></a><a href="/live"><svg></svg></a><a href="/missing-more">See more</a><a href="/live-more">See more</a>',
+    html: '<a href="/missing"><img alt=""></a><a href="/live"><svg></svg></a><a href="/missing-more">See more</a><a href="/live-more">See more</a><a href="/missing-continue">Continue</a><a href="/live-continue">Continue</a><a href="/missing-visit">Visit website</a><a href="/live-visit">Visit website</a>',
   });
   const responses = new Map([
     ['https://example.com/missing', new Response('Not found', { status: 404 })],
     ['https://example.com/live', new Response('Live', { status: 200, headers: { 'content-type': 'text/html' } })],
     ['https://example.com/missing-more', new Response('Not found', { status: 404 })],
     ['https://example.com/live-more', new Response('Live', { status: 200, headers: { 'content-type': 'text/html' } })],
+    ['https://example.com/missing-continue', new Response('Not found', { status: 404 })],
+    ['https://example.com/live-continue', new Response('Live', { status: 200, headers: { 'content-type': 'text/html' } })],
+    ['https://example.com/missing-visit', new Response('Not found', { status: 404 })],
+    ['https://example.com/live-visit', new Response('Live', { status: 200, headers: { 'content-type': 'text/html' } })],
   ]);
   const crawl = await crawlSiteLinks(root, {
     fetchImpl: async (url) => responses.get(url).clone(),
     lookupImpl: publicLookup,
-    crawl: { maxPages: 1, maxLinks: 4, maxRequests: 6, maxDepth: 1, maxFindings: 4, maxTotalMs: 5_000 },
+    crawl: { maxPages: 1, maxLinks: 8, maxRequests: 12, maxDepth: 1, maxFindings: 8, maxTotalMs: 5_000 },
   });
-  assert.equal(crawl.brokenLinks, 2);
+  assert.equal(crawl.brokenLinks, 4);
   assert.equal(crawl.preparedRepairs, 0);
   assert.ok(crawl.findings.filter((finding) => finding.kind === 'broken-link').every((finding) => finding.preparedRepair === null));
 });
