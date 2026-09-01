@@ -1,6 +1,12 @@
 # Design System: Suede Audit
 
-Extracted from: https://searchfit.ai/report/suedeai.ai?vertical=saas on 2026-07-15
+Reference: Suede Agent Studio (https://agents.suedeai.ai), tokens read from
+`suede-agent-studio/src/styles/tokens.css` on 2026-08-31. The earlier
+searchfit-derived system it replaced is recorded in git history.
+
+The two surfaces are one product to a visitor who moves between them, so this
+page inherits Studio's palette, type trio, radii, and control grammar rather
+than keeping a second visual language.
 
 ## Product Contract
 
@@ -13,53 +19,68 @@ Extracted from: https://searchfit.ai/report/suedeai.ai?vertical=saas on 2026-07-
 
 ## Identity
 
-- Color strategy: Full palette. Cobalt marks action, green marks verified access, coral marks blockers, amber marks repair priority, and violet carries the overall score.
-- Aesthetic tone: refined minimal with product-utilitarian density.
+- Color strategy: Restrained base with a full signal palette on the report. Near-white paper and white panels carry the page, indigo marks every action, and green/amber/red/violet stay reserved for verified access, repair priority, blockers, and the overall score.
+- Aesthetic tone: refined minimal. A serif display voice over a low-density, hairline-ruled product surface, inherited from Suede Agent Studio.
 - Unforgettable factor: the Answer Readiness Field plots every audit lane by measured readiness and finding impact, turning the report into an inspectable signal map.
 - Signature artifact: a live score rail that connects crawler access, entity structure, content, and technical health.
 
 ## Reference Translation
 
-The reference contributes the report hierarchy, white-space rhythm, floating score summary, platform cards, data-rich middle sections, and shareable closing state. Suede keeps those structural strengths while replacing proprietary copy, assets, scores, and gated-report mechanics with its own live audit data.
+Suede Agent Studio contributes the design grammar: near-white paper under white
+panels, a serif display face at large sizes with the second clause set in indigo
+italic, a mono uppercase eyebrow led by a short rule, mono uppercase control
+labels, an 8px radius family, hairline borders doing most of the separation
+work, and a faint indigo blueprint grid behind the hero.
 
-The target rejects the reference's unsupported implication that a crawler-policy check is the same as an AI recommendation test. Suede labels every measured signal and publishes the method inside the report.
+It does not contribute content. The audit's own copy, claims, evidence
+boundary, scoring method, and report structure are unchanged. Studio's product
+claims do not transfer to this page.
 
 ## Typography
 
-- Personality font: Space Grotesk, 500 to 700. Its broad geometric forms make the score and report headings feel direct without copying the reference wordmark.
-- Utility font: IBM Plex Sans, 400 to 600. It stays readable in dense findings and pairs with the display face through a technical, humanist contrast.
-- Data font: IBM Plex Mono, 500 to 600. It is reserved for timestamps, crawler names, labels, and measured values.
-- Type scale: H1 `clamp(2.5rem, 5vw, 5.75rem)`, H2 `clamp(1.65rem, 2.6vw, 2.5rem)`, H3 `clamp(1.05rem, 1.2vw, 1.3rem)`, body `clamp(1rem, .96rem + .2vw, 1.08rem)`, label `0.72rem`.
-- Line-height base: 1.58.
+- Personality font: Instrument Serif, regular and italic. It ships a single
+  weight, so display type never asks for 600 or 700; the browser would
+  synthesize a fake bold and smear the thin strokes the face is chosen for.
+  Emphasis comes from size and from the italic, not from weight.
+- Utility font: Geist, 400 to 600. Running text, form labels, and any heading
+  below roughly 1.4rem, where a serif reads as decoration rather than voice.
+- Data font: Geist Mono, 500 to 600. Eyebrows, control labels, timestamps,
+  crawler names, and measured values.
+- Type scale: hero `clamp(2.35rem, 1.5rem + 3.6vw, 4.15rem)`, H2
+  `clamp(1.75rem, 3vw, 2.7rem)`, H3 `clamp(1.05rem, 1.4vw, 1.3rem)`, body
+  `clamp(1rem, .95rem + .2vw, 1.0625rem)`, label `0.72rem`.
+- Line-height base: 1.58. Hero line-height 1.06.
 
 ## Color Tokens
 
 ```css
 :root {
-  --color-bg: #f5f6fa;
+  --color-bg: #fafbfd;
   --color-surface: #ffffff;
-  --color-surface-soft: #f0f2f7;
-  --color-text-primary: #12151b;
-  --color-text-secondary: #626977;
-  --color-text-tertiary: #59616e;
-  --color-accent: #3156ff;
-  --color-accent-hover: #2444d5;
-  --color-border: #dde1e8;
-  --color-border-strong: #c7ccd6;
-  --color-success: #08734a;
-  --color-warning: #914800;
-  --color-error: #b92f32;
-  --color-score: #b83fcf;
-  --font-personality: "Space Grotesk", sans-serif;
-  --font-utility: "IBM Plex Sans", sans-serif;
-  --font-data: "IBM Plex Mono", monospace;
-  --text-base: clamp(1rem, .96rem + .2vw, 1.08rem);
-  --text-scale-ratio: 1.28;
-  --radius-sm: 10px;
-  --radius-md: 16px;
-  --radius-lg: 24px;
-  --shadow-card: 0 10px 32px -24px rgba(25, 31, 45, .34);
-  --shadow-elevated: 0 24px 70px -34px rgba(49, 86, 255, .34);
+  --color-surface-soft: #f3f4f9;
+  --color-text-primary: #111317;
+  --color-text-secondary: #475467;
+  --color-text-tertiary: #6b7280;
+  --color-accent: #4f46e5;
+  --color-accent-hover: #4338ca;
+  --button-primary-bg: #4f46e5;      /* #fff on it: 6.29:1 */
+  --button-primary-bg-hover: #4338ca;
+  --color-border: #e6e8ef;           /* quiet dividers */
+  --color-border-strong: #818794;    /* sole boundaries, 3.60:1 on white */
+  --color-success: #047857;
+  --color-warning: #92400e;
+  --color-error: #b91c1c;
+  --color-score: #7c3aed;            /* 5.70:1 on white, large score text */
+  --brand-plate: #111317;            /* theme-stable; the mark is a light glyph */
+  --font-personality: "Instrument Serif", Georgia, serif;
+  --font-utility: "Geist", ui-sans-serif, system-ui, sans-serif;
+  --font-data: "Geist Mono", ui-monospace, SFMono-Regular, monospace;
+  --text-base: clamp(1rem, .95rem + .2vw, 1.0625rem);
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --shadow-card: 0 1px 3px rgba(17, 19, 23, .08), 0 6px 18px rgba(17, 19, 23, .06);
+  --shadow-elevated: 0 4px 8px rgba(17, 19, 23, .1), 0 20px 48px rgba(17, 19, 23, .16);
   --motion-fast: 140ms;
   --motion-base: 240ms;
   --motion-slow: 360ms;
@@ -67,13 +88,20 @@ The target rejects the reference's unsupported implication that a crawler-policy
 }
 ```
 
+Dark mode is opt-in via the header toggle and is not an inversion: surfaces step
+up in lightness (`#101114` page, `#17181d` panel, `#1d1f26` control), separation
+leans on borders rather than shadow, and every saturated value is the lighter
+twin of its light-theme counterpart. Full set in `styles.css`.
+
 ## Spacing And Shape
 
-- Grid: 12 columns, max-width 1240px, 24px desktop gutters, 16px mobile gutters.
+- Grid: 12 columns, max-width 1240px. Gutter is `clamp(40px, 7.5vw, 96px)`
+  total, so 48px per side at 1280px and 20px per side at 390px.
 - Section rhythm: report header 1.0, score overview 0.7, readiness field 1.2, findings ledger 1.5, method and next action 0.7.
-- Radii: small 10px, medium 16px, large 24px.
-- Card shadow: `0 10px 32px -24px rgba(25, 31, 45, .34)`.
-- Elevated score shadow: `0 24px 70px -34px rgba(49, 86, 255, .34)`.
+- Radii: small 6px, medium 8px, large 12px. Studio's 8px family, not the
+  16-24px cards this page previously used.
+- Card shadow: `0 1px 3px rgba(17, 19, 23, .08), 0 6px 18px rgba(17, 19, 23, .06)`.
+- Elevated shadow: `0 4px 8px rgba(17, 19, 23, .1), 0 20px 48px rgba(17, 19, 23, .16)`.
 - Borders provide most hierarchy. Shadows are limited to the score summary and transient states.
 
 ## Motion
@@ -92,8 +120,10 @@ The target rejects the reference's unsupported implication that a crawler-policy
 - Stance: second-person imperative for actions, third-person factual for measured results.
 - Claim type: measured artifact and direct next step.
 - Vocabulary anchors: inspect, evidence, repair.
-- Primary CTA: `Run the audit`.
+- Primary CTA: `Run the audit`. Control labels render mono uppercase.
 - Secondary CTA: `Copy report link`.
+- Contact: `Contact`, reachable from the nav, a named section, and a control
+  fixed to the viewport on every page. Address is `info@suedeai.org`.
 - Loading: `Inspecting public site signals`.
 - Success: `Audit complete`.
 - Error: `We could not inspect that public URL. Check the address and try again.`
@@ -110,8 +140,8 @@ The target rejects the reference's unsupported implication that a crawler-policy
 
 | Component | Default | Focus or hover | Loading | Success | Error | Disabled |
 | --- | --- | --- | --- | --- | --- | --- |
-| Domain input | visible label and example hint | 3px cobalt focus ring | value remains readable | normalized domain remains | inline message below field | gated after the browser's first successful audit |
-| Run button | cobalt, action label | darker cobalt and 1px lift | spinner plus `Inspecting` | header becomes `View saved audit` | returns to `Run the audit` | disabled during request; subsequent domains route to the saved-audit message |
+| Domain input | visible label and example hint | 3px indigo focus ring | value remains readable | normalized domain remains | inline message below field | gated after the browser's first successful audit |
+| Run button | indigo, mono uppercase label | darker indigo, no lift | spinner plus `Inspecting` | header becomes `View saved audit` | returns to `Run the audit` | disabled during request; subsequent domains route to the saved-audit message |
 | Report shell | empty-state proof preview | section links underline and weight | skeleton rails with status copy | full report visible | hidden, error stays near form | not applicable |
 | Finding row | summary, measured value, priority | row background changes | not applicable | pass uses icon plus text | fail shows repair copy | not applicable |
 | Share control | `Copy report link` | outline strengthens | `Copying` | `Link copied` for two seconds | `Copy this URL` fallback | disabled until a report route exists |

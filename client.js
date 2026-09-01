@@ -1,6 +1,6 @@
 const fontStylesheet = document.createElement('link');
 fontStylesheet.rel = 'stylesheet';
-fontStylesheet.href = 'https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap';
+fontStylesheet.href = 'https://fonts.googleapis.com/css2?family=Geist+Mono:wght@500;600&family=Geist:wght@400;500;600&family=Instrument+Serif:ital@0;1&display=swap';
 document.head.append(fontStylesheet);
 
 const byId = (id) => document.getElementById(id);
