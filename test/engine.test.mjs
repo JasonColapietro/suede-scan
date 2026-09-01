@@ -5,6 +5,7 @@ import {
   analyzeChunks,
   assertPublicUrl,
   auditChecks,
+  crawlSiteLinks,
   crawlerPolicy,
   isPrivateAddress,
   modelUseControls,
@@ -101,6 +102,58 @@ test('blocks local hostnames before a request is made', async () => {
   await assert.rejects(() => assertPublicUrl(new URL('http://127.0.0.1/'), { lookupImpl: publicLookup }), /Public internet domains only/);
   await assert.rejects(() => assertPublicUrl(new URL('http://[::ffff:7f00:1]/'), { lookupImpl: publicLookup }), /Public internet domains only/);
   await assert.doesNotReject(() => assertPublicUrl(new URL('https://example.com/'), { lookupImpl: publicLookup }));
+});
+
+test('crawls bounded same-origin links with broken-link and redirect repair evidence', async () => {
+  const root = healthyPage({
+    html: '<a href="/missing">Missing page</a><a href="/old">Old page</a><a href="/escape">Unsafe redirect</a><a href="/query-redirect">Query redirect</a><a href="https://outside.example/x">External</a><a href="/ignored?token=secret">Query</a>',
+  });
+  const requested = [];
+  const responses = new Map([
+    ['https://example.com/missing', new Response('Not found', { status: 404, headers: { 'content-type': 'text/html' } })],
+    ['https://example.com/old', new Response('', { status: 308, headers: { location: '/new' } })],
+    ['https://example.com/new', new Response('New page', { status: 200, headers: { 'content-type': 'text/html' } })],
+    ['https://example.com/escape', new Response('', { status: 302, headers: { location: 'http://127.0.0.1/private' } })],
+    ['https://example.com/query-redirect', new Response('', { status: 302, headers: { location: '/new?token=secret' } })],
+  ]);
+  const crawl = await crawlSiteLinks(root, {
+    fetchImpl: async (url) => {
+      requested.push(url);
+      return (responses.get(url) || new Response('Not found', { status: 404 })).clone();
+    },
+    lookupImpl: publicLookup,
+    crawl: { maxPages: 2, maxLinks: 6, maxRequests: 8, maxDepth: 1, maxFindings: 4, maxTotalMs: 5_000 },
+  });
+
+  assert.equal(crawl.brokenLinks, 1);
+  assert.equal(crawl.preparedRepairs, 1);
+  assert.equal(requested.some((url) => url.includes('outside.example')), false);
+  assert.equal(requested.some((url) => url.includes('127.0.0.1')), false);
+  assert.equal(requested.some((url) => url.includes('token=secret')), false);
+  assert.deepEqual(crawl.findings.find((finding) => finding.kind === 'broken-link').evidence, {
+    sourceUrl: 'https://example.com/',
+    targetUrl: 'https://example.com/missing',
+    finalUrl: 'https://example.com/missing',
+    status: 404,
+    anchorText: 'Missing page',
+    redirectChain: [],
+  });
+  const redirect = crawl.findings.find((finding) => finding.kind === 'redirect-link');
+  assert.equal(redirect.preparedRepair.before, 'https://example.com/old');
+  assert.equal(redirect.preparedRepair.after, 'https://example.com/new');
+});
+
+test('enforces the response deadline while DNS resolution is pending', async () => {
+  const started = Date.now();
+  const outcome = await Promise.race([
+    runTier('audit', 'example.com', {
+      lookupImpl: async () => new Promise(() => {}),
+      responseDeadlineMs: 50,
+    }).then(() => 'resolved', (error) => error.message),
+    new Promise((resolve) => setTimeout(() => resolve('test guard elapsed'), 180)),
+  ]);
+  assert.match(outcome, /response deadline/);
+  assert.ok(Date.now() - started < 150);
 });
 
 test('reads crawler policy using exact bot groups before wildcard rules', () => {
