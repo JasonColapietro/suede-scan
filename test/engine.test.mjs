@@ -126,7 +126,7 @@ test('crawls bounded same-origin links with broken-link and redirect repair evid
   });
 
   assert.equal(crawl.brokenLinks, 1);
-  assert.equal(crawl.preparedRepairs, 1);
+  assert.equal(crawl.preparedRepairs, 2);
   assert.equal(requested.some((url) => url.includes('outside.example')), false);
   assert.equal(requested.some((url) => url.includes('127.0.0.1')), false);
   assert.equal(requested.some((url) => url.includes('token=secret')), false);
@@ -138,6 +138,11 @@ test('crawls bounded same-origin links with broken-link and redirect repair evid
     anchorText: 'Missing page',
     redirectChain: [],
   });
+  const broken = crawl.findings.find((finding) => finding.kind === 'broken-link');
+  assert.equal(broken.preparedRepair.ready, true);
+  assert.equal(broken.preparedRepair.before, 'https://example.com/missing');
+  assert.equal(broken.preparedRepair.after, 'https://example.com/');
+  assert.match(broken.preparedRepair.verification.join(' '), /no longer links/);
   const redirect = crawl.findings.find((finding) => finding.kind === 'redirect-link');
   assert.equal(redirect.preparedRepair.before, 'https://example.com/old');
   assert.equal(redirect.preparedRepair.after, 'https://example.com/new');
@@ -153,6 +158,27 @@ test('enforces the response deadline while DNS resolution is pending', async () 
     new Promise((resolve) => setTimeout(() => resolve('test guard elapsed'), 180)),
   ]);
   assert.match(outcome, /response deadline/);
+  assert.ok(Date.now() - started < 150);
+});
+
+test('aborts the production request while connection or headers are pending', async () => {
+  let aborted = false;
+  const started = Date.now();
+  const outcome = await Promise.race([
+    runTier('audit', 'example.com', {
+      lookupImpl: publicLookup,
+      requestImpl: async (_url, { signal }) => new Promise((_resolve, reject) => {
+        signal.addEventListener('abort', () => {
+          aborted = true;
+          reject(Object.assign(new Error('aborted'), { name: 'AbortError' }));
+        }, { once: true });
+      }),
+      responseDeadlineMs: 50,
+    }).then(() => 'resolved', (error) => error.message),
+    new Promise((resolve) => setTimeout(() => resolve('test guard elapsed'), 180)),
+  ]);
+  assert.match(outcome, /response deadline/);
+  assert.equal(aborted, true);
   assert.ok(Date.now() - started < 150);
 });
 

@@ -30,14 +30,15 @@ test('authenticated operator audit returns a private Prospect handoff without co
     socket: {},
   }, res, async (...args) => {
     invocation = args;
-    return ({
-    host: 'example.com',
-    url: 'https://example.com/',
-    auditedAt: new Date().toISOString(),
-    score: 88,
-    elapsedMs: 12,
-    recommendations: [{
+    return {
+      host: 'example.com',
+      url: 'https://example.com/',
+      auditedAt: new Date().toISOString(),
+      score: 88,
+      elapsedMs: 12,
+      recommendations: [{
       id: 'redirect-link',
+      kind: 'redirect-link',
       lane: 'Site integrity',
       title: 'Replace a redirected internal link',
       severity: 'low',
@@ -59,8 +60,32 @@ test('authenticated operator audit returns a private Prospect handoff without co
         instruction: 'Replace the old target with the permanent destination.',
         verification: ['Confirm the destination returns 200.'],
       },
-    }],
-  });
+    }, {
+      id: 'broken-link',
+      kind: 'broken-link',
+      lane: 'Site integrity',
+      title: 'Repair a confirmed broken internal link',
+      severity: 'high',
+      observed: 'The internal destination returned HTTP 404 twice.',
+      action: 'Replace the dead target with the verified audited page.',
+      evidence: {
+        sourceUrl: 'https://example.com/services',
+        targetUrl: 'https://example.com/missing',
+        finalUrl: 'https://example.com/missing',
+        status: 404,
+        anchorText: 'Missing service',
+        redirectChain: [],
+      },
+      preparedRepair: {
+        kind: 'replace-link-target',
+        ready: true,
+        before: 'https://example.com/missing',
+        after: 'https://example.com/',
+        instruction: 'Replace the dead target with the verified audited page.',
+        verification: ['Confirm the source no longer links to the dead target.'],
+      },
+      }],
+    };
   }, { token });
 
   assert.equal(res.statusCode, 200);
@@ -73,7 +98,11 @@ test('authenticated operator audit returns a private Prospect handoff without co
     responseDeadlineMs: OPERATOR_RESPONSE_DEADLINE_MS,
   }]);
   assert.equal(JSON.parse(res.body).handoff.findings[0].evidence.sourceUrl, 'https://example.com/services');
+  assert.equal(JSON.parse(res.body).handoff.findings[0].evidence.subtype, 'redirect-link');
   assert.equal(JSON.parse(res.body).handoff.findings[0].preparedRepair.after, 'https://example.com/new');
+  const broken = JSON.parse(res.body).handoff.findings.find((finding) => finding.evidence?.subtype === 'broken-link');
+  assert.equal(broken.evidence.status, 404);
+  assert.equal(broken.preparedRepair.after, 'https://example.com/');
 });
 
 test('operator audit throttles invalid bearer attempts before any audit work', async () => {
