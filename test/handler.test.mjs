@@ -1,7 +1,12 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 
-import { handleTier } from '../lib/handler.mjs';
+import {
+  handleOperatorAudit,
+  handleTier,
+  OPERATOR_CRAWL_LIMITS,
+  OPERATOR_RESPONSE_DEADLINE_MS,
+} from '../lib/handler.mjs';
 
 function responseRecorder() {
   const headers = new Map();
@@ -13,6 +18,171 @@ function responseRecorder() {
     headers,
   };
 }
+
+test('authenticated operator audit returns a private Prospect handoff without consuming the public audit', async () => {
+  const token = 'operator-test-token-that-is-at-least-32-bytes';
+  const res = responseRecorder();
+  let invocation;
+  await handleOperatorAudit({
+    method: 'POST',
+    body: { url: 'https://example.com/' },
+    headers: { authorization: `Bearer ${token}`, 'x-forwarded-for': '203.0.113.41' },
+    socket: {},
+  }, res, async (...args) => {
+    invocation = args;
+    return {
+      host: 'example.com',
+      url: 'https://example.com/',
+      auditedAt: new Date().toISOString(),
+      score: 88,
+      elapsedMs: 12,
+      recommendations: [{
+      id: 'redirect-link',
+      kind: 'redirect-link',
+      lane: 'Site integrity',
+      title: 'Replace a redirected internal link',
+      severity: 'low',
+      observed: 'The old page permanently redirects.',
+      action: 'Link directly to the permanent destination.',
+      evidence: {
+        sourceUrl: 'https://example.com/services',
+        targetUrl: 'https://example.com/old',
+        finalUrl: 'https://example.com/new',
+        status: 200,
+        anchorText: 'Pricing',
+        redirectChain: [{ status: 301, from: 'https://example.com/old', to: 'https://example.com/new' }],
+      },
+      preparedRepair: {
+        kind: 'replace-link-target',
+        ready: true,
+        before: 'https://example.com/old',
+        after: 'https://example.com/new',
+        instruction: 'Replace the old target with the permanent destination.',
+        verification: ['Confirm the destination returns 200.'],
+      },
+    }, {
+      id: 'broken-link',
+      kind: 'broken-link',
+      lane: 'Site integrity',
+      title: 'Repair a confirmed broken internal link',
+      severity: 'high',
+      observed: 'The internal destination returned HTTP 404 twice.',
+      action: 'Replace the dead target with the verified audited page.',
+      evidence: {
+        sourceUrl: 'https://example.com/services',
+        targetUrl: 'https://example.com/missing',
+        finalUrl: 'https://example.com/missing',
+        status: 404,
+        anchorText: 'Missing service',
+        redirectChain: [],
+      },
+      preparedRepair: {
+        kind: 'replace-link-target',
+        ready: true,
+        before: 'https://example.com/missing',
+        after: 'https://example.com/',
+        instruction: 'Replace the dead target with the verified audited page.',
+        verification: ['Confirm the source no longer links to the dead target.'],
+      },
+      }],
+    };
+  }, { token });
+
+  assert.equal(res.statusCode, 200);
+  assert.equal(res.headers.get('cache-control'), 'no-store');
+  assert.equal(res.headers.has('set-cookie'), false);
+  assert.deepEqual(Object.keys(JSON.parse(res.body)), ['handoff']);
+  assert.equal(JSON.parse(res.body).handoff.kind, 'suede.audit.prospect');
+  assert.deepEqual(invocation, ['audit', 'https://example.com/', {
+    crawl: OPERATOR_CRAWL_LIMITS,
+    responseDeadlineMs: OPERATOR_RESPONSE_DEADLINE_MS,
+  }]);
+  assert.equal(JSON.parse(res.body).handoff.findings[0].evidence.sourceUrl, 'https://example.com/services');
+  assert.equal(JSON.parse(res.body).handoff.findings[0].evidence.subtype, 'redirect-link');
+  assert.equal(JSON.parse(res.body).handoff.findings[0].preparedRepair.after, 'https://example.com/new');
+  const broken = JSON.parse(res.body).handoff.findings.find((finding) => finding.evidence?.subtype === 'broken-link');
+  assert.equal(broken.evidence.status, 404);
+  assert.equal(broken.preparedRepair.after, 'https://example.com/');
+});
+
+test('operator audit throttles invalid bearer attempts before any audit work', async () => {
+  const token = 'failed-auth-test-token-that-is-at-least-32-bytes';
+  let last;
+  let runs = 0;
+  for (let index = 0; index < 13; index += 1) {
+    last = responseRecorder();
+    await handleOperatorAudit({
+      method: 'POST',
+      body: { url: 'https://example.com/' },
+      headers: { authorization: `Bearer invalid-${index}`, 'x-forwarded-for': '198.51.100.77' },
+      socket: {},
+    }, last, async () => { runs += 1; }, { token });
+  }
+
+  assert.equal(last.statusCode, 429);
+  assert.equal(runs, 0);
+});
+
+test('operator audit limits authorized work separately from the public browser gate', async () => {
+  const token = 'authorized-work-test-token-that-is-at-least-32-bytes';
+  let last;
+  let runs = 0;
+  for (let index = 0; index < 7; index += 1) {
+    last = responseRecorder();
+    await handleOperatorAudit({
+      method: 'POST',
+      body: { url: 'https://example.com/' },
+      headers: { authorization: `Bearer ${token}`, 'x-forwarded-for': '203.0.113.42' },
+      socket: {},
+    }, last, async () => {
+      runs += 1;
+      return {
+        host: 'example.com', url: 'https://example.com/', auditedAt: new Date().toISOString(),
+        score: 80, elapsedMs: 1,
+        recommendations: [{ id: 'finding', lane: 'Entity', title: 'Finding', severity: 'medium', observed: 'Observed state.', action: 'Apply the repair.' }],
+      };
+    }, { token });
+  }
+
+  assert.equal(last.statusCode, 429);
+  assert.equal(runs, 6);
+});
+
+test('operator audit fails closed without the configured token or an exact bearer match', async () => {
+  const request = (authorization, address) => ({
+    method: 'POST',
+    body: { url: 'https://example.com/' },
+    headers: { authorization, 'x-forwarded-for': address },
+    socket: {},
+  });
+  const unconfigured = responseRecorder();
+  await handleOperatorAudit(request('Bearer any', '203.0.113.60'), unconfigured, async () => ({}), { token: '' });
+  assert.equal(unconfigured.statusCode, 503);
+
+  const unauthorized = responseRecorder();
+  await handleOperatorAudit(request(`Bearer ${'b'.repeat(48)}`, '203.0.113.61'), unauthorized, async () => ({}), { token: 'a'.repeat(48) });
+  assert.equal(unauthorized.statusCode, 401);
+  assert.equal(unauthorized.headers.get('www-authenticate'), 'Bearer');
+});
+
+test('operator audit accepts only the exact url body contract', async () => {
+  const token = 'strict-body-test-token-that-is-at-least-32-bytes';
+  let runs = 0;
+  for (const [index, body] of [
+    { websiteUrl: 'https://example.com/' },
+    { url: 'https://example.com/', extra: true },
+    ['https://example.com/'],
+  ].entries()) {
+    const res = responseRecorder();
+    await handleOperatorAudit({
+      method: 'POST', body,
+      headers: { authorization: `Bearer ${token}`, 'x-forwarded-for': `203.0.113.${70 + index}` },
+      socket: {},
+    }, res, async () => { runs += 1; }, { token });
+    assert.equal(res.statusCode, 400);
+  }
+  assert.equal(runs, 0);
+});
 
 test('returns the audit envelope with no-store headers', async () => {
   const req = {

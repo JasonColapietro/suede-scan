@@ -5,6 +5,7 @@ import {
   analyzeChunks,
   assertPublicUrl,
   auditChecks,
+  crawlSiteLinks,
   crawlerPolicy,
   isPrivateAddress,
   modelUseControls,
@@ -101,6 +102,137 @@ test('blocks local hostnames before a request is made', async () => {
   await assert.rejects(() => assertPublicUrl(new URL('http://127.0.0.1/'), { lookupImpl: publicLookup }), /Public internet domains only/);
   await assert.rejects(() => assertPublicUrl(new URL('http://[::ffff:7f00:1]/'), { lookupImpl: publicLookup }), /Public internet domains only/);
   await assert.doesNotReject(() => assertPublicUrl(new URL('https://example.com/'), { lookupImpl: publicLookup }));
+});
+
+test('crawls bounded same-origin links with broken-link and redirect repair evidence', async () => {
+  const root = healthyPage({
+    html: '<a href="/missing">Missing page</a><a href="/old">Old page</a><a href="/escape">Unsafe redirect</a><a href="/query-redirect">Query redirect</a><a href="https://outside.example/x">External</a><a href="/ignored?token=secret">Query</a>',
+  });
+  const requested = [];
+  const responses = new Map([
+    ['https://example.com/missing', new Response('Not found', { status: 404, headers: { 'content-type': 'text/html' } })],
+    ['https://example.com/old', new Response('', { status: 308, headers: { location: '/new' } })],
+    ['https://example.com/new', new Response('New page', { status: 200, headers: { 'content-type': 'text/html' } })],
+    ['https://example.com/escape', new Response('', { status: 302, headers: { location: 'http://127.0.0.1/private' } })],
+    ['https://example.com/query-redirect', new Response('', { status: 302, headers: { location: '/new?token=secret' } })],
+  ]);
+  const crawl = await crawlSiteLinks(root, {
+    fetchImpl: async (url) => {
+      requested.push(url);
+      return (responses.get(url) || new Response('Not found', { status: 404 })).clone();
+    },
+    lookupImpl: publicLookup,
+    crawl: { maxPages: 2, maxLinks: 6, maxRequests: 8, maxDepth: 1, maxFindings: 4, maxTotalMs: 5_000 },
+  });
+
+  assert.equal(crawl.brokenLinks, 1);
+  assert.equal(crawl.preparedRepairs, 1);
+  assert.equal(requested.some((url) => url.includes('outside.example')), false);
+  assert.equal(requested.some((url) => url.includes('127.0.0.1')), false);
+  assert.equal(requested.some((url) => url.includes('token=secret')), false);
+  assert.deepEqual(crawl.findings.find((finding) => finding.kind === 'broken-link').evidence, {
+    sourceUrl: 'https://example.com/',
+    targetUrl: 'https://example.com/missing',
+    finalUrl: 'https://example.com/missing',
+    status: 404,
+    anchorText: 'Missing page',
+    redirectChain: [],
+  });
+  const broken = crawl.findings.find((finding) => finding.kind === 'broken-link');
+  assert.equal(broken.preparedRepair, null);
+  const redirect = crawl.findings.find((finding) => finding.kind === 'redirect-link');
+  assert.equal(redirect.preparedRepair.before, 'https://example.com/old');
+  assert.equal(redirect.preparedRepair.after, 'https://example.com/new');
+});
+
+test('prepares a broken-link repair only from a verified same-anchor destination', async () => {
+  const root = healthyPage({
+    html: '<a href="/missing-pricing">Pricing plans</a><a href="/pricing">Pricing plans</a>',
+  });
+  const responses = new Map([
+    ['https://example.com/missing-pricing', new Response('Not found', { status: 404, headers: { 'content-type': 'text/html' } })],
+    ['https://example.com/pricing', new Response('Live pricing', { status: 200, headers: { 'content-type': 'text/html' } })],
+  ]);
+  const crawl = await crawlSiteLinks(root, {
+    fetchImpl: async (url) => responses.get(url).clone(),
+    lookupImpl: publicLookup,
+    crawl: { maxPages: 1, maxLinks: 2, maxRequests: 3, maxDepth: 1, maxFindings: 2, maxTotalMs: 5_000 },
+  });
+  const broken = crawl.findings.find((finding) => finding.kind === 'broken-link');
+  assert.equal(broken.preparedRepair.ready, true);
+  assert.equal(broken.preparedRepair.before, 'https://example.com/missing-pricing');
+  assert.equal(broken.preparedRepair.after, 'https://example.com/pricing');
+  assert.match(broken.preparedRepair.verification.join(' '), /no longer links/);
+});
+
+test('never treats unlabelled or generic anchors as semantic replacement matches', async () => {
+  const root = healthyPage({
+    html: '<a href="/missing"><img alt=""></a><a href="/live"><svg></svg></a><a href="/missing-more">See more</a><a href="/live-more">See more</a><a href="/missing-continue">Continue</a><a href="/live-continue">Continue</a><a href="/missing-visit">Visit website</a><a href="/live-visit">Visit website</a>',
+  });
+  const responses = new Map([
+    ['https://example.com/missing', new Response('Not found', { status: 404 })],
+    ['https://example.com/live', new Response('Live', { status: 200, headers: { 'content-type': 'text/html' } })],
+    ['https://example.com/missing-more', new Response('Not found', { status: 404 })],
+    ['https://example.com/live-more', new Response('Live', { status: 200, headers: { 'content-type': 'text/html' } })],
+    ['https://example.com/missing-continue', new Response('Not found', { status: 404 })],
+    ['https://example.com/live-continue', new Response('Live', { status: 200, headers: { 'content-type': 'text/html' } })],
+    ['https://example.com/missing-visit', new Response('Not found', { status: 404 })],
+    ['https://example.com/live-visit', new Response('Live', { status: 200, headers: { 'content-type': 'text/html' } })],
+  ]);
+  const crawl = await crawlSiteLinks(root, {
+    fetchImpl: async (url) => responses.get(url).clone(),
+    lookupImpl: publicLookup,
+    crawl: { maxPages: 1, maxLinks: 8, maxRequests: 12, maxDepth: 1, maxFindings: 8, maxTotalMs: 5_000 },
+  });
+  assert.equal(crawl.brokenLinks, 4);
+  assert.equal(crawl.preparedRepairs, 0);
+  assert.ok(crawl.findings.filter((finding) => finding.kind === 'broken-link').every((finding) => finding.preparedRepair === null));
+});
+
+test('does not prepare a broken-link replacement to a non-successful audited page', async () => {
+  const root = healthyPage({ status: 500, html: '<a href="/missing">Missing page</a>' });
+  const crawl = await crawlSiteLinks(root, {
+    fetchImpl: async () => new Response('Not found', { status: 404, headers: { 'content-type': 'text/html' } }),
+    lookupImpl: publicLookup,
+    crawl: { maxPages: 1, maxLinks: 1, maxRequests: 2, maxDepth: 1, maxFindings: 1, maxTotalMs: 5_000 },
+  });
+  const broken = crawl.findings.find((finding) => finding.kind === 'broken-link');
+  assert.equal(broken.preparedRepair, null);
+  assert.equal(crawl.preparedRepairs, 0);
+});
+
+test('enforces the response deadline while DNS resolution is pending', async () => {
+  const started = Date.now();
+  const outcome = await Promise.race([
+    runTier('audit', 'example.com', {
+      lookupImpl: async () => new Promise(() => {}),
+      responseDeadlineMs: 50,
+    }).then(() => 'resolved', (error) => error.message),
+    new Promise((resolve) => setTimeout(() => resolve('test guard elapsed'), 180)),
+  ]);
+  assert.match(outcome, /response deadline/);
+  assert.ok(Date.now() - started < 150);
+});
+
+test('aborts the production request while connection or headers are pending', async () => {
+  let aborted = false;
+  const started = Date.now();
+  const outcome = await Promise.race([
+    runTier('audit', 'example.com', {
+      lookupImpl: publicLookup,
+      requestImpl: async (_url, { signal }) => new Promise((_resolve, reject) => {
+        signal.addEventListener('abort', () => {
+          aborted = true;
+          reject(Object.assign(new Error('aborted'), { name: 'AbortError' }));
+        }, { once: true });
+      }),
+      responseDeadlineMs: 50,
+    }).then(() => 'resolved', (error) => error.message),
+    new Promise((resolve) => setTimeout(() => resolve('test guard elapsed'), 180)),
+  ]);
+  assert.match(outcome, /response deadline/);
+  assert.equal(aborted, true);
+  assert.ok(Date.now() - started < 150);
 });
 
 test('reads crawler policy using exact bot groups before wildcard rules', () => {

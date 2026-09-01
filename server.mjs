@@ -2,7 +2,7 @@
 import http from 'node:http';
 import { readFile } from 'node:fs/promises';
 import { runTier } from './lib/engine.mjs';
-import { handleTier } from './lib/handler.mjs';
+import { handleOperatorAudit, handleTier } from './lib/handler.mjs';
 
 const PORT = process.env.PORT || 3400;
 const [INDEX_HTML, STYLES_CSS, CLIENT_JS, THEME_TOGGLE_JS, ROBOTS_TXT, LLMS_TXT, SITEMAP_XML, METHOD_HTML, PRIVACY_HTML, OG_IMAGE_PNG] = await Promise.all([
@@ -36,6 +36,7 @@ const server = http.createServer(async (req, res) => {
     const url = new URL(req.url, `http://${req.headers.host || 'localhost'}`);
     if (req.method === 'POST' && url.pathname === '/api/scan') return await handleTier('scan', req, res, runTier);
     if (req.method === 'POST' && url.pathname === '/api/audit') return await handleTier('audit', req, res, runTier);
+    if (req.method === 'POST' && url.pathname === '/api/operator-audit') return await handleOperatorAudit(req, res, runTier);
     const readableMethod = req.method === 'GET' || req.method === 'HEAD';
     const send = (body) => res.end(req.method === 'HEAD' ? undefined : body);
     if (readableMethod && (url.pathname === '/audit' || url.pathname === '/audit/')) {

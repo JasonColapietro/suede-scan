@@ -16,6 +16,12 @@ Shared snapshots are base64url-encoded, not encrypted or signed; anyone who rece
 
 The free audit is protected by a browser-local result gate, a one-year HttpOnly usage cookie, a bot-trap field, Fetch Metadata checks, in-process burst limiting, and Vercel Firewall challenge and rate-limit rules. The firewall is the durable request boundary; the browser controls make the one-audit policy explicit and preserve the saved result.
 
+## Operator audit
+
+`POST /api/operator-audit` is the private server-to-server audit seam used by Suede Prospect Lens. It accepts exactly `{ "url": "https://example.com/" }` and returns a fresh `{ "handoff": { ... } }` without setting or bypassing the public one-audit cookie.
+
+The endpoint requires an exact bearer match against the production-only `SUEDE_AUDIT_OPERATOR_TOKEN`, which must be at least 32 characters. Authorization attempts and authenticated audit work have separate in-process rate buckets. Never expose the token to browser code, commit it, put it in a URL, or reuse it as a customer credential.
+
 ## Claim boundary
 
 The report inspects public HTML, `robots.txt`, `llms.txt`, and `sitemap.xml`. It does not run buyer prompts inside ChatGPT, Perplexity, Gemini, or another answer engine. A high readiness score does not guarantee citations, recommendations, or rankings.
