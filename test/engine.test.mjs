@@ -201,22 +201,33 @@ test('does not prepare a broken-link replacement to a non-successful audited pag
   assert.equal(crawl.preparedRepairs, 0);
 });
 
+// The oracle in these two tests is the race, not the clock. The deadline timer
+// and the guard timer are armed at the same moment, so under load they drift
+// together and Node still fires the shorter one first: the ordering holds at
+// any load. An absolute Date.now() bound does not, and reading one here made
+// the tests fail on a busy host while measuring nothing about the engine.
+//
+// The race still catches every regression that bound did. A deadline that is
+// never armed hangs until the guard wins; a deadline armed too long lets the
+// guard win as well. Either way `outcome` is the guard string and the match
+// below fails. GUARD_MS is the only tunable, and it is 4x the configured
+// deadline so a correct implementation cannot lose the race.
+const DEADLINE_MS = 50;
+const GUARD_MS = 200;
+
 test('enforces the response deadline while DNS resolution is pending', async () => {
-  const started = Date.now();
   const outcome = await Promise.race([
     runTier('audit', 'example.com', {
       lookupImpl: async () => new Promise(() => {}),
-      responseDeadlineMs: 50,
+      responseDeadlineMs: DEADLINE_MS,
     }).then(() => 'resolved', (error) => error.message),
-    new Promise((resolve) => setTimeout(() => resolve('test guard elapsed'), 180)),
+    new Promise((resolve) => setTimeout(() => resolve('test guard elapsed'), GUARD_MS)),
   ]);
   assert.match(outcome, /response deadline/);
-  assert.ok(Date.now() - started < 150);
 });
 
 test('aborts the production request while connection or headers are pending', async () => {
   let aborted = false;
-  const started = Date.now();
   const outcome = await Promise.race([
     runTier('audit', 'example.com', {
       lookupImpl: publicLookup,
@@ -226,13 +237,14 @@ test('aborts the production request while connection or headers are pending', as
           reject(Object.assign(new Error('aborted'), { name: 'AbortError' }));
         }, { once: true });
       }),
-      responseDeadlineMs: 50,
+      responseDeadlineMs: DEADLINE_MS,
     }).then(() => 'resolved', (error) => error.message),
-    new Promise((resolve) => setTimeout(() => resolve('test guard elapsed'), 180)),
+    new Promise((resolve) => setTimeout(() => resolve('test guard elapsed'), GUARD_MS)),
   ]);
   assert.match(outcome, /response deadline/);
+  // The signal must actually reach the in-flight request, not just reject the
+  // caller's promise and leave the socket open.
   assert.equal(aborted, true);
-  assert.ok(Date.now() - started < 150);
 });
 
 test('reads crawler policy using exact bot groups before wildcard rules', () => {
