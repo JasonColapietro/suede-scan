@@ -908,8 +908,29 @@ p { overflow-wrap: anywhere; }
   background: var(--bar-bg);
 }
 
-.report-nav .container { display: flex; gap: 28px; overflow-x: auto; scrollbar-width: none; }
-.report-nav .container::-webkit-scrollbar { display: none; }
+.report-nav .container { display: flex; align-items: center; gap: 20px; }
+.report-nav-sections { display: flex; gap: 28px; min-width: 0; flex: 1 1 auto; overflow-x: auto; scrollbar-width: none; }
+.report-nav-sections::-webkit-scrollbar { display: none; }
+
+/* Reaching a person stays one click away on the report, where the landing
+   page's #contact section is hidden and cannot be scrolled to. Pinned outside
+   the scrolling track so it is visible at every viewport width. */
+.report-nav .report-nav-contact {
+  flex: 0 0 auto;
+  /* A rule, not just a gap: the section links scroll right up to this edge on
+     narrow viewports and read as colliding with it otherwise. */
+  padding-left: 18px;
+  border-left: 1px solid var(--color-border);
+  color: var(--color-accent);
+  font-family: var(--font-data);
+  font-size: .7rem;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.report-nav .report-nav-contact:hover,
+.report-nav .report-nav-contact:focus-visible { color: var(--color-accent-hover); text-decoration: underline; text-underline-offset: 6px; }
 .report-nav a { min-height: 52px; display: grid; place-items: center; flex: 0 0 auto; color: var(--color-text-secondary); text-decoration: none; font-size: .82rem; font-weight: 500; }
 .report-nav a:hover,
 .report-nav a:focus-visible { color: var(--color-text-primary); text-decoration: underline; text-decoration-color: var(--color-accent); text-decoration-thickness: 2px; text-underline-offset: 8px; }
@@ -1303,6 +1324,12 @@ p { overflow-wrap: anywhere; }
 }
 
 .contact-fab svg { width: 17px; height: 17px; color: var(--color-accent); }
+
+/* On the report the sticky report-nav carries its own Contact entry, so the
+   floating control is redundant and was sitting over severity chips in the
+   findings table. Where :has() is unsupported the rule is dropped and the
+   control simply stays, which is the previous behavior. */
+body:has(#report:not([hidden])) .contact-fab { display: none; }
 .contact-fab:hover,
 .contact-fab:focus-visible { border-color: var(--color-accent); color: var(--color-accent); box-shadow: var(--shadow-elevated); }
 

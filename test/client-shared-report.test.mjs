@@ -99,6 +99,7 @@ function runClient({ pathname = '/', hash = '', storedReport = null } = {}) {
   const navLinks = [
     fakeElement({ href: '#checks', textContent: 'What it checks' }),
     fakeElement({ href: '#example', textContent: 'Example report' }),
+    fakeElement({ href: '#contact', textContent: 'Contact' }),
   ];
   const auditEntry = fakeElement();
   const storage = { gets: 0, sets: 0, removes: 0 };
@@ -337,7 +338,7 @@ test('leaving a report restores the landing nav it was given, not a hardcoded co
 
   // Viewing a report repurposes the first two links for in-report sections.
   assert.deepEqual(
-    run.navLinks.map((link) => [link.getAttribute('href'), link.textContent]),
+    run.navLinks.slice(0, 2).map((link) => [link.getAttribute('href'), link.textContent]),
     [['#readiness-field', 'Signal field'], ['#findings', 'Findings']],
   );
 
@@ -348,7 +349,7 @@ test('leaving a report restores the landing nav it was given, not a hardcoded co
   run.windowListeners.get('popstate')();
 
   assert.deepEqual(
-    run.navLinks.map((link) => [link.getAttribute('href'), link.textContent]),
+    run.navLinks.slice(0, 2).map((link) => [link.getAttribute('href'), link.textContent]),
     [['#checks', 'What it checks'], ['#example', 'Example report']],
   );
 });
@@ -361,4 +362,19 @@ test('report scores reach the DOM as a grade attribute the stylesheet can key on
   // to the accent instead of inheriting an arbitrary value.
   const bogus = runClient({ pathname: '/report/example.com', storedReport: reportFixture({ grade: 'Z</style>' }) });
   assert.equal(bogus.elements.get('score-card').getAttribute('data-grade'), '');
+});
+
+test('the header contact link becomes a mailto while the report hides #contact', () => {
+  const run = runClient({ pathname: '/report/example.com', storedReport: reportFixture() });
+  const contact = run.navLinks[2];
+
+  // #contact lives inside #landing-shell, which is hidden behind the report,
+  // so pointing at it here would be a link that does nothing.
+  assert.equal(contact.getAttribute('href'), 'mailto:info@suedeai.org');
+  assert.equal(contact.textContent, 'Contact');
+
+  run.location.pathname = '/';
+  run.windowListeners.get('popstate')();
+
+  assert.equal(contact.getAttribute('href'), '#contact');
 });
