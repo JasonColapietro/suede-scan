@@ -339,6 +339,13 @@ const REPORT_NAV = [
   { href: '#findings', text: 'Findings' },
 ];
 
+// The landing page's #contact section lives inside #landing-shell, which is
+// hidden while a report is on screen. Left alone, the header's Contact link
+// pointed at a hidden element and did nothing. Located by its landing href
+// rather than by position, so reordering the nav cannot silently break it.
+const CONTACT_MAILTO = 'mailto:info@suedeai.org';
+const contactNavIndex = landingNav.findIndex((link) => link.href === '#contact');
+
 function setReportNavigation(active) {
   if (navLinks.length < 2) return;
   REPORT_NAV.forEach((reportLink, index) => {
@@ -348,6 +355,12 @@ function setReportNavigation(active) {
     navLinks[index].setAttribute('href', next.href);
     navLinks[index].textContent = next.text;
   });
+  if (contactNavIndex >= 0) {
+    navLinks[contactNavIndex].setAttribute(
+      'href',
+      active ? CONTACT_MAILTO : landingNav[contactNavIndex].href,
+    );
+  }
 }
 
 function formatTimestamp(value, elapsedMs) {

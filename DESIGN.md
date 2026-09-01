@@ -257,11 +257,33 @@ Rules that keep this honest:
 - **Dark mode uses lighter twins**, same hue, chroma pulled back, so the ramp
   reads on `#101114` without going neon.
 
-## Known Trade-off
+## Contact Ranks
 
-The fixed contact control overlaps report content at some scroll positions on
-long reports. It was measured across the full scroll range at 1280x900 and
-390x844: it never covers an interactive control, but it does sit over severity
-chips in the findings table at a few offsets. This is inherent to a viewport-fixed
-launcher over a long dense document, and is the accepted cost of contact staying
-reachable from every scroll position.
+Contact is a primary action here, not a footer courtesy, and each view carries
+the rank that fits it.
+
+| View | Affordance |
+| --- | --- |
+| Landing | Nav link to `#contact`, the `#contact` section, and the fixed control |
+| Report | `Contact` pinned in the sticky report nav, plus the header link as a mailto |
+| Both | Footer link |
+
+Two rules make the report case work:
+
+- **The fixed control is hidden on the report.** It was sitting over severity
+  chips in the findings table at several scroll offsets. The sticky report nav
+  already carries Contact there, so the floating copy was redundant as well as
+  in the way. Hidden via `body:has(#report:not([hidden]))`; where `:has()` is
+  unsupported the rule is dropped and the control stays, which is the older
+  behavior rather than a broken one.
+- **The header link swaps to a mailto on the report.** `#contact` lives inside
+  `#landing-shell`, which is hidden behind the report, so the header link
+  pointed at a hidden element and did nothing. `setReportNavigation` finds it by
+  its landing href rather than by position, so reordering the nav cannot
+  silently break it again.
+
+Remaining gap, accepted: at the very top of the report on a narrow viewport the
+report nav has not scrolled into view yet, so contact is one scroll away there.
+From that point down it is pinned. Verified by sweeping the full scroll range at
+1280x900 and 390x844, where the fixed control now overlaps no text and no
+control anywhere on the report.
