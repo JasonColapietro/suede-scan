@@ -21,7 +21,12 @@ than keeping a second visual language.
 
 - Color strategy: Restrained base with a full signal palette on the report. Near-white paper and white panels carry the page, indigo marks every action, and green/amber/red/violet stay reserved for verified access, repair priority, blockers, and the overall score.
 - Aesthetic tone: refined minimal. A serif display voice over a low-density, hairline-ruled product surface, inherited from Suede Agent Studio.
-- Unforgettable factor: the Answer Readiness Field plots every audit lane by measured readiness and finding impact, turning the report into an inspectable signal map.
+- Unforgettable factor: the Answer Readiness Field plots every audit lane by
+  measured readiness and finding impact, turning the report into an inspectable
+  signal map. Every lane bar, pillar bar, and the overall gauge are inked from
+  the grade ramp, so the shape of the verdict is legible before a single number
+  is read: a red Entity row next to a green Technical row says more at a glance
+  than eight identical bars ever did.
 - Signature artifact: a live score rail that connects crawler access, entity structure, content, and technical health.
 
 ## Reference Translation
@@ -71,6 +76,13 @@ claims do not transfer to this page.
   --color-warning: #92400e;
   --color-error: #b91c1c;
   --color-score: #7c3aed;            /* 5.70:1 on white, large score text */
+
+  /* Grade ramp. Thresholds mirror grade() in lib/engine.mjs. */
+  --grade-a: #10b981;                /* >=90 */
+  --grade-b: #0ea5e9;                /* >=80 */
+  --grade-c: #f59e0b;                /* >=70 */
+  --grade-d: #ea580c;                /* >=55 */
+  --grade-f: #dc2626;                /* below 55 */
   --brand-plate: #111317;            /* theme-stable; the mark is a light glyph */
   --font-personality: "Instrument Serif", Georgia, serif;
   --font-utility: "Geist", ui-sans-serif, system-ui, sans-serif;
@@ -222,3 +234,34 @@ the page's own type scale, palette, and section rhythm are unchanged.
   reduced-motion block, and the print sheet continue to apply without edits.
 - All added sections live inside `#landing-shell`, so a rendered report hides
   them. Sample figures can never appear beside a real audit result.
+
+## Grade Color Contract
+
+`renderReport` writes the engine's grade onto three elements as `data-grade`:
+the score card, each pillar card, and each lane row. The stylesheet resolves
+`--grade` from that attribute, and the gauge, pillar bars, and lane bars fill
+with `var(--grade, var(--color-accent))`.
+
+Rules that keep this honest:
+
+- **Color is never the only carrier.** Every graded element renders its numeric
+  score and its letter grade as text beside the fill, so the ramp is redundant
+  encoding, not the signal itself. This is what keeps it usable for a reader who
+  cannot distinguish the hues.
+- **Only `A`-`F` reach the DOM.** `gradeAttr()` in `client.js` rejects anything
+  else, so a malformed grade falls back to the accent fill rather than injecting
+  an arbitrary attribute value. Covered by a test.
+- **The grade letter is not tinted.** `--grade-c` and `--grade-d` are amber and
+  orange fills that do not hold 4.5:1 as text on white. The gauge carries the
+  color; the letter carries the contrast.
+- **Dark mode uses lighter twins**, same hue, chroma pulled back, so the ramp
+  reads on `#101114` without going neon.
+
+## Known Trade-off
+
+The fixed contact control overlaps report content at some scroll positions on
+long reports. It was measured across the full scroll range at 1280x900 and
+390x844: it never covers an interactive control, but it does sit over severity
+chips in the findings table at a few offsets. This is inherent to a viewport-fixed
+launcher over a long dense document, and is the accepted cost of contact staying
+reachable from every scroll position.

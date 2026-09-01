@@ -57,24 +57,33 @@ function encodeSnapshot(report) {
   return Buffer.from(JSON.stringify({ version: 1, report }), 'utf8').toString('base64url');
 }
 
-function fakeElement() {
+function fakeElement(initial = {}) {
   const listeners = new Map();
+  const attributes = { ...initial };
   const strong = { textContent: '' };
   return {
     hidden: false,
     disabled: false,
-    textContent: '',
+    textContent: initial.textContent ?? '',
     value: '',
-    href: '',
+    href: initial.href ?? '',
     innerHTML: '',
     listeners,
     classList: { add() {}, remove() {} },
     style: { setProperty() {} },
     addEventListener(type, listener) { listeners.set(type, listener); },
     focus() {},
-    removeAttribute() {},
+    removeAttribute(name) { delete attributes[name]; },
     scrollIntoView() {},
-    setAttribute() {},
+    // client.js restores the landing nav from the attributes it captured at
+    // startup, so the fake has to model getAttribute/setAttribute rather than
+    // swallow them. href stays a plain property too, since other code paths
+    // (and other tests) assign it directly.
+    getAttribute(name) { return name in attributes ? attributes[name] : (name === 'href' ? this.href : null); },
+    setAttribute(name, value) {
+      attributes[name] = String(value);
+      if (name === 'href') this.href = String(value);
+    },
     querySelector(selector) { return selector === 'strong' ? strong : null; },
   };
 }
@@ -87,7 +96,10 @@ function runClient({ pathname = '/', hash = '', storedReport = null } = {}) {
   };
   element('report').hidden = true;
   element('company-offer').hidden = true;
-  const navLinks = [fakeElement(), fakeElement()];
+  const navLinks = [
+    fakeElement({ href: '#checks', textContent: 'What it checks' }),
+    fakeElement({ href: '#example', textContent: 'Example report' }),
+  ];
   const auditEntry = fakeElement();
   const storage = { gets: 0, sets: 0, removes: 0 };
   const network = { fetches: 0 };
@@ -154,7 +166,7 @@ function runClient({ pathname = '/', hash = '', storedReport = null } = {}) {
     window,
   };
   vm.runInNewContext(clientSource, context);
-  return { auditEntry, clipboard, elements, historyCalls, location, network, storage, windowListeners };
+  return { auditEntry, clipboard, elements, historyCalls, location, navLinks, network, storage, windowListeners };
 }
 
 test('shared snapshot renders the report and company offer without spending an audit', () => {
@@ -318,4 +330,35 @@ test('Copy report clearly refuses an oversized snapshot without truncation or fa
   assert.equal(run.clipboard.length, 0);
   assert.equal(run.network.fetches, 0);
   assert.equal(run.elements.get('copy-report').textContent, 'Report too large to share');
+});
+
+test('leaving a report restores the landing nav it was given, not a hardcoded copy', () => {
+  const run = runClient({ pathname: '/report/example.com', storedReport: reportFixture() });
+
+  // Viewing a report repurposes the first two links for in-report sections.
+  assert.deepEqual(
+    run.navLinks.map((link) => [link.getAttribute('href'), link.textContent]),
+    [['#readiness-field', 'Signal field'], ['#findings', 'Findings']],
+  );
+
+  // Going back to the landing page restores what index.html actually ships.
+  // This used to write a stale hardcoded pair, which dropped "Example report"
+  // and left the landing nav showing "Method" twice.
+  run.location.pathname = '/';
+  run.windowListeners.get('popstate')();
+
+  assert.deepEqual(
+    run.navLinks.map((link) => [link.getAttribute('href'), link.textContent]),
+    [['#checks', 'What it checks'], ['#example', 'Example report']],
+  );
+});
+
+test('report scores reach the DOM as a grade attribute the stylesheet can key on', () => {
+  const run = runClient({ pathname: '/report/example.com', storedReport: reportFixture({ grade: 'B' }) });
+  assert.equal(run.elements.get('score-card').getAttribute('data-grade'), 'B');
+
+  // Anything outside A-F must not reach the attribute, so the fill falls back
+  // to the accent instead of inheriting an arbitrary value.
+  const bogus = runClient({ pathname: '/report/example.com', storedReport: reportFixture({ grade: 'Z</style>' }) });
+  assert.equal(bogus.elements.get('score-card').getAttribute('data-grade'), '');
 });

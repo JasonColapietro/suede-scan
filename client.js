@@ -16,6 +16,14 @@ const formError = byId('form-error');
 const loadingPanel = byId('loading-panel');
 const loadingDetail = byId('loading-detail');
 const navLinks = [...document.querySelectorAll('.primary-nav a')];
+// Captured before anything rewrites them. setReportNavigation used to restore
+// hardcoded landing labels that had drifted from the markup, so returning from
+// a report left the nav showing "Method" twice and dropped "Example report".
+// Reading the real values means the nav follows the HTML instead of a copy.
+const landingNav = navLinks.map((link) => ({
+  href: link.getAttribute('href'),
+  text: link.textContent,
+}));
 const auditEntry = document.querySelector('[data-audit-entry]');
 const emailInput = byId('audit-email');
 const codePanel = byId('code-panel');
@@ -41,6 +49,10 @@ const escapeHtml = (value) => String(value ?? '').replace(/[&<>'"]/g, (character
 }[character]));
 
 const clampScore = (value) => Math.max(0, Math.min(100, Number(value) || 0));
+
+// Only A-F reach the DOM as a grade attribute, so a malformed or absent grade
+// degrades to the accent fill rather than injecting an arbitrary value.
+const gradeAttr = (value) => (/^[ABCDF]$/.test(String(value ?? '')) ? String(value) : '');
 
 const COMPANY_OFFER_SEED_CAP = 6144;
 const COMPANY_OFFER_FINDING_CAP = 6;
@@ -322,12 +334,20 @@ function clearError() {
   urlInput.removeAttribute('aria-invalid');
 }
 
+const REPORT_NAV = [
+  { href: '#readiness-field', text: 'Signal field' },
+  { href: '#findings', text: 'Findings' },
+];
+
 function setReportNavigation(active) {
   if (navLinks.length < 2) return;
-  navLinks[0].href = active ? '#readiness-field' : '#checks';
-  navLinks[0].textContent = active ? 'Signal field' : 'What it checks';
-  navLinks[1].href = active ? '#findings' : '#method';
-  navLinks[1].textContent = active ? 'Findings' : 'Method';
+  REPORT_NAV.forEach((reportLink, index) => {
+    const restore = landingNav[index];
+    if (!restore) return;
+    const next = active ? reportLink : restore;
+    navLinks[index].setAttribute('href', next.href);
+    navLinks[index].textContent = next.text;
+  });
 }
 
 function formatTimestamp(value, elapsedMs) {
@@ -357,7 +377,7 @@ function renderPillars(pillars) {
   byId('pillar-grid').innerHTML = pillars.map((pillar) => {
     const score = clampScore(pillar.score);
     return `
-      <article class="pillar-card">
+      <article class="pillar-card" data-grade="${gradeAttr(pillar.grade)}">
         <header><h3>${escapeHtml(pillar.name)}</h3><div class="pillar-score">${score}<span>/100</span></div></header>
         <p>${escapeHtml(pillar.description)}</p>
         <div class="pillar-progress" role="progressbar" aria-label="${escapeHtml(pillar.name)} score" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${score}"><span style="width:${score}%"></span></div>
@@ -412,7 +432,7 @@ function renderLanes(lanes) {
       ? `${lane.highImpactOpen} high-impact ${lane.highImpactOpen === 1 ? 'blocker' : 'blockers'}`
       : 'No high-impact blockers';
     return `
-      <div class="lane-row">
+      <div class="lane-row" data-grade="${gradeAttr(lane.grade)}">
         <div class="lane-name">${escapeHtml(name)}</div>
         <div class="lane-track" role="progressbar" aria-label="${escapeHtml(name)} readiness" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${score}"><span style="width:${score}%"></span></div>
         <div class="lane-score">${score}/100</div>
@@ -509,6 +529,7 @@ function renderReport(data, { sharedSnapshot = false } = {}) {
   byId('score-value').textContent = score;
   byId('grade-value').textContent = data.grade;
   byId('score-gauge').style.setProperty('--score-angle', `${score * 3.6}deg`);
+  byId('score-card').setAttribute('data-grade', gradeAttr(data.grade));
   byId('methodology-copy').textContent = data.methodology;
   byId('share-score').querySelector('strong').textContent = score;
   byId('share-report-title').textContent = sharedSnapshot
