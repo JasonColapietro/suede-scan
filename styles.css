@@ -7,7 +7,11 @@
   --color-surface-soft: #f3f4f9;
   --color-text-primary: #111317;
   --color-text-secondary: #475467;
-  --color-text-tertiary: #6b7280;
+  /* Tertiary ink has to clear 4.5:1 on every surface it lands on, not just
+     white. Studio's #6b7280 held on the page but fell to 4.40 on
+     --color-surface-soft and 4.24 on --neutral-bg, both of which carry
+     tertiary labels in the report. #636b78 is 4.72:1 at worst. */
+  --color-text-tertiary: #636b78;
   --color-accent: #4f46e5;
   --color-accent-hover: #4338ca;
   /* Separate from --color-accent: this backs a solid button with white
@@ -50,6 +54,17 @@
   --share-score-bg: #111317;
   --share-score-text: #ffffff;
   --brand-plate: #111317;
+
+  /* Grade ramp. Thresholds match grade() in lib/engine.mjs: A>=90, B>=80,
+     C>=70, D>=55, F below. Applied to the gauge, pillar bars, and lane bars so
+     the reader sees the verdict before reading a single number. Fills only,
+     never the sole carrier of meaning: each sits beside its own score and
+     letter grade in text. */
+  --grade-a: #10b981;
+  --grade-b: #0ea5e9;
+  --grade-c: #f59e0b;
+  --grade-d: #ea580c;
+  --grade-f: #dc2626;
   --share-score-muted: #9aa1b0;
 
   /* Studio's display/body/data trio. Instrument Serif carries headings, Geist
@@ -115,6 +130,13 @@
   --share-score-bg: #1d1f26;
   --share-score-text: #f4f5f7;
   --brand-plate: #1d1f26;
+
+  /* Lighter twins so the ramp reads on the dark page without going neon. */
+  --grade-a: #34d399;
+  --grade-b: #38bdf8;
+  --grade-c: #fbbf24;
+  --grade-d: #fb923c;
+  --grade-f: #f87171;
   --share-score-muted: #9aa1b0;
 }
 
@@ -755,6 +777,13 @@ p { overflow-wrap: anywhere; }
   padding-block: 70px;
 }
 
+/* Any element carrying data-grade resolves --grade for its own subtree. */
+[data-grade="A"] { --grade: var(--grade-a); }
+[data-grade="B"] { --grade: var(--grade-b); }
+[data-grade="C"] { --grade: var(--grade-c); }
+[data-grade="D"] { --grade: var(--grade-d); }
+[data-grade="F"] { --grade: var(--grade-f); }
+
 .report-status {
   display: flex;
   align-items: center;
@@ -789,13 +818,14 @@ p { overflow-wrap: anywhere; }
   border-radius: 999px;
   background: var(--color-surface);
   color: var(--color-text-primary);
-  box-shadow: var(--shadow-card);
-  font-weight: 500;
+  font: 600 .68rem/1 var(--font-data);
+  letter-spacing: .08em;
+  text-transform: uppercase;
 }
 
 .report-status i { width: 8px; height: 8px; border-radius: 50%; background: var(--color-success); }
 .report--shared-snapshot .report-status i { background: var(--color-warning); }
-.report-status b { font-weight: 400; }
+.report-status b { font: 500 .78rem/1 var(--font-utility); }
 .report-lead h1,
 .report-lead .report-title { max-width: 13ch; font-size: clamp(3rem, 6vw, 5.7rem); overflow-wrap: anywhere; margin: 0; }
 #report-subtitle { margin: 12px 0 0; color: var(--color-text-secondary); font-size: clamp(1.08rem, 1.4vw, 1.3rem); }
@@ -838,7 +868,7 @@ p { overflow-wrap: anywhere; }
   place-items: center;
   margin: 0 auto;
   border-radius: 50%;
-  background: conic-gradient(var(--color-score) 0 var(--score-angle), var(--gauge-track) var(--score-angle) 360deg);
+  background: conic-gradient(var(--grade, var(--color-accent)) 0 var(--score-angle), var(--gauge-track) var(--score-angle) 360deg);
   transform: rotate(-105deg);
 }
 
@@ -863,8 +893,8 @@ p { overflow-wrap: anywhere; }
 .score-gauge span { color: var(--color-text-secondary); font-size: .72rem; }
 .grade-row { display: flex; justify-content: space-between; align-items: baseline; margin-top: 21px; padding-top: 16px; border-top: 1px solid var(--color-border); }
 .grade-row span { color: var(--color-text-secondary); font-size: .76rem; }
-.grade-row strong { font-family: var(--font-personality); font-size: 1.45rem; font-weight: 400; }
-.score-platforms { display: grid; grid-template-columns: repeat(auto-fit, minmax(72px, 1fr)); gap: 7px; margin-top: 16px; }
+.grade-row strong { font-family: var(--font-personality); font-size: 2rem; font-weight: 400; line-height: 1; }
+.score-platforms { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 12px; margin-top: 18px; }
 .score-platforms span { min-width: 0; display: grid; gap: 3px; text-align: center; color: var(--color-text-tertiary); font: 500 .58rem/1.25 var(--font-data); }
 .score-platforms i { width: 6px; height: 6px; margin: auto; border-radius: 50%; background: var(--color-success); }
 .score-platforms .blocked i { background: var(--color-error); }
@@ -909,7 +939,7 @@ p { overflow-wrap: anywhere; }
 .pillar-score span { color: var(--color-text-tertiary); font: 500 .68rem/1 var(--font-data); }
 .pillar-card p { min-height: 3.2em; margin: 12px 0 20px; color: var(--color-text-secondary); font-size: .86rem; }
 .pillar-progress { height: 7px; overflow: hidden; border-radius: 99px; background: var(--color-surface-soft); }
-.pillar-progress span { height: 100%; display: block; border-radius: inherit; background: var(--color-accent); transform-origin: left; transition: transform var(--motion-slow) var(--motion-easing); }
+.pillar-progress span { height: 100%; display: block; border-radius: inherit; background: var(--grade, var(--color-accent)); transform-origin: left; transition: transform var(--motion-slow) var(--motion-easing); }
 .pillar-foot { display: flex; justify-content: space-between; margin-top: 11px; color: var(--color-text-tertiary); font: 500 .66rem/1.4 var(--font-data); }
 
 .report-insight {
@@ -954,9 +984,9 @@ p { overflow-wrap: anywhere; }
 .lane-row:last-child { border-bottom: 0; }
 .lane-name { font-weight: 600; }
 .lane-track { height: 9px; overflow: hidden; border-radius: 99px; background: var(--color-surface-soft); }
-.lane-track span { height: 100%; display: block; border-radius: inherit; background: var(--color-accent); }
+.lane-track span { height: 100%; display: block; border-radius: inherit; background: var(--grade, var(--color-accent)); }
 .lane-score { text-align: right; font: 600 .83rem/1 var(--font-data); }
-.lane-impact { justify-self: end; color: var(--color-text-tertiary); font: 500 .64rem/1.45 var(--font-data); }
+.lane-impact { justify-self: end; text-align: right; color: var(--color-text-tertiary); font: 500 .64rem/1.45 var(--font-data); }
 .lane-impact.high { color: var(--color-error); font-weight: 600; }
 
 .repair-list { counter-reset: repairs; border-top: 1px solid var(--color-border-strong); }
