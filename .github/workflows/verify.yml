@@ -23,6 +23,7 @@ jobs:
           node --check client.js
           node --check server.mjs
           node --check api/audit.mjs
+          node --check api/operator-audit.mjs
           node --check api/scan.mjs
           node --check lib/engine.mjs
           node --check lib/handler.mjs
