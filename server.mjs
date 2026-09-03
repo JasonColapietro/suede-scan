@@ -5,7 +5,7 @@ import { runTier } from './lib/engine.mjs';
 import { handleOperatorAudit, handleTier } from './lib/handler.mjs';
 
 const PORT = process.env.PORT || 3400;
-const [INDEX_HTML, STYLES_CSS, CLIENT_JS, THEME_TOGGLE_JS, ROBOTS_TXT, LLMS_TXT, SITEMAP_XML, METHOD_HTML, PRIVACY_HTML, OG_IMAGE_PNG] = await Promise.all([
+const [INDEX_HTML, STYLES_CSS, CLIENT_JS, THEME_TOGGLE_JS, ROBOTS_TXT, LLMS_TXT, SITEMAP_XML, METHOD_HTML, PRIVACY_HTML, OG_IMAGE_PNG, LOGO_PNG, FAVICON_ICO] = await Promise.all([
   readFile(new URL('./index.html', import.meta.url)),
   readFile(new URL('./styles.css', import.meta.url)),
   readFile(new URL('./client.js', import.meta.url)),
@@ -16,6 +16,8 @@ const [INDEX_HTML, STYLES_CSS, CLIENT_JS, THEME_TOGGLE_JS, ROBOTS_TXT, LLMS_TXT,
   readFile(new URL('./method.html', import.meta.url)),
   readFile(new URL('./privacy.html', import.meta.url)),
   readFile(new URL('./og-suede-audit.png', import.meta.url)),
+  readFile(new URL('./suede-ai-logo.png', import.meta.url)),
+  readFile(new URL('./favicon.ico', import.meta.url)),
 ]);
 const STATIC_FILES = new Map([
   ['/styles.css', [STYLES_CSS, 'text/css; charset=utf-8']],
@@ -25,6 +27,8 @@ const STATIC_FILES = new Map([
   ['/llms.txt', [LLMS_TXT, 'text/plain; charset=utf-8']],
   ['/sitemap.xml', [SITEMAP_XML, 'application/xml; charset=utf-8']],
   ['/og-suede-audit.png', [OG_IMAGE_PNG, 'image/png']],
+  ['/suede-ai-logo.png', [LOGO_PNG, 'image/png']],
+  ['/favicon.ico', [FAVICON_ICO, 'image/x-icon']],
   ['/method', [METHOD_HTML, 'text/html; charset=utf-8']],
   ['/method/', [METHOD_HTML, 'text/html; charset=utf-8']],
   ['/privacy', [PRIVACY_HTML, 'text/html; charset=utf-8']],

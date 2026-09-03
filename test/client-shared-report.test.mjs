@@ -370,7 +370,7 @@ test('the header contact link becomes a mailto while the report hides #contact',
 
   // #contact lives inside #landing-shell, which is hidden behind the report,
   // so pointing at it here would be a link that does nothing.
-  assert.equal(contact.getAttribute('href'), 'mailto:info@suedeai.org');
+  assert.equal(contact.getAttribute('href'), 'mailto:info@suedeai.ai');
   assert.equal(contact.textContent, 'Contact');
 
   run.location.pathname = '/';

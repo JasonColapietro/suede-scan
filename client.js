@@ -343,7 +343,7 @@ const REPORT_NAV = [
 // hidden while a report is on screen. Left alone, the header's Contact link
 // pointed at a hidden element and did nothing. Located by its landing href
 // rather than by position, so reordering the nav cannot silently break it.
-const CONTACT_MAILTO = 'mailto:info@suedeai.org';
+const CONTACT_MAILTO = 'mailto:info@suedeai.ai';
 const contactNavIndex = landingNav.findIndex((link) => link.href === '#contact');
 
 function setReportNavigation(active) {
