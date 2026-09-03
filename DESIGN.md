@@ -135,7 +135,7 @@ twin of its light-theme counterpart. Full set in `styles.css`.
 - Primary CTA: `Run the audit`. Control labels render mono uppercase.
 - Secondary CTA: `Copy report link`.
 - Contact: `Contact`, reachable from the nav, a named section, and a control
-  fixed to the viewport on every page. Address is `info@suedeai.org`.
+  fixed to the viewport on every page. Address is `info@suedeai.ai`.
 - Loading: `Inspecting public site signals`.
 - Success: `Audit complete`.
 - Error: `We could not inspect that public URL. Check the address and try again.`
