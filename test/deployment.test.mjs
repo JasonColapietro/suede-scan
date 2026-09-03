@@ -62,7 +62,6 @@ test('ships the authenticated operator endpoint through Vercel and the local ser
 
 test('uses one local 1200x630 social card across every public audit document', async () => {
   const imageUrl = 'https://optimize.suedeai.ai/og-suede-audit.png';
-  const legacyLogoUrl = 'https://raw.githubusercontent.com/JasonColapietro/suede-creator-skills/cbd192309580a32da375881e0eeb4b2450a554c2/docs/assets/suede-ai-logo-transparent.png';
 
   for (const page of ['index.html', 'method.html', 'privacy.html']) {
     const html = await readFile(new URL(`../${page}`, import.meta.url), 'utf8');
@@ -72,7 +71,11 @@ test('uses one local 1200x630 social card across every public audit document', a
     assert.match(html, /<meta property="og:image:height" content="630">/);
     assert.match(html, /<meta property="og:image:type" content="image\/png">/);
     assert.match(html, new RegExp(`<meta name="twitter:image" content="${imageUrl.replaceAll('.', '\\.')}">`));
-    assert.match(html, new RegExp(`<link rel="icon" href="${legacyLogoUrl.replaceAll('.', '\\.')}">`));
-    assert.match(html, new RegExp(`<img src="${legacyLogoUrl.replaceAll('.', '\\.')}" alt="" width="36" height="36">`));
+    // The mark is served from this host. It used to be hotlinked from
+    // raw.githubusercontent.com, pinned to a commit SHA.
+    assert.match(html, /<link rel="icon" href="\/favicon\.ico" sizes="any">/);
+    assert.match(html, /<link rel="icon" type="image\/png" href="\/suede-ai-logo\.png">/);
+    assert.match(html, /<img src="\/suede-ai-logo\.png" alt="" width="36" height="36">/);
+    assert.ok(!html.includes('raw.githubusercontent.com'), `${page} still hotlinks GitHub raw`);
   }
 });
