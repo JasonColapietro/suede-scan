@@ -11,13 +11,13 @@
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Suede Audit">
   <meta property="og:title" content="Suede Audit | AI Discovery and SEO Readiness">
-  <meta property="og:description" content="Inspect public-site discovery signals, see every failed check, and leave with a prioritized repair list.">
+  <meta property="og:description" content="Inspect public-site discovery signals, see each failed check, and leave with a prioritized repair list.">
   <meta property="og:url" content="https://optimize.suedeai.ai/">
   <meta property="og:image" content="https://optimize.suedeai.ai/og-suede-audit.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:type" content="image/png">
-  <meta property="og:image:alt" content="Approved Suede mark">
+  <meta property="og:image:alt" content="Suede Labs AI logo">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Suede Audit | AI Discovery and SEO Readiness">
   <meta name="twitter:description" content="A scored public-site audit with crawler, entity, content, and technical evidence.">
@@ -89,7 +89,7 @@
           <div class="landing-copy">
             <p class="eyebrow">Public-signal audit</p>
             <h1 id="landing-title">See what answer engines <span class="headline-accent">can actually read.</span></h1>
-            <p class="landing-subhead">Suede inspects public HTML, crawler rules, entity schema, sitemap coverage, metadata, and content structure. Every failed check points to a repair.</p>
+            <p class="landing-subhead">Suede inspects public HTML, crawler rules, entity schema, sitemap coverage, metadata, and content structure. Each failed check points to a repair.</p>
 
             <form id="audit-form" class="audit-form" novalidate>
               <label for="audit-url">Website to inspect</label>
@@ -98,13 +98,13 @@
               <div class="form-row form-row--stack">
                 <input id="audit-url" name="url" type="text" inputmode="url" autocomplete="url" spellcheck="false" placeholder="suedeai.ai" required aria-describedby="form-note form-error">
               </div>
-              <label for="audit-email">Work email — your report unlocks with a code we send here</label>
+              <label for="audit-email">Work email. Your report unlocks with a code we send here.</label>
               <div class="form-row">
                 <input id="audit-email" name="email" type="email" inputmode="email" autocomplete="email" spellcheck="false" placeholder="you@company.com" required aria-describedby="form-note form-error">
                 <button id="submit-button" class="button button-primary" type="submit">Run the audit</button>
               </div>
               <p id="form-error" class="form-error" role="alert" hidden></p>
-              <p id="form-note" class="form-note">One free audit per browser. Public websites only. No account — a working email unlocks the report.</p>
+              <p id="form-note" class="form-note">One free audit per browser. Public websites only. No account. A working email unlocks the report.</p>
             </form>
 
             <div id="code-panel" class="code-panel" aria-live="polite" hidden>
@@ -114,7 +114,7 @@
                 <button id="code-button" class="button button-primary" type="button">Unlock the report</button>
               </div>
               <p id="code-error" class="form-error" role="alert" hidden></p>
-              <p class="form-note">The code expires in 15 minutes. Nothing arriving? Check spam, or <button type="button" class="link-button" id="code-restart">start over</button> with a different address.</p>
+              <p class="form-note">The code expires in 15 minutes. No code arriving? Check spam, or <button type="button" class="link-button" id="code-restart">start over</button> with a different address.</p>
             </div>
 
             <div id="loading-panel" class="loading-panel" aria-live="polite" hidden>
@@ -139,7 +139,7 @@
               <div><span>02</span><b>Entity evidence</b><em>JSON-LD</em></div>
               <div><span>03</span><b>Content clarity</b><em>HTML</em></div>
             </div>
-            <div class="preview-foot">Every result links an observed signal to a repair.</div>
+            <div class="preview-foot">Each result links an observed signal to a repair.</div>
           </div>
         </div>
       </section>
@@ -154,7 +154,7 @@
             <li class="step-card">
               <span class="step-index">01</span>
               <h3>Enter a public URL</h3>
-              <p>Give the audit any public homepage. Nothing is crawled behind a login, and no account is created.</p>
+              <p>Give the audit any public homepage. No page behind a login is crawled, and no account is created.</p>
             </li>
             <li class="step-card">
               <span class="step-index">02</span>
@@ -164,7 +164,7 @@
             <li class="step-card">
               <span class="step-index">03</span>
               <h3>Leave with repairs</h3>
-              <p>Every failed check shows the value we observed and the specific repair that clears it.</p>
+              <p>Each failed check shows the value we observed and the specific repair that clears it.</p>
             </li>
           </ol>
         </div>
@@ -205,7 +205,7 @@
               <tbody>
                 <tr><td>Tells you to add schema.</td><td>Shows the JSON-LD it parsed and the primary entity type it found.</td></tr>
                 <tr><td>Assumes answer engines can reach you.</td><td>Reports the robots.txt policy state for each named answer-engine crawler.</td></tr>
-                <tr><td>Scores every item equally.</td><td>Weights blockers above polish, so a blocked crawler outranks a missing preview image.</td></tr>
+                <tr><td>Scores each item equally.</td><td>Weights blockers above polish, so a blocked crawler outranks a missing preview image.</td></tr>
                 <tr><td>Ends at a list of problems.</td><td>Ends at one repair per failed signal, with the observed value attached.</td></tr>
               </tbody>
             </table>
@@ -280,7 +280,7 @@
             <h2 id="method-title">Truth stays attached to the artifact.</h2>
           </div>
           <div class="method-copy">
-            <p>The audit fetches one public page plus root discovery files. It scores weighted checks, shows the measured value, and names the repair for every failed signal.</p>
+            <p>The audit fetches one public page plus root discovery files. It scores weighted checks, shows the measured value, and names the repair for each failed signal.</p>
             <p>A high score is not proof of an AI citation. Buyer-prompt evidence requires separate, timestamped runs inside each answer engine.</p>
             <a class="text-link" href="https://github.com/JasonColapietro/suede-scan" target="_blank" rel="noreferrer">Read the audit source <span aria-hidden="true">&#8599;</span></a>
             <a class="text-link" href="/method">Read the full scoring method <span aria-hidden="true">&#8594;</span></a>
@@ -295,7 +295,7 @@
           <div class="faq-list">
             <details>
               <summary>What does the free audit check?</summary>
-              <p>The audit inspects your public homepage plus root discovery files: robots.txt, llms.txt, and sitemap.xml. It scores crawler access, entity and content evidence, and answer-engine crawl policy, then names a repair for every failed signal.</p>
+              <p>The audit inspects your public homepage plus root discovery files: robots.txt, llms.txt, and sitemap.xml. It scores crawler access, entity and content evidence, and answer-engine crawl policy, then names a repair for each failed signal.</p>
             </details>
             <details>
               <summary>Does a high score mean AI engines will cite my site?</summary>
@@ -303,7 +303,7 @@
             </details>
             <details>
               <summary>How many free audits can I run?</summary>
-              <p>One free audit per browser, on a public website. No account is created — you confirm a working email with a 6-digit code and the report unlocks on screen.</p>
+              <p>One free audit per browser, on a public website. No account is created. You confirm a working email with a 6-digit code and the report unlocks on screen.</p>
             </details>
             <details>
               <summary>Why do you ask for my email?</summary>
@@ -320,7 +320,7 @@
         <div class="container founder-grid">
           <div>
             <p class="section-kicker">Who built this</p>
-            <h2 id="founder-title">The method is public because it should be checkable.</h2>
+            <h2 id="founder-title">The method is public. It should be checkable.</h2>
             <p>Suede Audit is built by Jason Colapietro, founder of Suede Labs AI. The scoring code is open source, so any result on this page can be traced to the check that produced it.</p>
             <p>If a score looks wrong, read the source and tell us. That is a better contract than a number you cannot inspect.</p>
             <div class="founder-links">
@@ -329,7 +329,7 @@
             </div>
           </div>
           <ul class="founder-facts">
-            <li><b>Open source</b><span>Every weighted check in this audit is published in the public repository.</span></li>
+            <li><b>Open source</b><span>Each weighted check in this audit is published in the public repository.</span></li>
             <li><b>21 merged pull requests</b><span>Across 19 open-source projects, including Backstage and Jest.</span></li>
             <li><b>Suede Labs AI</b><span>Founded 2024. Admitted to Stripe Startups in 2026.</span></li>
           </ul>
@@ -355,7 +355,7 @@
         <div class="container closing-inner">
           <p class="section-kicker">Run it</p>
           <h2 id="closing-title">See what answer engines read on your site.</h2>
-          <p>One free audit per browser. Public websites only. No signup, no credit card — a verified email unlocks your report.</p>
+          <p>One free audit per browser. Public websites only. No signup, no credit card. A verified email unlocks your report.</p>
           <a class="button button-primary" href="#audit-url">Run your free audit</a>
         </div>
       </section>
@@ -403,7 +403,7 @@
             <a href="#crawler-access">Crawler access</a>
             <a href="#readiness-field">Signal field</a>
             <a href="#repairs">Repairs</a>
-            <a href="#findings">All findings</a>
+            <a href="#findings">Full findings</a>
           </div>
           <a class="report-nav-contact" href="mailto:info@suedeai.ai">Contact</a>
         </div>
@@ -448,7 +448,7 @@
         <div class="container">
           <div class="section-heading">
             <p class="section-kicker">Answer Readiness Field</p>
-            <h2 id="field-title">Every lane, plotted by measured readiness.</h2>
+            <h2 id="field-title">Each lane, plotted by measured readiness.</h2>
             <p>Rows move from weak signal to strong signal. High-impact blockers stay visible beside the score.</p>
           </div>
           <div class="readiness-field">
@@ -481,7 +481,7 @@
         <div class="container">
           <div class="section-heading">
             <p class="section-kicker">Full findings ledger</p>
-            <h2 id="findings-title">Every check, observed value, and priority.</h2>
+            <h2 id="findings-title">Each check, observed value, and priority.</h2>
           </div>
           <div class="findings-table-wrap">
             <table class="findings-table">

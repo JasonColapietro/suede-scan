@@ -70,6 +70,9 @@ test('uses one local 1200x630 social card across every public audit document', a
     assert.match(html, /<meta property="og:image:width" content="1200">/);
     assert.match(html, /<meta property="og:image:height" content="630">/);
     assert.match(html, /<meta property="og:image:type" content="image\/png">/);
+    // One image, one description of it. The homepage used to call the same file
+    // "Approved Suede mark" while the other two called it the logo.
+    assert.match(html, /<meta property="og:image:alt" content="Suede Labs AI logo">/);
     assert.match(html, new RegExp(`<meta name="twitter:image" content="${imageUrl.replaceAll('.', '\\.')}">`));
     // The mark is served from this host. It used to be hotlinked from
     // raw.githubusercontent.com, pinned to a commit SHA.
