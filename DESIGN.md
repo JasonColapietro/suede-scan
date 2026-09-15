@@ -1,6 +1,6 @@
 # Design System: Suede Audit
 
-Reference: Suede Agent Studio (https://agents.suedeai.ai), tokens read from
+Reference: Suede AI Agent Studio (https://agents.suedeai.ai), tokens read from
 `suede-agent-studio/src/styles/tokens.css` on 2026-08-31. The earlier
 searchfit-derived system it replaced is recorded in git history.
 
@@ -20,7 +20,7 @@ than keeping a second visual language.
 ## Identity
 
 - Color strategy: Restrained base with a full signal palette on the report. Near-white paper and white panels carry the page, indigo marks every action, and green/amber/red/violet stay reserved for verified access, repair priority, blockers, and the overall score.
-- Aesthetic tone: refined minimal. A serif display voice over a low-density, hairline-ruled product surface, inherited from Suede Agent Studio.
+- Aesthetic tone: refined minimal. A serif display voice over a low-density, hairline-ruled product surface, inherited from Suede AI Agent Studio.
 - Unforgettable factor: the Answer Readiness Field plots every audit lane by
   measured readiness and finding impact, turning the report into an inspectable
   signal map. Every lane bar, pillar bar, and the overall gauge are inked from
@@ -31,7 +31,7 @@ than keeping a second visual language.
 
 ## Reference Translation
 
-Suede Agent Studio contributes the design grammar: near-white paper under white
+Suede AI Agent Studio contributes the design grammar: near-white paper under white
 panels, a serif display face at large sizes with the second clause set in indigo
 italic, a mono uppercase eyebrow led by a short rule, mono uppercase control
 labels, an 8px radius family, hairline borders doing most of the separation
