@@ -1,6 +1,6 @@
 # Suede Scan
 
-Public-site discovery and answer-readiness audit from Suede Labs AI.
+Public-site discovery and answer-readiness audit from Suede AI.
 
 Product URL: [optimize.suedeai.ai](https://optimize.suedeai.ai/).
 
