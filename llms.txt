@@ -18,3 +18,7 @@ Search-discovery checks use OAI-SearchBot, Claude-SearchBot, PerplexityBot, and 
 Each browser receives one free audit. The result is cached in that browser so its report route can reopen without another scan.
 
 The report does not run buyer prompts inside ChatGPT, Perplexity, Gemini, or another answer engine. A high readiness score does not guarantee citations, recommendations, or rankings.
+
+## Source and citation guide
+
+- [AI Instructions](https://optimize.suedeai.ai/ai-instructions): Site identity, authoritative sources and citation guidance.
