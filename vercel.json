@@ -1,27 +1,60 @@
 {
   "ignoreCommand": "[ \"$VERCEL_ENV\" != \"production\" ] && exit 0 || exit 1",
   "redirects": [
-    { "source": "/audit", "destination": "/", "permanent": true },
-    { "source": "/audit/", "destination": "/", "permanent": true }
+    {
+      "source": "/audit",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/audit/",
+      "destination": "/",
+      "permanent": true
+    }
   ],
   "rewrites": [
-    { "source": "/report/:domain", "destination": "/index.html" }
+    {
+      "source": "/ai-instructions",
+      "destination": "/ai-instructions.html"
+    },
+    {
+      "source": "/report/:domain",
+      "destination": "/index.html"
+    }
   ],
   "headers": [
     {
       "source": "/(.*)",
       "headers": [
-        { "key": "X-Content-Type-Options", "value": "nosniff" },
-        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" },
-        { "key": "Permissions-Policy", "value": "camera=(), microphone=(), geolocation=()" },
-        { "key": "X-Frame-Options", "value": "SAMEORIGIN" },
-        { "key": "Content-Security-Policy", "value": "default-src 'self'; script-src 'self' 'sha256-2s7aDJJTwj7i2YfZFZsSFlfKffETVd+AyqXQEAgJMFI=' 'sha256-mh5hFdSBKqa64ix04TMmv1SsdgOL4OIsEL1nYRxY8fc='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests" }
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=()"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "SAMEORIGIN"
+        },
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'self' 'sha256-2s7aDJJTwj7i2YfZFZsSFlfKffETVd+AyqXQEAgJMFI=' 'sha256-mh5hFdSBKqa64ix04TMmv1SsdgOL4OIsEL1nYRxY8fc='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests"
+        }
       ]
     },
     {
       "source": "/api/(.*)",
       "headers": [
-        { "key": "Cache-Control", "value": "no-store" }
+        {
+          "key": "Cache-Control",
+          "value": "no-store"
+        }
       ]
     }
   ]
