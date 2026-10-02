@@ -5,7 +5,7 @@ import { runTier } from './lib/engine.mjs';
 import { handleOperatorAudit, handleTier } from './lib/handler.mjs';
 
 const PORT = process.env.PORT || 3400;
-const [INDEX_HTML, STYLES_CSS, CLIENT_JS, THEME_TOGGLE_JS, ROBOTS_TXT, LLMS_TXT, SITEMAP_XML, METHOD_HTML, PRIVACY_HTML, OG_IMAGE_PNG, LOGO_PNG, FAVICON_ICO] = await Promise.all([
+const [INDEX_HTML, STYLES_CSS, CLIENT_JS, THEME_TOGGLE_JS, ROBOTS_TXT, LLMS_TXT, SITEMAP_XML, METHOD_HTML, PRIVACY_HTML, OG_IMAGE_PNG, LOGO_PNG, FAVICON_ICO, AI_INSTRUCTIONS_HTML] = await Promise.all([
   readFile(new URL('./index.html', import.meta.url)),
   readFile(new URL('./styles.css', import.meta.url)),
   readFile(new URL('./client.js', import.meta.url)),
@@ -18,8 +18,12 @@ const [INDEX_HTML, STYLES_CSS, CLIENT_JS, THEME_TOGGLE_JS, ROBOTS_TXT, LLMS_TXT,
   readFile(new URL('./og-suede-audit.png', import.meta.url)),
   readFile(new URL('./suede-ai-logo.png', import.meta.url)),
   readFile(new URL('./favicon.ico', import.meta.url)),
+  readFile(new URL('./ai-instructions.html', import.meta.url)),
 ]);
 const STATIC_FILES = new Map([
+  ['/ai-instructions', [AI_INSTRUCTIONS_HTML, 'text/html; charset=utf-8']],
+  ['/ai-instructions/', [AI_INSTRUCTIONS_HTML, 'text/html; charset=utf-8']],
+  ['/ai-instructions.html', [AI_INSTRUCTIONS_HTML, 'text/html; charset=utf-8']],
   ['/styles.css', [STYLES_CSS, 'text/css; charset=utf-8']],
   ['/client.js', [CLIENT_JS, 'text/javascript; charset=utf-8']],
   ['/theme-toggle.js', [THEME_TOGGLE_JS, 'text/javascript; charset=utf-8']],
