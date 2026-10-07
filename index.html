@@ -377,7 +377,7 @@
               <span>Suede has not verified this copy. Its score, findings, evidence, and date may have been changed. Run a new audit before relying on it.</span>
             </aside>
             <p class="report-status"><span><i></i> <span id="report-status-label">Live report</span></span><b id="report-status-detail">Fresh automated audit</b></p>
-            <p class="report-title" id="report-title">domain.example</p>
+            <h1 class="report-title" id="report-title">domain.example</h1>
             <p id="report-subtitle">Public-site discovery and answer-readiness report</p>
             <div class="report-stats">
               <div><strong id="stat-checks">0</strong><span>Weighted checks</span></div>
@@ -422,7 +422,13 @@
             <h2 id="overview-title">Three pillars. One public evidence trail.</h2>
             <p>The score weights blockers above polish. A blocked crawler or missing entity outranks a missing social preview.</p>
           </div>
+          <div id="page-evidence" class="page-evidence" hidden></div>
           <div id="pillar-grid" class="pillar-grid"></div>
+          <aside class="measurement-boundary" aria-labelledby="measurement-title">
+            <div><p class="section-kicker">Measurement coverage</p><h3 id="measurement-title">Readiness is measured. AI visibility is still unmeasured.</h3></div>
+            <p>This score covers one page and its discovery files. It does not measure brand mentions, cited sources, sentiment, or competitor share in AI answers.</p>
+            <a class="text-link" href="#next-measurement">See what to measure next →</a>
+          </aside>
           <div id="report-insight" class="report-insight"></div>
         </div>
       </section>
@@ -489,6 +495,11 @@
             <p class="section-kicker">Full findings ledger</p>
             <h2 id="findings-title">Each check, observed value, and priority.</h2>
           </div>
+          <div class="findings-controls">
+            <label for="findings-filter">Show findings</label>
+            <select id="findings-filter"><option value="all">All checks</option><option value="repair">Repairs only</option><option value="pass">Passed checks</option></select>
+            <p id="findings-count" role="status" aria-live="polite"></p>
+          </div>
           <div class="findings-table-wrap">
             <table class="findings-table">
               <thead><tr><th>Status</th><th>Signal</th><th>Observed</th><th>Priority</th></tr></thead>
@@ -498,7 +509,18 @@
         </div>
       </section>
 
-      <section class="report-section method-report" aria-labelledby="report-method-title">
+      <section id="next-measurement" class="report-section section-tint" aria-labelledby="next-measurement-title">
+        <div class="container">
+          <div class="section-heading"><p class="section-kicker">Beyond the score</p><h2 id="next-measurement-title">Turn readiness into answer evidence.</h2><p>These are follow-up measurements, not findings from this audit.</p></div>
+          <ol class="measurement-steps">
+            <li><h3>Choose buyer questions</h3><p>Record a fixed set of questions about your category, use cases, and alternatives. Keep the wording for the next run.</p></li>
+            <li><h3>Capture answers and sources</h3><p>Save the date, engine, model, exact prompt, full answer, and cited URLs. Mark failed or unavailable captures separately.</p></li>
+            <li><h3>Compare the same sample</h3><p>Count brand and competitor mentions only in successful captures. Review accuracy, citations, and sentiment separately before choosing content changes.</p></li>
+          </ol>
+        </div>
+      </section>
+
+      <section id="report-method" class="report-section method-report" aria-labelledby="report-method-title">
         <div class="container report-method-grid">
           <div>
             <p class="section-kicker">Methodology</p>

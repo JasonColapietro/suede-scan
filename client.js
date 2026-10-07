@@ -337,6 +337,8 @@ function clearError() {
 const REPORT_NAV = [
   { href: '#readiness-field', text: 'Signal field' },
   { href: '#findings', text: 'Findings' },
+  { href: '#report-method', text: 'Method' },
+  { href: '/#faq', text: 'FAQ' },
 ];
 
 // The landing page's #contact section lives inside #landing-shell, which is
@@ -487,7 +489,12 @@ function renderCompanyOffer(data) {
 }
 
 function renderFindings(checks) {
-  byId('findings-body').innerHTML = checks.map((check) => `
+  const filter = byId('findings-filter').value || 'all';
+  const selected = checks.filter((check) => filter === 'repair' ? !check.pass : filter === 'pass' ? check.pass : true);
+  byId('findings-count').textContent = `${selected.length} of ${checks.length} checks`;
+  byId('findings-body').innerHTML = selected.length === 0
+    ? '<tr><td colspan="4">No checks match this filter.</td></tr>'
+    : selected.map((check) => `
     <tr>
       <td><span class="status-chip ${check.pass ? 'status-pass' : 'status-repair'}">${check.pass ? 'Pass' : 'Repair'}</span></td>
       <td><div class="finding-label">${escapeHtml(check.label)}<span>${escapeHtml(check.lane)}</span></div></td>
@@ -496,14 +503,46 @@ function renderFindings(checks) {
     </tr>`).join('');
 }
 
+function evidenceLink(value, label) {
+  try {
+    const url = new URL(value);
+    if (!['https:', 'http:'].includes(url.protocol) || url.username || url.password) throw new Error();
+    return `<a href="${escapeHtml(url.href)}" target="_blank" rel="noopener noreferrer">${escapeHtml(label)} ↗</a>`;
+  } catch { return escapeHtml(label); }
+}
+
+function renderPageEvidence(data) {
+  const node = byId('page-evidence');
+  const evidence = data.pageEvidence;
+  node.hidden = !evidence || typeof evidence !== 'object';
+  if (node.hidden) { node.innerHTML = ''; return; }
+  const sitemap = evidence.sitemap || {};
+  const sitemapText = sitemap.kind === 'urlset' ? `${Number(sitemap.entries) || 0} page entries in the root sitemap`
+    : sitemap.kind === 'index' ? `${Number(sitemap.entries) || 0} child sitemaps; child pages not counted`
+    : 'No recognized root sitemap inspected';
+  const rows = [
+    ['Inspected URL', evidenceLink(data.url, data.url)],
+    ['Page title', escapeHtml(evidence.title || 'Not found')],
+    ['Description', escapeHtml(evidence.description || 'Not found')],
+    ['Main heading', escapeHtml(evidence.h1 || 'Not found')],
+    ['Language', escapeHtml(evidence.language || 'Not declared')],
+    ['Canonical declaration', escapeHtml(evidence.canonical || 'Not declared')],
+    ['Schema types', escapeHtml(Array.isArray(evidence.schemaTypes) ? evidence.schemaTypes.join(', ') : 'Not recorded')],
+    ['Sitemap scope', escapeHtml(sitemapText)],
+  ];
+  node.innerHTML = `<p class="section-kicker">What we inspected</p><dl>${rows.map(([label, value]) => `<div><dt>${label}</dt><dd>${value}</dd></div>`).join('')}</dl>
+    <p class="evidence-note">Declarations from the fetched HTML, not independently verified business facts. Sitemap entries are not crawled or confirmed indexed.</p>`;
+  if (evidence.images?.empty > 0) node.innerHTML += `<p class="evidence-note">Manual image review: ${escapeHtml(evidence.images.empty)} images declare empty alt text. Keep it empty for decorative images; describe images that convey information. This presence check does not certify accessibility.</p>`;
+}
+
 function renderArtifacts(artifacts) {
   const entries = Object.entries(artifacts || {});
   byId('artifact-list').innerHTML = entries.map(([name, artifact]) => `
-    <span class="artifact-chip ${artifact.ok ? 'ok' : ''}">${escapeHtml(name)} · HTTP ${escapeHtml(artifact.status || 0)}</span>
+    <span class="artifact-chip ${artifact.ok ? 'ok' : ''}">${evidenceLink(artifact.url, `${name} · HTTP ${artifact.status || 0}`)}</span>
   `).join('');
 }
 
-function renderReport(data, { sharedSnapshot = false } = {}) {
+function renderReport(data, { sharedSnapshot = false, fresh = false } = {}) {
   currentReport = data;
   currentReportIsSharedSnapshot = sharedSnapshot;
   const score = clampScore(data.score);
@@ -517,10 +556,10 @@ function renderReport(data, { sharedSnapshot = false } = {}) {
   report.classList[sharedSnapshot ? 'add' : 'remove']('report--shared-snapshot');
   byId('report-title').textContent = data.host;
   byId('shared-report-warning').hidden = !sharedSnapshot;
-  byId('report-status-label').textContent = sharedSnapshot ? 'Shared snapshot' : 'Live report';
+  byId('report-status-label').textContent = sharedSnapshot ? 'Shared snapshot' : fresh ? 'Live report' : 'Saved report';
   byId('report-status-detail').textContent = sharedSnapshot
     ? 'Unverified user-provided copy'
-    : 'Fresh automated audit';
+    : fresh ? 'Fresh automated audit' : 'Previous run · not rechecked';
   byId('report-subtitle').textContent = sharedSnapshot
     ? 'Unverified copy of user-provided public-site results'
     : 'Public-site discovery and answer-readiness report';
@@ -553,6 +592,7 @@ function renderReport(data, { sharedSnapshot = false } = {}) {
     : 'The link reopens this saved result without consuming a recipient audit.';
 
   renderScorePlatforms(data.platforms || []);
+  renderPageEvidence(data);
   renderPillars(data.pillarScores || []);
   renderInsight(data);
   renderPlatforms(data.platforms || []);
@@ -560,6 +600,7 @@ function renderReport(data, { sharedSnapshot = false } = {}) {
   renderLanes(data.laneScores || {});
   renderRepairs(data.recommendations || []);
   renderCompanyOffer(data);
+  byId('findings-filter').value = 'all';
   renderFindings(data.checks || []);
   renderArtifacts(data.artifacts || {});
 
@@ -588,7 +629,7 @@ function hideCodePanel() {
 
 function finishReport(payload, updateHistory) {
   hideCodePanel();
-  renderReport(payload);
+  renderReport(payload, { fresh: true });
   storeReport(payload);
   urlInput.value = payload.host;
   const path = reportPath(payload.host);
@@ -754,6 +795,8 @@ function renderSharedReportFromLocation() {
   else showNonConsumingReportPrompt(domain, true);
   return true;
 }
+
+byId('findings-filter').addEventListener('change', () => renderFindings(currentReport?.checks || []));
 
 form.addEventListener('submit', (event) => {
   event.preventDefault();

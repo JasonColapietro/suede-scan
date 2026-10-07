@@ -99,6 +99,9 @@ function runClient({ pathname = '/', hash = '', storedReport = null } = {}) {
   const navLinks = [
     fakeElement({ href: '#checks', textContent: 'What it checks' }),
     fakeElement({ href: '#example', textContent: 'Example report' }),
+    fakeElement({ href: '#method', textContent: 'Method' }),
+    fakeElement({ href: '#faq', textContent: 'FAQ' }),
+    fakeElement({ href: 'https://github.com/JasonColapietro/suede-scan', textContent: 'Source' }),
     fakeElement({ href: '#contact', textContent: 'Contact' }),
   ];
   const auditEntry = fakeElement();
@@ -167,7 +170,7 @@ function runClient({ pathname = '/', hash = '', storedReport = null } = {}) {
     window,
   };
   vm.runInNewContext(clientSource, context);
-  return { auditEntry, clipboard, elements, historyCalls, location, navLinks, network, storage, windowListeners };
+  return { finishReport: context.finishReport, auditEntry, clipboard, elements, historyCalls, location, navLinks, network, storage, windowListeners };
 }
 
 test('shared snapshot renders the report and company offer without spending an audit', () => {
@@ -201,12 +204,12 @@ test('shared snapshot renders the report and company offer without spending an a
   assert.equal(run.historyCalls.length, 1);
 });
 
-test('locally stored reports retain verified first-party report framing', () => {
+test('locally stored reports are labelled saved and never claim a fresh audit', () => {
   const run = runClient({ pathname: '/report/example.com', storedReport: reportFixture() });
 
   assert.equal(run.elements.get('shared-report-warning').hidden, true);
-  assert.equal(run.elements.get('report-status-label').textContent, 'Live report');
-  assert.equal(run.elements.get('report-status-detail').textContent, 'Fresh automated audit');
+  assert.equal(run.elements.get('report-status-label').textContent, 'Saved report');
+  assert.equal(run.elements.get('report-status-detail').textContent, 'Previous run · not rechecked');
   assert.equal(run.elements.get('score-card-label').textContent, 'Overall readiness score');
   assert.equal(run.elements.get('grade-label').textContent, 'Weighted grade');
 });
@@ -366,7 +369,7 @@ test('report scores reach the DOM as a grade attribute the stylesheet can key on
 
 test('the header contact link becomes a mailto while the report hides #contact', () => {
   const run = runClient({ pathname: '/report/example.com', storedReport: reportFixture() });
-  const contact = run.navLinks[2];
+  const contact = run.navLinks.find((link) => link.textContent === 'Contact');
 
   // #contact lives inside #landing-shell, which is hidden behind the report,
   // so pointing at it here would be a link that does nothing.
@@ -377,4 +380,61 @@ test('the header contact link becomes a mailto while the report hides #contact',
   run.windowListeners.get('popstate')();
 
   assert.equal(contact.getAttribute('href'), '#contact');
+});
+
+
+test('fresh API result is live, while reopening it never fetches or claims freshness', () => {
+  const run = runClient();
+  run.finishReport(reportFixture(), true);
+  assert.equal(run.elements.get('report-status-label').textContent, 'Live report');
+  assert.equal(run.elements.get('report-status-detail').textContent, 'Fresh automated audit');
+  run.location.pathname = '/report/example.com';
+  run.windowListeners.get('popstate')();
+  assert.equal(run.elements.get('report-status-label').textContent, 'Saved report');
+  assert.equal(run.network.fetches, 0);
+});
+
+test('finding filters display correct subsets, counts and empty state', () => {
+  const data = reportFixture();
+  data.checks.push({ id: 'title', label: 'Title present', lane: 'Metadata', pass: true, value: 'Example', severity: 'low' });
+  const run = runClient({ pathname: '/report/example.com', storedReport: data });
+  const filter = run.elements.get('findings-filter');
+  assert.equal(run.elements.get('findings-count').textContent, '2 of 2 checks');
+  filter.value = 'repair';
+  filter.listeners.get('change')();
+  assert.match(run.elements.get('findings-body').innerHTML, /Open crawler access/);
+  assert.doesNotMatch(run.elements.get('findings-body').innerHTML, /Title present/);
+  assert.equal(run.elements.get('findings-count').textContent, '1 of 2 checks');
+  filter.value = 'pass';
+  filter.listeners.get('change')();
+  assert.match(run.elements.get('findings-body').innerHTML, /Title present/);
+  run.finishReport(reportFixture(), false);
+  filter.value = 'pass';
+  filter.listeners.get('change')();
+  assert.match(run.elements.get('findings-body').innerHTML, /No checks match/);
+});
+
+test('evidence handles legacy snapshots and escapes supplied content and unsafe links', () => {
+  const legacy = runClient({ pathname: '/report/example.com', storedReport: reportFixture() });
+  assert.equal(legacy.elements.get('page-evidence').hidden, true);
+  const data = reportFixture({
+    pageEvidence: { title: '<img src=x onerror=alert(1)>', schemaTypes: ['Organization'], images: { empty: 4 }, sitemap: { kind: 'index', entries: 2 } },
+    artifacts: { robots: { ok: true, status: 200, url: 'javascript:alert(1)' }, sitemap: { ok: true, status: 200, url: 'https://example.com/sitemap.xml' } },
+  });
+  const run = runClient({ pathname: '/report/example.com', hash: '#report=' + encodeSnapshot(data) });
+  const html = run.elements.get('page-evidence').innerHTML;
+  assert.match(html, /&lt;img/);
+  assert.doesNotMatch(html, /<img/);
+  assert.match(html, /2 child sitemaps; child pages not counted/);
+  assert.match(html, /4 images declare empty alt/);
+  assert.doesNotMatch(run.elements.get('artifact-list').innerHTML, /javascript:/);
+  assert.match(run.elements.get('artifact-list').innerHTML, /href="https:\/\/example.com\/sitemap.xml"/);
+  assert.equal(run.elements.get('report-status-label').textContent, 'Shared snapshot');
+});
+
+
+test('report navigation points Method and FAQ to reachable content', () => {
+  const run = runClient({ pathname: '/report/example.com', storedReport: reportFixture() });
+  assert.equal(run.navLinks.find((link) => link.textContent === 'Method').href, '#report-method');
+  assert.equal(run.navLinks.find((link) => link.textContent === 'FAQ').href, '/#faq');
 });
