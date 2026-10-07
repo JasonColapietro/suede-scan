@@ -1522,3 +1522,27 @@ body:has(#report:not([hidden])) .contact-fab { display: none; }
   .shift-table { font-size: .9rem; }
   .shift-table td:first-child { width: 46%; }
 }
+
+/* Evidence summary and report controls */
+.page-evidence { padding: 24px; margin-bottom: 28px; border: 1px solid var(--color-border); border-radius: 8px; background: var(--color-surface); }
+.page-evidence dl { display: grid; grid-template-columns: 1fr 1fr; gap: 20px 32px; margin: 0; }
+.page-evidence dl > div { min-width: 0; }
+.page-evidence dt { font: 500 .72rem/1.5 var(--font-data); color: var(--color-text-secondary); text-transform: uppercase; margin-bottom: 4px; }
+.page-evidence dd { margin: 0; font-size: .94rem; overflow-wrap: anywhere; }
+.evidence-note { color: var(--color-text-secondary); font-size: .85rem; margin: 18px 0 0; }
+.measurement-boundary { margin-top: 24px; padding: 24px; border-left: 3px solid var(--color-accent); background: var(--color-surface-soft); }
+.measurement-boundary h3 { margin: 0; font-size: 1.15rem; }
+.measurement-boundary > p { max-width: 85ch; color: var(--color-text-secondary); }
+.measurement-steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 36px; padding-left: 24px; }
+.measurement-steps li { padding-left: 6px; }
+.measurement-steps h3 { font-size: 1.12rem; margin: 0 0 12px; }
+.measurement-steps p { color: var(--color-text-secondary); margin: 0; }
+.findings-controls { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 18px; }
+.findings-controls label, .findings-controls p { color: var(--color-text-secondary); font-size: .9rem; }
+.findings-controls select { padding: 10px 32px 10px 12px; color: var(--color-text-primary); background: var(--color-surface); border: 1px solid var(--color-border-strong); border-radius: 8px; font: inherit; }
+.artifact-chip a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
+@media (max-width: 760px) {
+  .page-evidence dl, .measurement-steps { grid-template-columns: 1fr; }
+  .page-evidence { padding: 20px; }
+  .measurement-steps { gap: 24px; }
+}

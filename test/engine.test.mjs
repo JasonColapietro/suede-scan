@@ -3,6 +3,8 @@ import test from 'node:test';
 
 import {
   analyzeChunks,
+  imageAlternatives,
+  pageEvidence,
   assertPublicUrl,
   auditChecks,
   crawlSiteLinks,
@@ -505,4 +507,42 @@ test('auditChecks scores retrieval chunking alongside the existing content check
   assert.equal(checks.find((check) => check.id === 'chunking').pass, false);
   assert.ok(summary.score < 100);
   assert.ok(summary.recommendations.some((repair) => repair.id === 'chunking'));
+});
+
+
+test('image check distinguishes explicit empty alternatives from missing attributes', () => {
+  const html = `<img alt="Proof"><img alt=''><img alt="   "><img src="missing.png"><img data-alt="not an alternative"><img alt=Diagram><!-- <img> --><script>"<img>"</script>`;
+  assert.deepEqual(imageAlternatives(html), { total: 6, named: 2, empty: 2, missing: 2 });
+  const result = scanChecks(healthyPage({ html })).find((check) => check.id === 'image-alt');
+  assert.equal(result.pass, false);
+  assert.match(result.value, /2 missing of 6/);
+  assert.match(result.advice, /decorative/);
+  assert.equal(scanChecks(healthyPage({ html: '<img alt=""><img alt="Proof">' })).find((check) => check.id === 'image-alt').pass, true);
+});
+
+test('title scoring uses decoded text, including quoted apostrophes and numeric entities', () => {
+  const html = `<title>${'a'.repeat(54)} &amp; B</title><meta name="description" content="A founder's description &amp; evidence.">`;
+  const page = healthyPage({ html });
+  const title = scanChecks(page).find((check) => check.id === 'title');
+  assert.equal(title.pass, true);
+  assert.match(title.value, /58 characters/);
+  assert.equal(pageEvidence(page).description, "A founder's description & evidence.");
+  assert.equal(pageEvidence(healthyPage({ html: '<title>&#x41; &#66; &#99999999;</title>' })).title, 'A B &#99999999;');
+});
+
+test('page evidence reports declarations and separates page entries from sitemap indexes', () => {
+  const page = healthyPage();
+  const evidence = pageEvidence(page);
+  assert.equal(evidence.language, 'en');
+  assert.equal(evidence.canonical, 'https://example.com/');
+  assert.equal(evidence.h1, 'Example evidence hub');
+  assert.ok(evidence.schemaTypes.includes('Organization'));
+  page.artifacts.sitemap.text = '<sitemapindex><sitemap><loc>https://example.com/one.xml</loc></sitemap></sitemapindex>';
+  assert.deepEqual(pageEvidence(page).sitemap, { kind: 'index', entries: 1 });
+  page.artifacts.sitemap.text = '<urlset><url><loc>https://example.com/</loc></url><url><loc>https://example.com/about</loc></url></urlset>';
+  assert.deepEqual(pageEvidence(page).sitemap, { kind: 'urlset', entries: 2 });
+  page.artifacts.sitemap.text = '<html>Fallback page</html>';
+  assert.equal(pageEvidence(page).sitemap.kind, 'unrecognized');
+  page.artifacts.sitemap.ok = false;
+  assert.equal(pageEvidence(page).sitemap.kind, 'unavailable');
 });

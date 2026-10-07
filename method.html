@@ -84,6 +84,10 @@
           <h2>What the score does not prove</h2>
           <p>A high score is not proof of an AI citation. Buyer-prompt evidence requires separate, timestamped runs inside each answer engine, which this audit does not run. The score measures whether an answer engine can technically reach and parse a page &mdash; not whether it will recommend, rank, or cite it.</p>
 
+          <h2>Image alternatives and page evidence</h2>
+          <p>The image check tests whether each image declares an alt attribute. Empty alt text can be correct for decorative images; the report counts empty, non-empty, and missing attributes separately and flags empty alternatives for manual review. It does not certify that descriptions are accurate or that the page is accessible. See the <a href="https://www.w3.org/WAI/tutorials/images/decorative/">W3C guidance on decorative images</a>.</p>
+          <p>The evidence summary reports title, description, main heading, language, canonical declaration, schema types, and entries in the root sitemap. These are page declarations, not verified business facts. A sitemap index counts child sitemaps, not their pages; no sitemap count proves indexing.</p>
+
           <h2>Limits and caching</h2>
           <p>Each browser gets one free audit. The finished report is cached in that browser's local storage, so its report link can reopen without using another scan. Suede Audit accepts public HTTP and HTTPS URLs only; it will not inspect private, internal, or non-routable addresses.</p>
 
