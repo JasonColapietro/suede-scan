@@ -1,0 +1,25 @@
+# Suede Audit (full)
+
+Suede Audit is a public-site audit for crawler access, entity schema, metadata, content structure, and answer-engine discovery signals. It is built by Suede AI (https://suedeai.ai/), founded by Jason Colapietro (https://suedeai.ai/founder).
+
+## Primary URLs
+
+- Product: https://optimize.suedeai.ai/
+- Method: https://optimize.suedeai.ai/method
+- Privacy: https://optimize.suedeai.ai/privacy
+- Source: https://github.com/JasonColapietro/suede-scan
+- Implementation service: https://seo.suedeai.ai/
+
+## What an audit does
+
+Each audit fetches one public homepage plus three root discovery files on the same domain: robots.txt, llms.txt, and sitemap.xml. It does not log in and does not crawl beyond those four documents. Weighted checks are grouped into scoring pillars, and every failed check names a repair.
+
+Search-discovery checks use OAI-SearchBot, Claude-SearchBot, PerplexityBot, and Googlebot. GPTBot, ClaudeBot, and Google-Extended are reported separately as non-scoring training or AI-use controls.
+
+## What a score does not prove
+
+The report does not run buyer prompts inside ChatGPT, Perplexity, Gemini, or another answer engine. A high readiness score does not guarantee citations, recommendations, or rankings.
+
+## Open source
+
+The scoring code is public, so any result can be traced to the check that produced it: https://github.com/JasonColapietro/suede-scan
