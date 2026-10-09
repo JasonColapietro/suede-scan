@@ -30,7 +30,7 @@ test('traces every public asset into the Vercel root function', async () => {
   assert.equal(pkg.scripts.dev, 'node server.mjs');
   await access(new URL('../server.mjs', import.meta.url));
 
-  for (const asset of ['index.html', 'styles.css', 'client.js', 'robots.txt', 'llms.txt', 'sitemap.xml']) {
+  for (const asset of ['index.html', 'styles.css', 'client.js', 'robots.txt', 'llms.txt', 'llms-full.txt', 'sitemap.xml']) {
     const body = await readFile(new URL(`../${asset}`, import.meta.url), 'utf8');
     assert.ok(body.length > 20, `${asset} should be a non-empty production asset`);
     assert.match(server, new RegExp(`new URL\\('\\./${asset.replace('.', '\\.')}\\', import\\.meta\\.url\\)`));

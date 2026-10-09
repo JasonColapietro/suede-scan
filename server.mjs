@@ -5,13 +5,14 @@ import { runTier } from './lib/engine.mjs';
 import { handleOperatorAudit, handleTier } from './lib/handler.mjs';
 
 const PORT = process.env.PORT || 3400;
-const [INDEX_HTML, STYLES_CSS, CLIENT_JS, THEME_TOGGLE_JS, ROBOTS_TXT, LLMS_TXT, SITEMAP_XML, METHOD_HTML, PRIVACY_HTML, OG_IMAGE_PNG, LOGO_PNG, FAVICON_ICO, AI_INSTRUCTIONS_HTML] = await Promise.all([
+const [INDEX_HTML, STYLES_CSS, CLIENT_JS, THEME_TOGGLE_JS, ROBOTS_TXT, LLMS_TXT, LLMS_FULL_TXT, SITEMAP_XML, METHOD_HTML, PRIVACY_HTML, OG_IMAGE_PNG, LOGO_PNG, FAVICON_ICO, AI_INSTRUCTIONS_HTML] = await Promise.all([
   readFile(new URL('./index.html', import.meta.url)),
   readFile(new URL('./styles.css', import.meta.url)),
   readFile(new URL('./client.js', import.meta.url)),
   readFile(new URL('./theme-toggle.js', import.meta.url)),
   readFile(new URL('./robots.txt', import.meta.url)),
   readFile(new URL('./llms.txt', import.meta.url)),
+  readFile(new URL('./llms-full.txt', import.meta.url)),
   readFile(new URL('./sitemap.xml', import.meta.url)),
   readFile(new URL('./method.html', import.meta.url)),
   readFile(new URL('./privacy.html', import.meta.url)),
@@ -29,6 +30,7 @@ const STATIC_FILES = new Map([
   ['/theme-toggle.js', [THEME_TOGGLE_JS, 'text/javascript; charset=utf-8']],
   ['/robots.txt', [ROBOTS_TXT, 'text/plain; charset=utf-8']],
   ['/llms.txt', [LLMS_TXT, 'text/plain; charset=utf-8']],
+  ['/llms-full.txt', [LLMS_FULL_TXT, 'text/plain; charset=utf-8']],
   ['/sitemap.xml', [SITEMAP_XML, 'application/xml; charset=utf-8']],
   ['/og-suede-audit.png', [OG_IMAGE_PNG, 'image/png']],
   ['/suede-ai-logo.png', [LOGO_PNG, 'image/png']],
