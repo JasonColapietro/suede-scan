@@ -530,6 +530,19 @@ test('title scoring uses decoded text, including quoted apostrophes and numeric 
   assert.equal(pageEvidence(healthyPage({ html: '<title>&#x41; &#66; &#99999999;</title>' })).title, 'A B &#99999999;');
 });
 
+test('named entities other than amp, lt, gt, quot, apos and nbsp are counted as written', () => {
+  // checks/metadata.html documents this: &mdash; adds seven characters to the length, &#8212; adds one.
+  const check = (html, id) => scanChecks(healthyPage({ html })).find((item) => item.id === id);
+  const named = check(`<title>${'a'.repeat(54)} &mdash;</title>`, 'title');
+  assert.equal(named.pass, false);
+  assert.match(named.value, /&mdash; \(62 characters\)/);
+  const numeric = check(`<title>${'a'.repeat(54)} &#8212;</title>`, 'title');
+  assert.equal(numeric.pass, true);
+  assert.match(numeric.value, /\u2014 \(56 characters\)/);
+  assert.equal(check('<meta name="description" content="Copyright &copy; Acme">', 'description').value, '21 characters');
+  assert.equal(check('<meta name="description" content="Copyright &#169; Acme">', 'description').value, '16 characters');
+});
+
 test('page evidence reports declarations and separates page entries from sitemap indexes', () => {
   const page = healthyPage();
   const evidence = pageEvidence(page);

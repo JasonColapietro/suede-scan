@@ -66,14 +66,14 @@
           <h2 id="title">Title is specific and scannable</h2>
           <p class="check-facts" data-check="title" data-lane="Metadata" data-severity="medium"><span>Metadata</span><span>Medium severity</span><span>3 of 90 points</span><span>id: title</span></p>
           <p class="check-report"><b>Repair shown in the report:</b> Write a 15 to 60 character title with the page topic near the front.</p>
-          <p><b>The rule.</b> Reads the first <code>&lt;title&gt;</code> element, decodes HTML entities, trims whitespace and counts characters. 15 to 60 characters, inclusive, passes. The observed value shows the first 80 characters and the length.</p>
+          <p><b>The rule.</b> Reads the first <code>&lt;title&gt;</code> element, trims whitespace, decodes numeric character references such as <code>&amp;#8212;</code> and six named entities (<code>&amp;amp;</code>, <code>&amp;lt;</code>, <code>&amp;gt;</code>, <code>&amp;quot;</code>, <code>&amp;apos;</code> and <code>&amp;nbsp;</code>), then counts characters. Any other named entity is counted as written, so <code>&amp;mdash;</code> adds seven characters, not one. 15 to 60 characters, inclusive, passes. The observed value shows the first 80 characters and the length.</p>
           <p><b>Why it matters.</b> Google asks for a descriptive, concise title on every page and distinct text for each one. It sets no length limit, but truncates title links as needed to fit the device width (<a href="https://developers.google.com/search/docs/appearance/title-link">Google, influencing title links</a>). The 15 to 60 range is the audit's own rule.</p>
           <p><b>How to fix it.</b> Put the page subject first and the brand last, and give every page its own title rather than a shared template string.</p>
 
           <h2 id="description">Meta description explains the page</h2>
           <p class="check-facts" data-check="description" data-lane="Metadata" data-severity="medium"><span>Metadata</span><span>Medium severity</span><span>3 of 90 points</span><span>id: description</span></p>
           <p class="check-report"><b>Repair shown in the report:</b> Add a 50 to 160 character description that states the page outcome.</p>
-          <p><b>The rule.</b> Reads the content of the meta tag named description, decodes entities and counts characters. 50 to 160 characters, inclusive, passes.</p>
+          <p><b>The rule.</b> Reads the content of the meta tag named description, decodes the same numeric references and six named entities as the title check, and counts characters. Other named entities, such as <code>&amp;copy;</code>, are counted as written. 50 to 160 characters, inclusive, passes.</p>
           <p><b>Why it matters.</b> Google sometimes uses the meta description for the search snippet when it describes the page more accurately than on-page text. There is no length limit, but snippets are truncated to fit the device, and Google asks for a unique description on each page (<a href="https://developers.google.com/search/docs/appearance/snippet">Google, how to write meta descriptions</a>).</p>
           <p><b>How to fix it.</b> Write one or two sentences that say what the page offers and who it is for, and keep each page's description distinct.</p>
 
