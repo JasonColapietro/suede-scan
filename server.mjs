@@ -21,7 +21,24 @@ const [INDEX_HTML, STYLES_CSS, CLIENT_JS, THEME_TOGGLE_JS, ROBOTS_TXT, LLMS_TXT,
   readFile(new URL('./favicon.ico', import.meta.url)),
   readFile(new URL('./ai-instructions.html', import.meta.url)),
 ]);
+// Check reference pages. Each file is read through a literal URL so Vercel
+// traces it into the function bundle. Unknown /checks/<slug> paths fall
+// through to the 404 below.
+const CHECK_PAGES = await Promise.all([
+  ['/checks', readFile(new URL('./checks/index.html', import.meta.url))],
+  ['/checks/page-access', readFile(new URL('./checks/page-access.html', import.meta.url))],
+  ['/checks/crawler-access', readFile(new URL('./checks/crawler-access.html', import.meta.url))],
+  ['/checks/discovery-files', readFile(new URL('./checks/discovery-files.html', import.meta.url))],
+  ['/checks/structured-data', readFile(new URL('./checks/structured-data.html', import.meta.url))],
+  ['/checks/metadata', readFile(new URL('./checks/metadata.html', import.meta.url))],
+  ['/checks/content-structure', readFile(new URL('./checks/content-structure.html', import.meta.url))],
+  ['/checks/retrieval-chunks', readFile(new URL('./checks/retrieval-chunks.html', import.meta.url))],
+].map(async ([route, body]) => [route, await body]));
 const STATIC_FILES = new Map([
+  ...CHECK_PAGES.flatMap(([route, body]) => [
+    [route, [body, 'text/html; charset=utf-8']],
+    [`${route}/`, [body, 'text/html; charset=utf-8']],
+  ]),
   ['/ai-instructions', [AI_INSTRUCTIONS_HTML, 'text/html; charset=utf-8']],
   ['/ai-instructions/', [AI_INSTRUCTIONS_HTML, 'text/html; charset=utf-8']],
   ['/ai-instructions.html', [AI_INSTRUCTIONS_HTML, 'text/html; charset=utf-8']],

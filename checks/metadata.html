@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <script>(function(){try{var t=localStorage.getItem('suede-audit-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Title, Description and Share Metadata Checks | Suede Audit</title>
+  <meta name="description" content="Five metadata checks: title and meta description length, Open Graph title and image, X card, and favicon. The exact rule for each and how to fix it.">
+  <meta name="keywords" content="title tag length, meta description length, Open Graph tags, twitter:card, favicon, Suede AI, Suede Audit">
+  <link rel="canonical" href="https://optimize.suedeai.ai/checks/metadata">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Suede Audit">
+  <meta property="og:title" content="Title, Description and Share Metadata Checks | Suede Audit">
+  <meta property="og:description" content="Five metadata checks: title and meta description length, Open Graph title and image, X card, and favicon. The exact rule for each and how to fix it.">
+  <meta property="og:url" content="https://optimize.suedeai.ai/checks/metadata">
+  <meta property="og:image" content="https://optimize.suedeai.ai/og-suede-audit.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:alt" content="Suede AI logo">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Title, Description and Share Metadata Checks | Suede Audit">
+  <meta name="twitter:description" content="Five metadata checks: title and meta description length, Open Graph title and image, X card, and favicon. The exact rule for each and how to fix it.">
+  <meta name="twitter:image" content="https://optimize.suedeai.ai/og-suede-audit.png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" href="/suede-ai-logo.png">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="/styles.css">
+  <script defer src="/theme-toggle.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-bar">
+    <div class="container bar-inner">
+      <a class="brand" href="/" aria-label="Suede Audit home">
+        <img src="/suede-ai-logo.png" alt="" width="36" height="36">
+        <span>Suede <b>Audit</b></span>
+      </a>
+      <nav class="primary-nav" aria-label="Primary navigation">
+        <a href="/checks">What it checks</a>
+        <a href="/method">Method</a>
+        <a href="/#faq">FAQ</a>
+        <a href="https://github.com/JasonColapietro/suede-scan" target="_blank" rel="noreferrer">Source</a>
+        <a href="/#contact">Contact</a>
+      </nav>
+      <button class="theme-toggle" type="button" data-theme-toggle aria-label="Toggle light or dark view" title="Toggle light or dark view">
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+      </button>
+      <a class="button button-primary button-small" href="/">Run your free audit</a>
+    </div>
+  </header>
+
+  <main id="main">
+    <article class="doc-page">
+      <div class="container">
+        <div class="doc-prose">
+          <a class="text-link" href="/checks"><span aria-hidden="true">&#8592;</span> All checks</a>
+          <p class="eyebrow" style="margin-top:28px;">Check reference</p>
+          <h1>The labels your page carries everywhere else.</h1>
+
+          <p>Five checks read the head of the homepage. None of them blocks indexing. They are medium or low severity and together carry 9 of the 90 points. They control how the page is labelled in search results, browser tabs and link previews.</p>
+
+          <h2 id="title">Title is specific and scannable</h2>
+          <p class="check-facts" data-check="title" data-lane="Metadata" data-severity="medium"><span>Metadata</span><span>Medium severity</span><span>3 of 90 points</span><span>id: title</span></p>
+          <p class="check-report"><b>Repair shown in the report:</b> Write a 15 to 60 character title with the page topic near the front.</p>
+          <p><b>The rule.</b> Reads the first <code>&lt;title&gt;</code> element, decodes HTML entities, trims whitespace and counts characters. 15 to 60 characters, inclusive, passes. The observed value shows the first 80 characters and the length.</p>
+          <p><b>Why it matters.</b> Google asks for a descriptive, concise title on every page and distinct text for each one. It sets no length limit, but truncates title links as needed to fit the device width (<a href="https://developers.google.com/search/docs/appearance/title-link">Google, influencing title links</a>). The 15 to 60 range is the audit's own rule.</p>
+          <p><b>How to fix it.</b> Put the page subject first and the brand last, and give every page its own title rather than a shared template string.</p>
+
+          <h2 id="description">Meta description explains the page</h2>
+          <p class="check-facts" data-check="description" data-lane="Metadata" data-severity="medium"><span>Metadata</span><span>Medium severity</span><span>3 of 90 points</span><span>id: description</span></p>
+          <p class="check-report"><b>Repair shown in the report:</b> Add a 50 to 160 character description that states the page outcome.</p>
+          <p><b>The rule.</b> Reads the content of the meta tag named description, decodes entities and counts characters. 50 to 160 characters, inclusive, passes.</p>
+          <p><b>Why it matters.</b> Google sometimes uses the meta description for the search snippet when it describes the page more accurately than on-page text. There is no length limit, but snippets are truncated to fit the device, and Google asks for a unique description on each page (<a href="https://developers.google.com/search/docs/appearance/snippet">Google, how to write meta descriptions</a>).</p>
+          <p><b>How to fix it.</b> Write one or two sentences that say what the page offers and who it is for, and keep each page's description distinct.</p>
+
+          <h2 id="open-graph">Open Graph title and image are present</h2>
+          <p class="check-facts" data-check="open-graph" data-lane="Metadata" data-severity="low"><span>Metadata</span><span>Low severity</span><span>1 of 90 points</span><span>id: open-graph</span></p>
+          <p class="check-report"><b>Repair shown in the report:</b> Add Open Graph title and image metadata.</p>
+          <p><b>The rule.</b> Passes when both og:title and og:image meta tags have content. Either the name or the property attribute is accepted.</p>
+          <p><b>Why it matters.</b> The Open Graph protocol defines four required properties for every page: og:title, og:type, og:image and og:url (<a href="https://ogp.me/">The Open Graph protocol</a>). The protocol's stated aim is to let any web page become a rich object in a social graph.</p>
+          <p><b>How to fix it.</b> Set all four, with og:url matching the canonical URL and og:image pointing at an absolute image URL.</p>
+
+          <h2 id="twitter-card">X card metadata is present</h2>
+          <p class="check-facts" data-check="twitter-card" data-lane="Metadata" data-severity="low"><span>Metadata</span><span>Low severity</span><span>1 of 90 points</span><span>id: twitter-card</span></p>
+          <p class="check-report"><b>Repair shown in the report:</b> Add twitter:card metadata for reliable X previews.</p>
+          <p><b>The rule.</b> Passes when a meta tag named twitter:card has content. This site's own pages use <code>summary_large_image</code>.</p>
+          <p><b>How to fix it.</b> Add the tag next to your Open Graph tags in the shared head template so every page carries it.</p>
+
+          <h2 id="favicon">A favicon is declared</h2>
+          <p class="check-facts" data-check="favicon" data-lane="Metadata" data-severity="low"><span>Metadata</span><span>Low severity</span><span>1 of 90 points</span><span>id: favicon</span></p>
+          <p class="check-report"><b>Repair shown in the report:</b> Declare a favicon for browser and result-page identity.</p>
+          <p><b>The rule.</b> Passes when a link element's rel is icon or shortcut icon. An apple-touch-icon link on its own does not pass.</p>
+          <p><b>Why it matters.</b> Google reads the favicon from a link tag in the head of your home page and supports icon, shortcut icon, apple-touch-icon and apple-touch-icon-precomposed. It shows one favicon per hostname, for domain-level and subdomain-level home pages (<a href="https://developers.google.com/search/docs/appearance/favicon-in-search">Google, favicon in search results</a>).</p>
+          <p><b>How to fix it.</b> Add <code>&lt;link rel="icon" href="/favicon.ico"&gt;</code> to the homepage head. Keep any apple-touch-icon link as well.</p>
+
+          <h2>More check references</h2>
+          <ul>
+            <li><a href="/checks/page-access">Page access and indexing</a>: Status code, HTTPS, noindex, canonical, viewport, language and HTML weight.</li>
+            <li><a href="/checks/crawler-access">Crawler access</a>: How robots.txt is read for OAI-SearchBot, Claude-SearchBot, PerplexityBot and Googlebot.</li>
+            <li><a href="/checks/discovery-files">Discovery files</a>: Whether robots.txt, sitemap.xml and llms.txt answer at the site root.</li>
+            <li><a href="/checks/structured-data">Structured data and entity</a>: Valid JSON-LD, a primary entity type, and sameAs identity links.</li>
+            <li><a href="/checks/content-structure">Headings, content and links</a>: One H1, two H2 sections, 300 words, three internal links and image alt attributes.</li>
+            <li><a href="/checks/retrieval-chunks">Retrieval chunk size</a>: Whether every heading section fits in one 375-word retrieval chunk.</li>
+          </ul>
+          <h2>Related Suede guides</h2>
+          <ul>
+            <li><a href="https://seo.suedeai.ai/on-page-seo">On-Page SEO and Metadata Services</a>: titles, descriptions, headings and content aligned with each page purpose, with the published metadata verified.</li>
+          </ul>
+
+          <p class="doc-meta">Every rule on this page is read from the scoring code in <a href="https://github.com/JasonColapietro/suede-scan/blob/main/lib/engine.mjs">lib/engine.mjs</a>. If the code changes, this reference changes with it.</p>
+        </div>
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <span>Suede Audit</span>
+        <p>Public-site evidence for search and answer-engine readiness.</p>
+      </div>
+      <div><b>Product</b><a href="https://seo.suedeai.ai/">Suede SEO practice</a><a href="https://suedeai.ai/">Suede AI</a><a href="https://suedeai.ai/founder">About the founder</a></div>
+      <div><b>Evidence</b><a href="https://github.com/JasonColapietro/suede-scan">Source code</a><a href="/method">Method</a><a href="/checks">Check reference</a></div>
+      <div><b>Company</b><a href="/privacy">Privacy</a><a href="mailto:info@suedeai.ai">Contact</a></div>
+      <div class="footer-note"><span>Point-in-time public signals</span><span>No citation or ranking guarantee</span></div>
+    </div>
+  </footer>
+
+  <a class="contact-fab" href="mailto:info@suedeai.ai" aria-label="Contact Suede AI by email at info@suedeai.ai">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="4.5" width="19" height="15" rx="2"/><path d="m3 6 9 6.5L21 6"/></svg>
+    <span class="contact-fab-text">Contact</span>
+  </a>
+</body>
+</html>

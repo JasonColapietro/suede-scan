@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { access, readFile } from 'node:fs/promises';
+import { access, readdir, readFile } from 'node:fs/promises';
 import test from 'node:test';
 
 test('keeps the canonical audit intent on the root URL', async () => {
@@ -63,7 +63,10 @@ test('ships the authenticated operator endpoint through Vercel and the local ser
 test('uses one local 1200x630 social card across every public audit document', async () => {
   const imageUrl = 'https://optimize.suedeai.ai/og-suede-audit.png';
 
-  for (const page of ['index.html', 'method.html', 'privacy.html']) {
+  const checkPages = (await readdir(new URL('../checks/', import.meta.url)))
+    .filter((name) => name.endsWith('.html'))
+    .map((name) => `checks/${name}`);
+  for (const page of ['index.html', 'method.html', 'privacy.html', ...checkPages]) {
     const html = await readFile(new URL(`../${page}`, import.meta.url), 'utf8');
 
     assert.match(html, new RegExp(`<meta property="og:image" content="${imageUrl.replaceAll('.', '\\.')}">`));

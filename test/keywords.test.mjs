@@ -6,7 +6,11 @@ import { BRAND_KEYWORDS, PAGE_KEYWORDS, keywordsContent, keywordsFor } from '../
 const root = new URL('../', import.meta.url);
 
 async function indexablePages() {
-  const files = (await readdir(root)).filter((name) => name.endsWith('.html'));
+  // Root pages plus the check reference pages under checks/.
+  const files = [
+    ...(await readdir(root)).filter((name) => name.endsWith('.html')),
+    ...(await readdir(new URL('checks/', root))).filter((name) => name.endsWith('.html')).map((name) => `checks/${name}`),
+  ];
   const pages = [];
   for (const name of files) {
     const html = await readFile(new URL(name, root), 'utf8');

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <script>(function(){try{var t=localStorage.getItem('suede-audit-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Audit Checks Reference | Suede Audit</title>
+  <meta name="description" content="All 28 weighted checks in a Suede Audit report: what each one tests, its severity and points, the exact pass rule, and how to repair a failure.">
+  <meta name="keywords" content="SEO audit checklist, AI visibility audit checks, AI readiness score, audit scoring weights, robots.txt, JSON-LD, sitemap.xml, llms.txt, Suede AI, Suede Audit">
+  <link rel="canonical" href="https://optimize.suedeai.ai/checks">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Suede Audit">
+  <meta property="og:title" content="Audit Checks Reference | Suede Audit">
+  <meta property="og:description" content="All 28 weighted checks in a Suede Audit report: what each one tests, its severity and points, the exact pass rule, and how to repair a failure.">
+  <meta property="og:url" content="https://optimize.suedeai.ai/checks">
+  <meta property="og:image" content="https://optimize.suedeai.ai/og-suede-audit.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:alt" content="Suede AI logo">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Audit Checks Reference | Suede Audit">
+  <meta name="twitter:description" content="All 28 weighted checks in a Suede Audit report: what each one tests, its severity and points, the exact pass rule, and how to repair a failure.">
+  <meta name="twitter:image" content="https://optimize.suedeai.ai/og-suede-audit.png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" href="/suede-ai-logo.png">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="/styles.css">
+  <script defer src="/theme-toggle.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-bar">
+    <div class="container bar-inner">
+      <a class="brand" href="/" aria-label="Suede Audit home">
+        <img src="/suede-ai-logo.png" alt="" width="36" height="36">
+        <span>Suede <b>Audit</b></span>
+      </a>
+      <nav class="primary-nav" aria-label="Primary navigation">
+        <a href="/checks">What it checks</a>
+        <a href="/method">Method</a>
+        <a href="/#faq">FAQ</a>
+        <a href="https://github.com/JasonColapietro/suede-scan" target="_blank" rel="noreferrer">Source</a>
+        <a href="/#contact">Contact</a>
+      </nav>
+      <button class="theme-toggle" type="button" data-theme-toggle aria-label="Toggle light or dark view" title="Toggle light or dark view">
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+      </button>
+      <a class="button button-primary button-small" href="/">Run your free audit</a>
+    </div>
+  </header>
+
+  <main id="main">
+    <article class="doc-page">
+      <div class="container">
+        <div class="doc-prose">
+          <a class="text-link" href="/"><span aria-hidden="true">&#8592;</span> Back to the audit</a>
+          <p class="eyebrow" style="margin-top:28px;">Check reference</p>
+          <h1>Every check in the audit, and the rule behind it.</h1>
+
+          <p>A Suede Audit report runs 28 weighted checks against one public homepage and three root discovery files. This reference documents each one: the signal it reads, the exact rule the scanner applies, why search engines and AI crawlers care, and how to clear a failure. Every rule is read from the open scoring code.</p>
+
+          <h2>How the weights add up</h2>
+          <p>Each check carries a severity. High counts 5 points, medium 3 and low 1. The 28 checks add up to 90 points: 10 high checks worth 50, 11 medium checks worth 33, and 7 low checks worth 7. The readiness score is the share of those points a page earns, rounded to a whole number. One failed high check costs about 5.6 points of the score, a medium check about 3.3, and a low check about 1.1.</p>
+          <p>Checks roll up into three pillars, scored the same way: Discoverability (13 checks, 49 points), Entity evidence (3 checks, 13 points) and Content clarity (12 checks, 28 points). Grades use the same bands everywhere: A from 90, B from 80, C from 70, D from 55, and F below 55. The <a href="/method">method page</a> covers what the audit fetches and how results are cached.</p>
+
+          <h2>Discoverability: 13 checks, 49 points</h2>
+          <div class="check-table-wrap">
+            <table class="check-table">
+              <thead><tr><th scope="col">Check</th><th scope="col">Lane</th><th scope="col">Severity, points</th><th scope="col">Passes when</th></tr></thead>
+              <tbody>
+                <tr data-check="status" data-lane="Access" data-severity="high"><td><a href="/checks/page-access#status">Page returns a successful response</a></td><td data-label="Lane">Access</td><td data-label="Severity, points">High, 5</td><td data-label="Passes when">Final response is 2xx</td></tr>
+                <tr data-check="https" data-lane="Access" data-severity="high"><td><a href="/checks/page-access#https">Page is served over HTTPS</a></td><td data-label="Lane">Access</td><td data-label="Severity, points">High, 5</td><td data-label="Passes when">Final URL uses https</td></tr>
+                <tr data-check="noindex" data-lane="Access" data-severity="high"><td><a href="/checks/page-access#noindex">Page can be indexed</a></td><td data-label="Lane">Access</td><td data-label="Severity, points">High, 5</td><td data-label="Passes when">Robots meta has no noindex</td></tr>
+                <tr data-check="language" data-lane="Access" data-severity="low"><td><a href="/checks/page-access#language">Document language is declared</a></td><td data-label="Lane">Access</td><td data-label="Severity, points">Low, 1</td><td data-label="Passes when">html tag has a lang attribute</td></tr>
+                <tr data-check="canonical" data-lane="Technical" data-severity="medium"><td><a href="/checks/page-access#canonical">Canonical link is declared</a></td><td data-label="Lane">Technical</td><td data-label="Severity, points">Medium, 3</td><td data-label="Passes when">A rel=&quot;canonical&quot; link exists</td></tr>
+                <tr data-check="viewport" data-lane="Technical" data-severity="high"><td><a href="/checks/page-access#viewport">Mobile viewport is declared</a></td><td data-label="Lane">Technical</td><td data-label="Severity, points">High, 5</td><td data-label="Passes when">A viewport meta tag exists</td></tr>
+                <tr data-check="robots" data-lane="Technical" data-severity="low"><td><a href="/checks/discovery-files#robots">robots.txt is available</a></td><td data-label="Lane">Technical</td><td data-label="Severity, points">Low, 1</td><td data-label="Passes when">/robots.txt returns 2xx</td></tr>
+                <tr data-check="sitemap" data-lane="Technical" data-severity="medium"><td><a href="/checks/discovery-files#sitemap">XML sitemap is available</a></td><td data-label="Lane">Technical</td><td data-label="Severity, points">Medium, 3</td><td data-label="Passes when">/sitemap.xml returns 2xx</td></tr>
+                <tr data-check="crawler-openai" data-lane="AI discovery" data-severity="high"><td><a href="/checks/crawler-access#crawler-openai">OpenAI search crawler can access the homepage</a></td><td data-label="Lane">AI discovery</td><td data-label="Severity, points">High, 5</td><td data-label="Passes when">OAI-SearchBot not blocked from /</td></tr>
+                <tr data-check="crawler-anthropic" data-lane="AI discovery" data-severity="high"><td><a href="/checks/crawler-access#crawler-anthropic">Claude search crawler can access the homepage</a></td><td data-label="Lane">AI discovery</td><td data-label="Severity, points">High, 5</td><td data-label="Passes when">Claude-SearchBot not blocked from /</td></tr>
+                <tr data-check="crawler-perplexity" data-lane="AI discovery" data-severity="high"><td><a href="/checks/crawler-access#crawler-perplexity">Perplexity crawler can access the homepage</a></td><td data-label="Lane">AI discovery</td><td data-label="Severity, points">High, 5</td><td data-label="Passes when">PerplexityBot not blocked from /</td></tr>
+                <tr data-check="crawler-google" data-lane="AI discovery" data-severity="high"><td><a href="/checks/crawler-access#crawler-google">Google discovery crawler can access the homepage</a></td><td data-label="Lane">AI discovery</td><td data-label="Severity, points">High, 5</td><td data-label="Passes when">Googlebot not blocked from /</td></tr>
+                <tr data-check="llms" data-lane="AI discovery" data-severity="low"><td><a href="/checks/discovery-files#llms">llms.txt evidence index is available</a></td><td data-label="Lane">AI discovery</td><td data-label="Severity, points">Low, 1</td><td data-label="Passes when">/llms.txt returns 2xx with text</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h2>Entity evidence: 3 checks, 13 points</h2>
+          <div class="check-table-wrap">
+            <table class="check-table">
+              <thead><tr><th scope="col">Check</th><th scope="col">Lane</th><th scope="col">Severity, points</th><th scope="col">Passes when</th></tr></thead>
+              <tbody>
+                <tr data-check="schema" data-lane="Entity" data-severity="high"><td><a href="/checks/structured-data#schema">Valid JSON-LD is present</a></td><td data-label="Lane">Entity</td><td data-label="Severity, points">High, 5</td><td data-label="Passes when">One JSON-LD block parses</td></tr>
+                <tr data-check="entity-type" data-lane="Entity" data-severity="high"><td><a href="/checks/structured-data#entity-type">A primary entity type is declared</a></td><td data-label="Lane">Entity</td><td data-label="Severity, points">High, 5</td><td data-label="Passes when">Organization, Corporation, LocalBusiness, OnlineBusiness or Person declared</td></tr>
+                <tr data-check="same-as" data-lane="Entity" data-severity="medium"><td><a href="/checks/structured-data#same-as">Entity identity links are declared</a></td><td data-label="Lane">Entity</td><td data-label="Severity, points">Medium, 3</td><td data-label="Passes when">A node declares sameAs</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h2>Content clarity: 12 checks, 28 points</h2>
+          <div class="check-table-wrap">
+            <table class="check-table">
+              <thead><tr><th scope="col">Check</th><th scope="col">Lane</th><th scope="col">Severity, points</th><th scope="col">Passes when</th></tr></thead>
+              <tbody>
+                <tr data-check="title" data-lane="Metadata" data-severity="medium"><td><a href="/checks/metadata#title">Title is specific and scannable</a></td><td data-label="Lane">Metadata</td><td data-label="Severity, points">Medium, 3</td><td data-label="Passes when">Title is 15 to 60 characters</td></tr>
+                <tr data-check="description" data-lane="Metadata" data-severity="medium"><td><a href="/checks/metadata#description">Meta description explains the page</a></td><td data-label="Lane">Metadata</td><td data-label="Severity, points">Medium, 3</td><td data-label="Passes when">Description is 50 to 160 characters</td></tr>
+                <tr data-check="open-graph" data-lane="Metadata" data-severity="low"><td><a href="/checks/metadata#open-graph">Open Graph title and image are present</a></td><td data-label="Lane">Metadata</td><td data-label="Severity, points">Low, 1</td><td data-label="Passes when">og:title and og:image present</td></tr>
+                <tr data-check="twitter-card" data-lane="Metadata" data-severity="low"><td><a href="/checks/metadata#twitter-card">X card metadata is present</a></td><td data-label="Lane">Metadata</td><td data-label="Severity, points">Low, 1</td><td data-label="Passes when">twitter:card present</td></tr>
+                <tr data-check="favicon" data-lane="Metadata" data-severity="low"><td><a href="/checks/metadata#favicon">A favicon is declared</a></td><td data-label="Lane">Metadata</td><td data-label="Severity, points">Low, 1</td><td data-label="Passes when">icon or shortcut icon link present</td></tr>
+                <tr data-check="h1" data-lane="Content" data-severity="medium"><td><a href="/checks/content-structure#h1">Page has exactly one H1</a></td><td data-label="Lane">Content</td><td data-label="Severity, points">Medium, 3</td><td data-label="Passes when">Exactly one H1</td></tr>
+                <tr data-check="image-alt" data-lane="Content" data-severity="low"><td><a href="/checks/content-structure#image-alt">Images declare alt attributes</a></td><td data-label="Lane">Content</td><td data-label="Severity, points">Low, 1</td><td data-label="Passes when">No img without an alt attribute</td></tr>
+                <tr data-check="content-depth" data-lane="Content" data-severity="medium"><td><a href="/checks/content-structure#content-depth">Page has substantive readable content</a></td><td data-label="Lane">Content</td><td data-label="Severity, points">Medium, 3</td><td data-label="Passes when">300 words or more</td></tr>
+                <tr data-check="h2" data-lane="Content" data-severity="medium"><td><a href="/checks/content-structure#h2">Page uses explanatory H2 sections</a></td><td data-label="Lane">Content</td><td data-label="Severity, points">Medium, 3</td><td data-label="Passes when">Two or more H2</td></tr>
+                <tr data-check="chunking" data-lane="Content" data-severity="medium"><td><a href="/checks/retrieval-chunks#chunking">Page sections fit one retrieval chunk</a></td><td data-label="Lane">Content</td><td data-label="Severity, points">Medium, 3</td><td data-label="Passes when">No heading section over 375 words</td></tr>
+                <tr data-check="internal-links" data-lane="Content" data-severity="medium"><td><a href="/checks/content-structure#internal-links">Page points to supporting internal evidence</a></td><td data-label="Lane">Content</td><td data-label="Severity, points">Medium, 3</td><td data-label="Passes when">Three or more same-host links</td></tr>
+                <tr data-check="html-weight" data-lane="Performance" data-severity="medium"><td><a href="/checks/page-access#html-weight">HTML response stays under 300 KB</a></td><td data-label="Lane">Performance</td><td data-label="Severity, points">Medium, 3</td><td data-label="Passes when">HTML is 300 KB or less</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h2>Reported beside the score</h2>
+          <p>Three crawler tokens that control model training or AI use, GPTBot, ClaudeBot and Google-Extended, are read from the same robots.txt with the same rule and shown in their own panel. They never change the score; the <a href="/checks/crawler-access">crawler access</a> page explains why. The evidence summary, which lists the title, description, language, canonical, schema types, image alt counts and sitemap entries the audit found, is reported without scoring too.</p>
+
+          <h2>Reference pages</h2>
+          <ul>
+            <li><a href="/checks/page-access">Page access and indexing</a>: Status code, HTTPS, noindex, canonical, viewport, language and HTML weight.</li>
+            <li><a href="/checks/crawler-access">Crawler access</a>: How robots.txt is read for OAI-SearchBot, Claude-SearchBot, PerplexityBot and Googlebot.</li>
+            <li><a href="/checks/discovery-files">Discovery files</a>: Whether robots.txt, sitemap.xml and llms.txt answer at the site root.</li>
+            <li><a href="/checks/structured-data">Structured data and entity</a>: Valid JSON-LD, a primary entity type, and sameAs identity links.</li>
+            <li><a href="/checks/metadata">Titles, descriptions and share metadata</a>: Title and description length, Open Graph, X card and favicon.</li>
+            <li><a href="/checks/content-structure">Headings, content and links</a>: One H1, two H2 sections, 300 words, three internal links and image alt attributes.</li>
+            <li><a href="/checks/retrieval-chunks">Retrieval chunk size</a>: Whether every heading section fits in one 375-word retrieval chunk.</li>
+          </ul>
+
+          <h2>Related Suede guides</h2>
+          <ul>
+            <li><a href="https://signal.suedeai.ai/docs/scoring">Scoring and lanes, Suede Signal Docs</a>: the Suede Signal methodology: five weighted lanes, 26 deterministic checks, and A to F grade bands.</li>
+            <li><a href="https://seo.suedeai.ai/technical-seo">Technical SEO Services: Fix Crawl and Indexing Gaps</a>: Suede AI fixes crawlability, indexing, canonicals, internal links and performance in your CMS or codebase.</li>
+          </ul>
+
+          <p class="doc-meta">Every rule on this page is read from the scoring code in <a href="https://github.com/JasonColapietro/suede-scan/blob/main/lib/engine.mjs">lib/engine.mjs</a>. If the code changes, this reference changes with it.</p>
+        </div>
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <span>Suede Audit</span>
+        <p>Public-site evidence for search and answer-engine readiness.</p>
+      </div>
+      <div><b>Product</b><a href="https://seo.suedeai.ai/">Suede SEO practice</a><a href="https://suedeai.ai/">Suede AI</a><a href="https://suedeai.ai/founder">About the founder</a></div>
+      <div><b>Evidence</b><a href="https://github.com/JasonColapietro/suede-scan">Source code</a><a href="/method">Method</a><a href="/checks">Check reference</a></div>
+      <div><b>Company</b><a href="/privacy">Privacy</a><a href="mailto:info@suedeai.ai">Contact</a></div>
+      <div class="footer-note"><span>Point-in-time public signals</span><span>No citation or ranking guarantee</span></div>
+    </div>
+  </footer>
+
+  <a class="contact-fab" href="mailto:info@suedeai.ai" aria-label="Contact Suede AI by email at info@suedeai.ai">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="4.5" width="19" height="15" rx="2"/><path d="m3 6 9 6.5L21 6"/></svg>
+    <span class="contact-fab-text">Contact</span>
+  </a>
+</body>
+</html>

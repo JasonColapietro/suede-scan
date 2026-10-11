@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <script>(function(){try{var t=localStorage.getItem('suede-audit-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Headings, Content and Internal Link Checks | Suede Audit</title>
+  <meta name="description" content="Five content checks: one H1, two or more H2 sections, 300 words of server-rendered copy, three internal links, and alt attributes on every image.">
+  <meta name="keywords" content="H1 tag, H2 headings, content depth, internal links, image alt text, server-side rendering, Suede AI, Suede Audit">
+  <link rel="canonical" href="https://optimize.suedeai.ai/checks/content-structure">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Suede Audit">
+  <meta property="og:title" content="Headings, Content and Internal Link Checks | Suede Audit">
+  <meta property="og:description" content="Five content checks: one H1, two or more H2 sections, 300 words of server-rendered copy, three internal links, and alt attributes on every image.">
+  <meta property="og:url" content="https://optimize.suedeai.ai/checks/content-structure">
+  <meta property="og:image" content="https://optimize.suedeai.ai/og-suede-audit.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:alt" content="Suede AI logo">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Headings, Content and Internal Link Checks | Suede Audit">
+  <meta name="twitter:description" content="Five content checks: one H1, two or more H2 sections, 300 words of server-rendered copy, three internal links, and alt attributes on every image.">
+  <meta name="twitter:image" content="https://optimize.suedeai.ai/og-suede-audit.png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" href="/suede-ai-logo.png">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="/styles.css">
+  <script defer src="/theme-toggle.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-bar">
+    <div class="container bar-inner">
+      <a class="brand" href="/" aria-label="Suede Audit home">
+        <img src="/suede-ai-logo.png" alt="" width="36" height="36">
+        <span>Suede <b>Audit</b></span>
+      </a>
+      <nav class="primary-nav" aria-label="Primary navigation">
+        <a href="/checks">What it checks</a>
+        <a href="/method">Method</a>
+        <a href="/#faq">FAQ</a>
+        <a href="https://github.com/JasonColapietro/suede-scan" target="_blank" rel="noreferrer">Source</a>
+        <a href="/#contact">Contact</a>
+      </nav>
+      <button class="theme-toggle" type="button" data-theme-toggle aria-label="Toggle light or dark view" title="Toggle light or dark view">
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+      </button>
+      <a class="button button-primary button-small" href="/">Run your free audit</a>
+    </div>
+  </header>
+
+  <main id="main">
+    <article class="doc-page">
+      <div class="container">
+        <div class="doc-prose">
+          <a class="text-link" href="/checks"><span aria-hidden="true">&#8592;</span> All checks</a>
+          <p class="eyebrow" style="margin-top:28px;">Check reference</p>
+          <h1>Give crawlers a page they can read and follow.</h1>
+
+          <p>These checks read the served HTML of the homepage, before any JavaScript runs. Text, headings and links that only appear after scripts execute are not counted. Google renders JavaScript, but its documentation calls server-side or pre-rendering a great idea because not all bots can run JavaScript (<a href="https://developers.google.com/search/docs/crawling-indexing/javascript/javascript-seo-basics">Google, JavaScript SEO basics</a>). The sixth content check, section length, has its own page: <a href="/checks/retrieval-chunks">retrieval chunk size</a>.</p>
+
+          <h2 id="h1">Page has exactly one H1</h2>
+          <p class="check-facts" data-check="h1" data-lane="Content" data-severity="medium"><span>Content</span><span>Medium severity</span><span>3 of 90 points</span><span>id: h1</span></p>
+          <p class="check-report"><b>Repair shown in the report:</b> Use one H1 that states the page subject.</p>
+          <p><b>The rule.</b> Counts h1 opening tags in the served HTML. Exactly one passes. None, or two or more, fails.</p>
+          <p><b>Why it matters.</b> Google's SEO Starter Guide recommends breaking content into sections with headings so readers can navigate, and notes that semantic heading order helps screen readers (<a href="https://developers.google.com/search/docs/fundamentals/seo-starter-guide">Google, SEO Starter Guide</a>). A single H1 gives the page one stated subject. The report's evidence summary shows that H1 next to the title so you can check they agree.</p>
+          <p><b>How to fix it.</b> Keep one H1 that names what the page is about. Demote logo text and repeated banners to other elements.</p>
+
+          <h2 id="h2">Page uses explanatory H2 sections</h2>
+          <p class="check-facts" data-check="h2" data-lane="Content" data-severity="medium"><span>Content</span><span>Medium severity</span><span>3 of 90 points</span><span>id: h2</span></p>
+          <p class="check-report"><b>Repair shown in the report:</b> Break the page into at least two descriptive H2 sections.</p>
+          <p><b>The rule.</b> Counts h2 opening tags in the served HTML. Two or more passes.</p>
+          <p><b>Why it matters.</b> Headings mark where one topic ends and the next begins. Google Cloud's Agent Search layout parser, for example, identifies text blocks, tables, lists, titles and headings and uses them to define a document's hierarchy, and its layout-aware chunking keeps each chunk inside one layout entity (<a href="https://docs.cloud.google.com/generative-ai-app-builder/docs/parse-chunk-documents">Google Cloud, parse and chunk documents</a>).</p>
+          <p><b>How to fix it.</b> Give each major section an H2 that names its question or topic, such as pricing, how it works or who it is for.</p>
+
+          <h2 id="content-depth">Page has substantive readable content</h2>
+          <p class="check-facts" data-check="content-depth" data-lane="Content" data-severity="medium"><span>Content</span><span>Medium severity</span><span>3 of 90 points</span><span>id: content-depth</span></p>
+          <p class="check-report"><b>Repair shown in the report:</b> Add direct, answer-ready copy that explains the subject in at least 300 useful words.</p>
+          <p><b>The rule.</b> Removes scripts, styles and comments, strips the remaining tags, and counts whitespace-separated words, navigation and footer included. 300 or more passes.</p>
+          <p><b>Why it matters.</b> Google says length alone does not matter for ranking and there is no magical word count (<a href="https://developers.google.com/search/docs/fundamentals/seo-starter-guide">Google, SEO Starter Guide</a>). The 300-word floor is the audit's test that the homepage explains itself in server-rendered text. Google lists making important content available in textual form among the fundamentals for AI Overviews and AI Mode (<a href="https://developers.google.com/search/docs/appearance/ai-features">Google, AI features and your website</a>).</p>
+          <p><b>How to fix it.</b> State what you offer, who it serves and how it works in plain HTML text. Replace text baked into images with real text.</p>
+
+          <h2 id="internal-links">Page points to supporting internal evidence</h2>
+          <p class="check-facts" data-check="internal-links" data-lane="Content" data-severity="medium"><span>Content</span><span>Medium severity</span><span>3 of 90 points</span><span>id: internal-links</span></p>
+          <p class="check-report"><b>Repair shown in the report:</b> Link to at least three relevant internal pages with descriptive anchor text.</p>
+          <p><b>The rule.</b> Counts anchor elements with a quoted href whose resolved hostname matches the audited host. Links that start with #, mailto:, tel: or javascript: are skipped, and links to another subdomain count as external. Three or more passes. The observed value reads, for example, "12 internal of 18 links".</p>
+          <p><b>Why it matters.</b> Google uses links to judge relevance and to find new pages, and can generally crawl a link only when it is an a element with an href. It asks for anchor text that is descriptive, reasonably concise and relevant (<a href="https://developers.google.com/search/docs/crawling-indexing/links-crawlable">Google, link best practices</a>). Its AI features guidance lists making content findable through internal links.</p>
+          <p><b>How to fix it.</b> Link from the homepage to the pages that support your claims, such as pricing, documentation and case studies, using real a href elements rather than click handlers.</p>
+
+          <h2 id="image-alt">Images declare alt attributes</h2>
+          <p class="check-facts" data-check="image-alt" data-lane="Content" data-severity="low"><span>Content</span><span>Low severity</span><span>1 of 90 points</span><span>id: image-alt</span></p>
+          <p class="check-report"><b>Repair shown in the report:</b> Add alt attributes to images missing them. Describe informative images; keep alt=&quot;&quot; for decorative images. Review purpose in context.</p>
+          <p><b>The rule.</b> Finds every img tag outside scripts, styles and comments and reads its alt attribute. The check fails when any image has no alt attribute at all. An empty alt="" passes. The observed value splits images into non-empty, empty and missing.</p>
+          <p><b>Why it matters.</b> Google uses alt text with computer vision and page content to understand what an image shows (<a href="https://developers.google.com/search/docs/appearance/google-images">Google, image SEO best practices</a>). The W3C says decorative images take a null alt, and that leaving the attribute out makes some screen readers announce the file name instead (<a href="https://www.w3.org/WAI/tutorials/images/decorative/">W3C, decorative images</a>).</p>
+          <p><b>How to fix it.</b> Describe informative images in a short phrase and set alt="" on decorative ones.</p>
+
+          <h2>More check references</h2>
+          <ul>
+            <li><a href="/checks/page-access">Page access and indexing</a>: Status code, HTTPS, noindex, canonical, viewport, language and HTML weight.</li>
+            <li><a href="/checks/crawler-access">Crawler access</a>: How robots.txt is read for OAI-SearchBot, Claude-SearchBot, PerplexityBot and Googlebot.</li>
+            <li><a href="/checks/discovery-files">Discovery files</a>: Whether robots.txt, sitemap.xml and llms.txt answer at the site root.</li>
+            <li><a href="/checks/structured-data">Structured data and entity</a>: Valid JSON-LD, a primary entity type, and sameAs identity links.</li>
+            <li><a href="/checks/metadata">Titles, descriptions and share metadata</a>: Title and description length, Open Graph, X card and favicon.</li>
+            <li><a href="/checks/retrieval-chunks">Retrieval chunk size</a>: Whether every heading section fits in one 375-word retrieval chunk.</li>
+          </ul>
+          <h2>Related Suede guides</h2>
+          <ul>
+            <li><a href="https://seo.suedeai.ai/internal-linking-optimization">Internal Linking Optimization</a>: connect important services to relevant supporting pages, repair broken paths and improve anchor text.</li>
+            <li><a href="https://seo.suedeai.ai/javascript-seo-and-rendering-repair">JavaScript SEO and Rendering Repair</a>: make essential page content, links and metadata accessible with verified template repairs.</li>
+          </ul>
+
+          <p class="doc-meta">Every rule on this page is read from the scoring code in <a href="https://github.com/JasonColapietro/suede-scan/blob/main/lib/engine.mjs">lib/engine.mjs</a>. If the code changes, this reference changes with it.</p>
+        </div>
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <span>Suede Audit</span>
+        <p>Public-site evidence for search and answer-engine readiness.</p>
+      </div>
+      <div><b>Product</b><a href="https://seo.suedeai.ai/">Suede SEO practice</a><a href="https://suedeai.ai/">Suede AI</a><a href="https://suedeai.ai/founder">About the founder</a></div>
+      <div><b>Evidence</b><a href="https://github.com/JasonColapietro/suede-scan">Source code</a><a href="/method">Method</a><a href="/checks">Check reference</a></div>
+      <div><b>Company</b><a href="/privacy">Privacy</a><a href="mailto:info@suedeai.ai">Contact</a></div>
+      <div class="footer-note"><span>Point-in-time public signals</span><span>No citation or ranking guarantee</span></div>
+    </div>
+  </footer>
+
+  <a class="contact-fab" href="mailto:info@suedeai.ai" aria-label="Contact Suede AI by email at info@suedeai.ai">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="4.5" width="19" height="15" rx="2"/><path d="m3 6 9 6.5L21 6"/></svg>
+    <span class="contact-fab-text">Contact</span>
+  </a>
+</body>
+</html>

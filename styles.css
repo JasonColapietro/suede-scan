@@ -755,6 +755,63 @@ p { overflow-wrap: anywhere; }
 .doc-prose .doc-meta { margin: 28px 0 0; padding-top: 24px; border-top: 1px solid var(--color-border); color: var(--color-text-tertiary); font-size: .86rem; }
 .doc-prose .doc-meta a { color: var(--color-text-tertiary); text-decoration: underline; text-underline-offset: 3px; }
 
+/* Check reference pages (checks/*.html). Every value resolves through the
+   tokens above, so the dark theme applies without extra rules. */
+.doc-prose h2[id] { scroll-margin-top: 96px; }
+.doc-prose ol { margin: 0 0 16px; padding-left: 1.4em; max-width: 72ch; color: var(--color-text-secondary); }
+.doc-prose pre {
+  margin: 0 0 16px;
+  padding: 14px 16px;
+  overflow-x: auto;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-soft);
+  color: var(--color-text-primary);
+  font: 500 .84rem/1.6 var(--font-data);
+}
+.doc-prose pre code { padding: 0; background: none; font: inherit; }
+.doc-prose .check-facts { display: flex; flex-wrap: wrap; gap: 6px; margin: -4px 0 14px; }
+.doc-prose .check-facts span {
+  padding: 3px 8px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  color: var(--color-text-tertiary);
+  font: 600 .68rem/1.4 var(--font-data);
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+.doc-prose .check-report { padding-left: 12px; border-left: 2px solid var(--color-accent); font-size: .94rem; }
+.check-table-wrap { margin: 0 0 20px; overflow-x: auto; border: 1px solid var(--color-border); border-radius: var(--radius-md); }
+.check-table { width: 100%; border-collapse: collapse; background: var(--color-surface); font-size: .9rem; }
+.check-table th,
+.check-table td { padding: 10px 12px; border-bottom: 1px solid var(--color-border); text-align: left; vertical-align: top; color: var(--color-text-secondary); }
+.check-table th { background: var(--color-surface-soft); color: var(--color-text-tertiary); font: 600 .64rem/1.4 var(--font-data); letter-spacing: .05em; text-transform: uppercase; }
+.check-table tr:last-child td { border-bottom: 0; }
+.check-table td:first-child { min-width: 11rem; color: var(--color-text-primary); }
+.check-table a { color: var(--color-accent); font-weight: 600; }
+.checks-more { margin-top: 24px; }
+/* Phone width: stack each row so no column is squeezed. The header row stays
+   in the accessibility tree; each cell repeats its column name visually. */
+@media (max-width: 600px) {
+  .check-table-wrap { overflow-x: visible; }
+  .check-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .check-table,
+  .check-table tbody,
+  .check-table tr,
+  .check-table td { display: block; }
+  .check-table tr { padding: 10px 12px; border-bottom: 1px solid var(--color-border); }
+  .check-table tr:last-child { border-bottom: 0; }
+  .check-table td { min-width: 0; padding: 2px 0; border-bottom: 0; }
+  .check-table td:first-child { min-width: 0; padding-bottom: 6px; }
+  .check-table td[data-label]::before {
+    content: attr(data-label) ": ";
+    color: var(--color-text-tertiary);
+    font: 600 .64rem/1.4 var(--font-data);
+    letter-spacing: .05em;
+    text-transform: uppercase;
+  }
+}
+
 .report { background: var(--color-surface); }
 
 .report-hero {
