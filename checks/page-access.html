@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <script>(function(){try{var t=localStorage.getItem('suede-audit-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Page Access and Indexing Checks | Suede Audit</title>
+  <meta name="description" content="Seven checks that decide whether crawlers can fetch and index your homepage: status, HTTPS, noindex, canonical, viewport, language and HTML weight.">
+  <meta name="keywords" content="HTTP status code SEO, HTTPS, noindex, canonical tag, viewport meta tag, html lang attribute, HTML page size, Suede AI, Suede Audit">
+  <link rel="canonical" href="https://optimize.suedeai.ai/checks/page-access">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Suede Audit">
+  <meta property="og:title" content="Page Access and Indexing Checks | Suede Audit">
+  <meta property="og:description" content="Seven checks that decide whether crawlers can fetch and index your homepage: status, HTTPS, noindex, canonical, viewport, language and HTML weight.">
+  <meta property="og:url" content="https://optimize.suedeai.ai/checks/page-access">
+  <meta property="og:image" content="https://optimize.suedeai.ai/og-suede-audit.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:alt" content="Suede AI logo">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Page Access and Indexing Checks | Suede Audit">
+  <meta name="twitter:description" content="Seven checks that decide whether crawlers can fetch and index your homepage: status, HTTPS, noindex, canonical, viewport, language and HTML weight.">
+  <meta name="twitter:image" content="https://optimize.suedeai.ai/og-suede-audit.png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" href="/suede-ai-logo.png">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="/styles.css">
+  <script defer src="/theme-toggle.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-bar">
+    <div class="container bar-inner">
+      <a class="brand" href="/" aria-label="Suede Audit home">
+        <img src="/suede-ai-logo.png" alt="" width="36" height="36">
+        <span>Suede <b>Audit</b></span>
+      </a>
+      <nav class="primary-nav" aria-label="Primary navigation">
+        <a href="/checks">What it checks</a>
+        <a href="/method">Method</a>
+        <a href="/#faq">FAQ</a>
+        <a href="https://github.com/JasonColapietro/suede-scan" target="_blank" rel="noreferrer">Source</a>
+        <a href="/#contact">Contact</a>
+      </nav>
+      <button class="theme-toggle" type="button" data-theme-toggle aria-label="Toggle light or dark view" title="Toggle light or dark view">
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+      </button>
+      <a class="button button-primary button-small" href="/">Run your free audit</a>
+    </div>
+  </header>
+
+  <main id="main">
+    <article class="doc-page">
+      <div class="container">
+        <div class="doc-prose">
+          <a class="text-link" href="/checks"><span aria-hidden="true">&#8592;</span> All checks</a>
+          <p class="eyebrow" style="margin-top:28px;">Check reference</p>
+          <h1>Can a crawler fetch and index the page?</h1>
+
+          <p>These seven checks read the homepage response itself. Two of them can stop indexing outright: a final status outside 2xx and a noindex directive. Google says a page must be indexed and eligible for a snippet before it can appear as a supporting link in AI Overviews or AI Mode (<a href="https://developers.google.com/search/docs/appearance/ai-features">Google Search Central, AI features and your website</a>). Together the seven checks carry 27 of the 90 points.</p>
+
+          <h2 id="status">Page returns a successful response</h2>
+          <p class="check-facts" data-check="status" data-lane="Access" data-severity="high"><span>Access</span><span>High severity</span><span>5 of 90 points</span><span>id: status</span></p>
+          <p class="check-report"><b>Repair shown in the report:</b> Return a 2xx status for the public page.</p>
+          <p><b>The rule.</b> The scanner requests the URL you submit, follows up to five redirects, and reads the status of the final response. Any status from 200 to 299 passes. Anything else fails, and the observed value shows the code received, such as HTTP 404. A sixth redirect stops the audit with an error, and so does a response that declares a non-HTML content type.</p>
+          <p><b>Why it matters.</b> Google does not use content from URLs that return 4xx codes, and it removes already indexed URLs that start returning them. Even a 2xx only makes the content eligible: the indexing systems may index it, but that is not guaranteed (<a href="https://developers.google.com/crawling/docs/troubleshooting/http-status-codes">Google, how HTTP status codes affect its crawlers</a>).</p>
+          <p><b>How to fix it.</b> Serve the canonical homepage with 200. Point old addresses at it with one permanent redirect rather than a chain, and make error templates return 404 or 410 instead of 200 so they are not mistaken for content.</p>
+
+          <h2 id="https">Page is served over HTTPS</h2>
+          <p class="check-facts" data-check="https" data-lane="Access" data-severity="high"><span>Access</span><span>High severity</span><span>5 of 90 points</span><span>id: https</span></p>
+          <p class="check-report"><b>Repair shown in the report:</b> Serve the page over HTTPS and redirect the HTTP version.</p>
+          <p><b>The rule.</b> Passes when the final URL, after redirects, uses https. A bare domain such as example.com is requested over HTTPS first. If you submit an http:// address, the check passes only when the server redirects it to an https:// URL.</p>
+          <p><b>Why it matters.</b> Google's page experience guidance asks whether your pages are served in a secure fashion and points site owners to the Search Console HTTPS report (<a href="https://developers.google.com/search/docs/appearance/page-experience">Google, understanding page experience</a>).</p>
+          <p><b>How to fix it.</b> Install a certificate, redirect every http:// URL to its https:// twin with a permanent redirect, and use https:// addresses in canonical tags, sitemap entries and internal links.</p>
+
+          <h2 id="noindex">Page can be indexed</h2>
+          <p class="check-facts" data-check="noindex" data-lane="Access" data-severity="high"><span>Access</span><span>High severity</span><span>5 of 90 points</span><span>id: noindex</span></p>
+          <p class="check-report"><b>Repair shown in the report:</b> Remove the noindex directive if the page should be discovered.</p>
+          <p><b>The rule.</b> The scanner reads the first meta tag named robots in the HTML. The check fails when its content contains noindex in any letter case. The observed value shows the directive found, or "No robots meta block" when the tag is absent. This check reads the generic robots tag in the HTML; review the X-Robots-Tag response header and crawler-specific tags such as googlebot in the same pass.</p>
+          <p><b>Why it matters.</b> Google's robots meta specification defines noindex as "Do not show this page, media, or resource in search results" (<a href="https://developers.google.com/search/docs/crawling-indexing/robots-meta-tag">Google, robots meta tag specifications</a>). A noindex homepage cannot be indexed, so it cannot be a supporting link in Google's AI features either.</p>
+          <p><b>How to fix it.</b> Remove noindex from every page you want found. If a staging or preview build sets it, make sure the production build drops it, then rerun the audit against the live domain.</p>
+
+          <h2 id="canonical">Canonical link is declared</h2>
+          <p class="check-facts" data-check="canonical" data-lane="Technical" data-severity="medium"><span>Technical</span><span>Medium severity</span><span>3 of 90 points</span><span>id: canonical</span></p>
+          <p class="check-report"><b>Repair shown in the report:</b> Add a canonical URL for the preferred page version.</p>
+          <p><b>The rule.</b> Passes when any link element lists canonical among its rel values. The check confirms the tag exists. The evidence summary at the top of the report shows the href it points to, so you can confirm it names the version you want indexed.</p>
+          <p><b>Why it matters.</b> Google treats a rel="canonical" link as a strong signal that the named URL should become canonical, alongside redirects, while sitemap inclusion is a weak signal (<a href="https://developers.google.com/search/docs/crawling-indexing/consolidate-duplicate-urls">Google, how to specify a canonical</a>).</p>
+          <p><b>How to fix it.</b> Add <code>&lt;link rel="canonical" href="https://www.example.com/"&gt;</code> to the head, using the absolute URL of the preferred version. Keep it consistent with your redirects and sitemap entries so the signals agree.</p>
+
+          <h2 id="viewport">Mobile viewport is declared</h2>
+          <p class="check-facts" data-check="viewport" data-lane="Technical" data-severity="high"><span>Technical</span><span>High severity</span><span>5 of 90 points</span><span>id: viewport</span></p>
+          <p class="check-report"><b>Repair shown in the report:</b> Add a responsive viewport meta tag.</p>
+          <p><b>The rule.</b> Passes when the page has a meta tag named viewport with a non-empty content value.</p>
+          <p><b>Why it matters.</b> Google uses the mobile version of a site's content, crawled with the smartphone agent, for indexing and ranking (<a href="https://developers.google.com/search/docs/crawling-indexing/mobile/mobile-sites-mobile-first-indexing">Google, mobile-first indexing best practices</a>). Its page experience guidance also asks whether your content displays well on mobile devices. The audit weights this check high.</p>
+          <p><b>How to fix it.</b> Add <code>&lt;meta name="viewport" content="width=device-width, initial-scale=1"&gt;</code> to the head of every template, then confirm the layout reads cleanly at phone width.</p>
+
+          <h2 id="language">Document language is declared</h2>
+          <p class="check-facts" data-check="language" data-lane="Access" data-severity="low"><span>Access</span><span>Low severity</span><span>1 of 90 points</span><span>id: language</span></p>
+          <p class="check-report"><b>Repair shown in the report:</b> Set the html lang attribute.</p>
+          <p><b>The rule.</b> Passes when the opening html tag carries a quoted lang attribute with any value. The observed value shows the code found, such as en or en-US. Quote the value: an unquoted lang=en is not read.</p>
+          <p><b>Why it matters.</b> Google says it determines language from the visible content of a page and does not use lang attributes (<a href="https://developers.google.com/search/docs/specialty/international/managing-multi-regional-sites">Google, managing multilingual sites</a>). The attribute serves people and their tools: WCAG 2.2 Success Criterion 3.1.1 requires that the default human language of each page can be programmatically determined, so screen readers pronounce the text correctly (<a href="https://www.w3.org/WAI/WCAG22/Understanding/language-of-page.html">W3C, Understanding SC 3.1.1</a>). The audit weights it low.</p>
+          <p><b>How to fix it.</b> Set <code>&lt;html lang="en"&gt;</code>, or the code for your page's language, in the base template.</p>
+
+          <h2 id="html-weight">HTML response stays under 300 KB</h2>
+          <p class="check-facts" data-check="html-weight" data-lane="Performance" data-severity="medium"><span>Performance</span><span>Medium severity</span><span>3 of 90 points</span><span>id: html-weight</span></p>
+          <p class="check-report"><b>Repair shown in the report:</b> Reduce server-rendered HTML and inline payloads below 300 KB.</p>
+          <p><b>The rule.</b> The scanner measures the HTML document it received in UTF-8 bytes, divides by 1,024 and rounds. 300 KB or less passes. The observed value also counts script tags and inline style attributes to show where the weight sits; those counts are not scored. The scanner reads at most 1.5 MB of HTML, and a larger page stops the audit with an error.</p>
+          <p><b>Why it matters.</b> When crawling for Google Search, Googlebot fetches the first 2 MB of an HTML file, measured uncompressed, and sends only the part it downloaded before the cutoff for indexing consideration (<a href="https://developers.google.com/search/docs/crawling-indexing/googlebot">Google, what is Googlebot</a>). The 300 KB threshold is the audit's own rule and sits well inside that cutoff.</p>
+          <p><b>How to fix it.</b> Move inline scripts and data blobs into cached external files, remove unused markup from templates, and avoid embedding images as data URIs in the HTML.</p>
+
+          <h2>More check references</h2>
+          <ul>
+            <li><a href="/checks/crawler-access">Crawler access</a>: How robots.txt is read for OAI-SearchBot, Claude-SearchBot, PerplexityBot and Googlebot.</li>
+            <li><a href="/checks/discovery-files">Discovery files</a>: Whether robots.txt, sitemap.xml and llms.txt answer at the site root.</li>
+            <li><a href="/checks/structured-data">Structured data and entity</a>: Valid JSON-LD, a primary entity type, and sameAs identity links.</li>
+            <li><a href="/checks/metadata">Titles, descriptions and share metadata</a>: Title and description length, Open Graph, X card and favicon.</li>
+            <li><a href="/checks/content-structure">Headings, content and links</a>: One H1, two H2 sections, 300 words, three internal links and image alt attributes.</li>
+            <li><a href="/checks/retrieval-chunks">Retrieval chunk size</a>: Whether every heading section fits in one 375-word retrieval chunk.</li>
+          </ul>
+          <h2>Related Suede guides</h2>
+          <ul>
+            <li><a href="https://seo.suedeai.ai/technical-seo">Technical SEO Services: Fix Crawl and Indexing Gaps</a>: Suede AI fixes crawlability, indexing, canonicals, internal links and performance in your CMS or codebase.</li>
+            <li><a href="https://seo.suedeai.ai/indexing-and-sitemap-optimization">Indexing and Sitemap Optimization</a>: align canonical URLs, indexing directives and XML sitemaps with a validated URL inventory.</li>
+          </ul>
+
+          <p class="doc-meta">Every rule on this page is read from the scoring code in <a href="https://github.com/JasonColapietro/suede-scan/blob/main/lib/engine.mjs">lib/engine.mjs</a>. If the code changes, this reference changes with it.</p>
+        </div>
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <span>Suede Audit</span>
+        <p>Public-site evidence for search and answer-engine readiness.</p>
+      </div>
+      <div><b>Product</b><a href="https://seo.suedeai.ai/">Suede SEO practice</a><a href="https://suedeai.ai/">Suede AI</a><a href="https://suedeai.ai/founder">About the founder</a></div>
+      <div><b>Evidence</b><a href="https://github.com/JasonColapietro/suede-scan">Source code</a><a href="/method">Method</a><a href="/checks">Check reference</a></div>
+      <div><b>Company</b><a href="/privacy">Privacy</a><a href="mailto:info@suedeai.ai">Contact</a></div>
+      <div class="footer-note"><span>Point-in-time public signals</span><span>No citation or ranking guarantee</span></div>
+    </div>
+  </footer>
+
+  <a class="contact-fab" href="mailto:info@suedeai.ai" aria-label="Contact Suede AI by email at info@suedeai.ai">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="4.5" width="19" height="15" rx="2"/><path d="m3 6 9 6.5L21 6"/></svg>
+    <span class="contact-fab-text">Contact</span>
+  </a>
+</body>
+</html>

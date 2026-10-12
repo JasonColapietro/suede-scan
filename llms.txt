@@ -1,6 +1,6 @@
 # Suede Audit
 
-Suede Audit is a public-site audit for crawler access, entity schema, metadata, content structure, and answer-engine discovery signals.
+> Suede Audit is a public-site audit for crawler access, entity schema, metadata, content structure, and answer-engine discovery signals.
 
 ## Primary URL
 
@@ -18,6 +18,17 @@ Search-discovery checks use OAI-SearchBot, Claude-SearchBot, PerplexityBot, and 
 Each browser receives one free audit. The result is cached in that browser so its report route can reopen without another scan.
 
 The report does not run buyer prompts inside ChatGPT, Perplexity, Gemini, or another answer engine. A high readiness score does not guarantee citations, recommendations, or rankings.
+
+## Check reference
+
+- [Check reference](https://optimize.suedeai.ai/checks): All 28 weighted checks with severity, points, pass rule and repair; 90 points in total.
+- [Page access and indexing](https://optimize.suedeai.ai/checks/page-access): HTTP status, HTTPS, noindex, canonical, viewport, html lang and HTML weight.
+- [Crawler access](https://optimize.suedeai.ai/checks/crawler-access): How robots.txt is read for OAI-SearchBot, Claude-SearchBot, PerplexityBot and Googlebot; GPTBot, ClaudeBot and Google-Extended are reported without scoring.
+- [Discovery files](https://optimize.suedeai.ai/checks/discovery-files): When /robots.txt, /sitemap.xml and /llms.txt pass.
+- [Structured data and entity](https://optimize.suedeai.ai/checks/structured-data): Valid JSON-LD, a primary Organization, Corporation, LocalBusiness, OnlineBusiness or Person type, and sameAs.
+- [Titles, descriptions and share metadata](https://optimize.suedeai.ai/checks/metadata): Title 15 to 60 characters, description 50 to 160, Open Graph, twitter:card and favicon.
+- [Headings, content and links](https://optimize.suedeai.ai/checks/content-structure): One H1, two or more H2, 300 words, three internal links and image alt attributes.
+- [Retrieval chunk size](https://optimize.suedeai.ai/checks/retrieval-chunks): Every heading section must hold 375 words or fewer, about one 500-token retrieval chunk.
 
 ## Source and citation guide
 

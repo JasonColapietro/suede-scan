@@ -12,6 +12,10 @@ Each browser gets one free audit. Its result is cached locally for reopening, wh
 
 Shared snapshots are base64url-encoded, not encrypted or signed; anyone who receives the link can read or change the public audit data it contains. Recipient pages therefore present these results as an unverified user-provided snapshot, not as a fresh or Suede-verified audit. Copy report refuses snapshots above the defined 48 KiB encoded limit instead of truncating JSON or silently falling back to a new audit. Older fragmentless `/report/<domain>` links never auto-run an audit: they show a prompt and let the visitor explicitly choose whether to spend their free audit.
 
+## Check reference
+
+`checks/` holds the public reference pages served at `/checks` and `/checks/<group>`: one section per scored check, with its lane, severity, exact pass rule, cited primary sources, and repair. `test/checks-reference.test.mjs` fails when a check id, lane, or severity in `lib/engine.mjs` drifts from those pages, when a page drops out of `sitemap.xml`, `llms.txt`, or the `server.mjs` routes, or when a page fails the audit's own page-level checks. Change a check in the engine and its reference section in the same pull request.
+
 ## Abuse protection
 
 The free audit is protected by a browser-local result gate, a one-year HttpOnly usage cookie, a bot-trap field, Fetch Metadata checks, in-process burst limiting, and Vercel Firewall challenge and rate-limit rules. The firewall is the durable request boundary; the browser controls make the one-audit policy explicit and preserve the saved result.

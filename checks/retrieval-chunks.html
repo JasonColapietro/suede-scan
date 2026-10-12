@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <script>(function(){try{var t=localStorage.getItem('suede-audit-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Retrieval Chunk Size Check | Suede Audit</title>
+  <meta name="description" content="How the audit splits a page at its headings and flags any section over 375 words, about one 500-token retrieval chunk, with the fix for each result.">
+  <meta name="keywords" content="retrieval chunk size, content chunking, passage retrieval, answer engine optimization, generative engine optimization, heading sections, Suede AI, Suede Audit">
+  <link rel="canonical" href="https://optimize.suedeai.ai/checks/retrieval-chunks">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Suede Audit">
+  <meta property="og:title" content="Retrieval Chunk Size Check | Suede Audit">
+  <meta property="og:description" content="How the audit splits a page at its headings and flags any section over 375 words, about one 500-token retrieval chunk, with the fix for each result.">
+  <meta property="og:url" content="https://optimize.suedeai.ai/checks/retrieval-chunks">
+  <meta property="og:image" content="https://optimize.suedeai.ai/og-suede-audit.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:alt" content="Suede AI logo">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Retrieval Chunk Size Check | Suede Audit">
+  <meta name="twitter:description" content="How the audit splits a page at its headings and flags any section over 375 words, about one 500-token retrieval chunk, with the fix for each result.">
+  <meta name="twitter:image" content="https://optimize.suedeai.ai/og-suede-audit.png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" href="/suede-ai-logo.png">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="/styles.css">
+  <script defer src="/theme-toggle.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-bar">
+    <div class="container bar-inner">
+      <a class="brand" href="/" aria-label="Suede Audit home">
+        <img src="/suede-ai-logo.png" alt="" width="36" height="36">
+        <span>Suede <b>Audit</b></span>
+      </a>
+      <nav class="primary-nav" aria-label="Primary navigation">
+        <a href="/checks">What it checks</a>
+        <a href="/method">Method</a>
+        <a href="/#faq">FAQ</a>
+        <a href="https://github.com/JasonColapietro/suede-scan" target="_blank" rel="noreferrer">Source</a>
+        <a href="/#contact">Contact</a>
+      </nav>
+      <button class="theme-toggle" type="button" data-theme-toggle aria-label="Toggle light or dark view" title="Toggle light or dark view">
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+      </button>
+      <a class="button button-primary button-small" href="/">Run your free audit</a>
+    </div>
+  </header>
+
+  <main id="main">
+    <article class="doc-page">
+      <div class="container">
+        <div class="doc-prose">
+          <a class="text-link" href="/checks"><span aria-hidden="true">&#8592;</span> All checks</a>
+          <p class="eyebrow" style="margin-top:28px;">Check reference</p>
+          <h1>Does each section fit in one retrieval chunk?</h1>
+
+          <p>Retrieval systems such as Google Cloud's Agent Search split documents into chunks that are then used for retrieval and answer generation. This check estimates whether each section of your homepage fits in one chunk together with the heading that names it. It is a medium-severity Content check worth 3 of the 90 points.</p>
+
+          <h2 id="chunking">Page sections fit one retrieval chunk</h2>
+          <p class="check-facts" data-check="chunking" data-lane="Content" data-severity="medium"><span>Content</span><span>Medium severity</span><span>3 of 90 points</span><span>id: chunking</span></p>
+          <p>The check passes when the homepage serves at least 100 words of text, has at least one heading, and holds no heading section over 375 words. The sections below explain where that number comes from, how the page is split, and what each result means.</p>
+
+          <h2>Where the 375-word limit comes from</h2>
+          <p>Google Cloud's Agent Search documentation sets a token limit for each chunk in layout-based chunking: 500 by default, with supported values from 100 to 500. An optional setting appends the title and headings to chunks from the middle of a document, which the documentation says can help prevent context loss in retrieval and ranking (<a href="https://docs.cloud.google.com/generative-ai-app-builder/docs/parse-chunk-documents">Google Cloud, parse and chunk documents</a>).</p>
+          <p>The audit converts the 500-token ceiling at about 0.75 words per token, which gives 375 words. Token counts vary with vocabulary, so treat 375 as a working ceiling rather than an exact count.</p>
+
+          <h2>How the scanner splits the page</h2>
+          <ol>
+            <li>Remove comments and script, style, noscript, svg and template elements. Drop nav and footer elements entirely, because site chrome is not the prose a chunk competes for. Header elements stay, because article pages often place the H1 inside one.</li>
+            <li>Find every heading from H1 to H6. Each heading starts a section that runs to the next heading of any level.</li>
+            <li>Count the words in each section. Text before the first heading counts as its own section.</li>
+            <li>Compare every section with 375 words.</li>
+          </ol>
+
+          <h2>The four results</h2>
+          <div class="check-table-wrap">
+            <table class="check-table">
+              <thead><tr><th scope="col">Page state</th><th scope="col">Result</th><th scope="col">Observed value</th></tr></thead>
+              <tbody>
+                <tr><td>Fewer than 100 words of text in total</td><td data-label="Result">Repair</td><td data-label="Observed value">"N words of server-rendered text, too little to evaluate"</td></tr>
+                <tr><td>100 words or more, no headings</td><td data-label="Result">Repair</td><td data-label="Observed value">"N words, no headings anywhere on the page"</td></tr>
+                <tr><td>Any section over 375 words</td><td data-label="Result">Repair</td><td data-label="Observed value">How many sections are over the limit, and the largest one with its heading</td></tr>
+                <tr><td>Every section 375 words or fewer</td><td data-label="Result">Pass</td><td data-label="Observed value">"All N heading sections fit", with the largest one named</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p>The first result is aimed at pages whose copy arrives through JavaScript, which leaves little text in the served HTML. The report's repair for it reads: "Server-render the page copy. A retrieval crawler chunks the HTML it is served, so text that arrives client-side is not chunked at all."</p>
+
+          <h2>How to fix an oversized section</h2>
+          <p>Split the section at its natural subtopics and give each part its own H2 or H3 that names it. Keep each claim close to the heading that identifies it, so the claim and its context land in the same chunk. Question-and-answer blocks and short definitions fit well, because each one can carry its own heading. Then rerun the audit: the observed value names the largest remaining section and its word count.</p>
+          <p>This page follows the rule it documents: every section on it is under 375 words.</p>
+
+          <h2>More check references</h2>
+          <ul>
+            <li><a href="/checks/page-access">Page access and indexing</a>: Status code, HTTPS, noindex, canonical, viewport, language and HTML weight.</li>
+            <li><a href="/checks/crawler-access">Crawler access</a>: How robots.txt is read for OAI-SearchBot, Claude-SearchBot, PerplexityBot and Googlebot.</li>
+            <li><a href="/checks/discovery-files">Discovery files</a>: Whether robots.txt, sitemap.xml and llms.txt answer at the site root.</li>
+            <li><a href="/checks/structured-data">Structured data and entity</a>: Valid JSON-LD, a primary entity type, and sameAs identity links.</li>
+            <li><a href="/checks/metadata">Titles, descriptions and share metadata</a>: Title and description length, Open Graph, X card and favicon.</li>
+            <li><a href="/checks/content-structure">Headings, content and links</a>: One H1, two H2 sections, 300 words, three internal links and image alt attributes.</li>
+          </ul>
+          <h2>Related Suede guides</h2>
+          <ul>
+            <li><a href="https://signal.suedeai.ai/articles/citable-passages">How to Write Passages AI Answer Engines Can Quote</a>: Suede Signal on direct answers, clear headings, useful lists, and enough context for accurate quotes.</li>
+          </ul>
+
+          <p class="doc-meta">Every rule on this page is read from the scoring code in <a href="https://github.com/JasonColapietro/suede-scan/blob/main/lib/engine.mjs">lib/engine.mjs</a>. If the code changes, this reference changes with it.</p>
+        </div>
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <span>Suede Audit</span>
+        <p>Public-site evidence for search and answer-engine readiness.</p>
+      </div>
+      <div><b>Product</b><a href="https://seo.suedeai.ai/">Suede SEO practice</a><a href="https://suedeai.ai/">Suede AI</a><a href="https://suedeai.ai/founder">About the founder</a></div>
+      <div><b>Evidence</b><a href="https://github.com/JasonColapietro/suede-scan">Source code</a><a href="/method">Method</a><a href="/checks">Check reference</a></div>
+      <div><b>Company</b><a href="/privacy">Privacy</a><a href="mailto:info@suedeai.ai">Contact</a></div>
+      <div class="footer-note"><span>Point-in-time public signals</span><span>No citation or ranking guarantee</span></div>
+    </div>
+  </footer>
+
+  <a class="contact-fab" href="mailto:info@suedeai.ai" aria-label="Contact Suede AI by email at info@suedeai.ai">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="4.5" width="19" height="15" rx="2"/><path d="m3 6 9 6.5L21 6"/></svg>
+    <span class="contact-fab-text">Contact</span>
+  </a>
+</body>
+</html>

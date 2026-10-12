@@ -6,6 +6,7 @@ Suede Audit is a public-site audit for crawler access, entity schema, metadata, 
 
 - Product: https://optimize.suedeai.ai/
 - Method: https://optimize.suedeai.ai/method
+- Check reference: https://optimize.suedeai.ai/checks
 - Privacy: https://optimize.suedeai.ai/privacy
 - Source: https://github.com/JasonColapietro/suede-scan
 - Implementation service: https://seo.suedeai.ai/
@@ -15,6 +16,21 @@ Suede Audit is a public-site audit for crawler access, entity schema, metadata, 
 Each audit fetches one public homepage plus three root discovery files on the same domain: robots.txt, llms.txt, and sitemap.xml. It does not log in and does not crawl beyond those four documents. Weighted checks are grouped into scoring pillars, and every failed check names a repair.
 
 Search-discovery checks use OAI-SearchBot, Claude-SearchBot, PerplexityBot, and Googlebot. GPTBot, ClaudeBot, and Google-Extended are reported separately as non-scoring training or AI-use controls.
+
+## Scoring
+
+The public audit runs 28 checks. High severity counts 5 points, medium 3 and low 1, for 90 points in total: 10 high checks (50 points), 11 medium checks (33 points) and 7 low checks (7 points). The readiness score is the share of those points a page earns, rounded to a whole number. Pillars: Discoverability (13 checks, 49 points), Entity evidence (3 checks, 13 points), Content clarity (12 checks, 28 points). Grades: A from 90, B from 80, C from 70, D from 55, F below 55.
+
+## Check reference
+
+- [Check reference](https://optimize.suedeai.ai/checks): All 28 weighted checks with severity, points, pass rule and repair; 90 points in total.
+- [Page access and indexing](https://optimize.suedeai.ai/checks/page-access): HTTP status, HTTPS, noindex, canonical, viewport, html lang and HTML weight.
+- [Crawler access](https://optimize.suedeai.ai/checks/crawler-access): How robots.txt is read for OAI-SearchBot, Claude-SearchBot, PerplexityBot and Googlebot; GPTBot, ClaudeBot and Google-Extended are reported without scoring.
+- [Discovery files](https://optimize.suedeai.ai/checks/discovery-files): When /robots.txt, /sitemap.xml and /llms.txt pass.
+- [Structured data and entity](https://optimize.suedeai.ai/checks/structured-data): Valid JSON-LD, a primary Organization, Corporation, LocalBusiness, OnlineBusiness or Person type, and sameAs.
+- [Titles, descriptions and share metadata](https://optimize.suedeai.ai/checks/metadata): Title 15 to 60 characters, description 50 to 160, Open Graph, twitter:card and favicon.
+- [Headings, content and links](https://optimize.suedeai.ai/checks/content-structure): One H1, two or more H2, 300 words, three internal links and image alt attributes.
+- [Retrieval chunk size](https://optimize.suedeai.ai/checks/retrieval-chunks): Every heading section must hold 375 words or fewer, about one 500-token retrieval chunk.
 
 ## What a score does not prove
 

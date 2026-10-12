@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <script>(function(){try{var t=localStorage.getItem('suede-audit-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>JSON-LD and Entity Schema Checks | Suede Audit</title>
+  <meta name="description" content="Three entity checks worth 13 of 90 points: valid JSON-LD, a primary Organization or Person type, and sameAs identity links. Exact rules and fixes.">
+  <meta name="keywords" content="JSON-LD, schema markup audit, Organization schema, sameAs, entity schema, structured data, Suede AI, Suede Audit">
+  <link rel="canonical" href="https://optimize.suedeai.ai/checks/structured-data">
+  <meta name="robots" content="index, follow, max-image-preview:large">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Suede Audit">
+  <meta property="og:title" content="JSON-LD and Entity Schema Checks | Suede Audit">
+  <meta property="og:description" content="Three entity checks worth 13 of 90 points: valid JSON-LD, a primary Organization or Person type, and sameAs identity links. Exact rules and fixes.">
+  <meta property="og:url" content="https://optimize.suedeai.ai/checks/structured-data">
+  <meta property="og:image" content="https://optimize.suedeai.ai/og-suede-audit.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:alt" content="Suede AI logo">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="JSON-LD and Entity Schema Checks | Suede Audit">
+  <meta name="twitter:description" content="Three entity checks worth 13 of 90 points: valid JSON-LD, a primary Organization or Person type, and sameAs identity links. Exact rules and fixes.">
+  <meta name="twitter:image" content="https://optimize.suedeai.ai/og-suede-audit.png">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" href="/suede-ai-logo.png">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="/styles.css">
+  <script defer src="/theme-toggle.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-bar">
+    <div class="container bar-inner">
+      <a class="brand" href="/" aria-label="Suede Audit home">
+        <img src="/suede-ai-logo.png" alt="" width="36" height="36">
+        <span>Suede <b>Audit</b></span>
+      </a>
+      <nav class="primary-nav" aria-label="Primary navigation">
+        <a href="/checks">What it checks</a>
+        <a href="/method">Method</a>
+        <a href="/#faq">FAQ</a>
+        <a href="https://github.com/JasonColapietro/suede-scan" target="_blank" rel="noreferrer">Source</a>
+        <a href="/#contact">Contact</a>
+      </nav>
+      <button class="theme-toggle" type="button" data-theme-toggle aria-label="Toggle light or dark view" title="Toggle light or dark view">
+        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"/></svg>
+      </button>
+      <a class="button button-primary button-small" href="/">Run your free audit</a>
+    </div>
+  </header>
+
+  <main id="main">
+    <article class="doc-page">
+      <div class="container">
+        <div class="doc-prose">
+          <a class="text-link" href="/checks"><span aria-hidden="true">&#8592;</span> All checks</a>
+          <p class="eyebrow" style="margin-top:28px;">Check reference</p>
+          <h1>Tell machines who is behind the page.</h1>
+
+          <p>The Entity evidence pillar is three checks on the homepage's JSON-LD. Two of them are high severity, and a page with no structured data fails all three, losing 13 of the 90 points at once. The scanner reads every <code>&lt;script type="application/ld+json"&gt;</code> block in the served HTML, parses it as JSON, and walks every node, including nested objects and <code>@graph</code> arrays, to collect <code>@type</code> and <code>sameAs</code> values.</p>
+
+          <h2 id="schema">Valid JSON-LD is present</h2>
+          <p class="check-facts" data-check="schema" data-lane="Entity" data-severity="high"><span>Entity</span><span>High severity</span><span>5 of 90 points</span><span>id: schema</span></p>
+          <p class="check-report"><b>Repair shown in the report:</b> Add valid JSON-LD for the organization and the page subject.</p>
+          <p><b>The rule.</b> Passes when at least one JSON-LD block parses as JSON. The observed value reads, for example, "1 valid of 2 blocks", so a broken block shows even when another passes. Trailing commas, comments and unescaped quotes all break parsing.</p>
+          <p><b>Why it matters.</b> Google marks JSON-LD as its recommended format and accepts any supported format as long as the markup is valid (<a href="https://developers.google.com/search/docs/appearance/structured-data/intro-structured-data">Google, intro to structured data</a>). Google can read JSON-LD injected by JavaScript, but the scanner reads the served HTML, and Google's own JavaScript guidance notes that not all bots can run JavaScript (<a href="https://developers.google.com/search/docs/crawling-indexing/javascript/javascript-seo-basics">Google, JavaScript SEO basics</a>).</p>
+          <p><b>How to fix it.</b> Render the block in the server response and run it through a JSON parser before you ship. One valid block that describes the organization and the page is enough to pass.</p>
+
+          <h2 id="entity-type">A primary entity type is declared</h2>
+          <p class="check-facts" data-check="entity-type" data-lane="Entity" data-severity="high"><span>Entity</span><span>High severity</span><span>5 of 90 points</span><span>id: entity-type</span></p>
+          <p class="check-report"><b>Repair shown in the report:</b> Declare the primary Organization, Person, or business entity in JSON-LD.</p>
+          <p><b>The rule.</b> Passes when any parsed node has an <code>@type</code> of exactly Organization, Corporation, LocalBusiness, OnlineBusiness or Person. Matching is exact and case-sensitive. A more specific type on its own, such as NGO or Restaurant, does not count, and neither does a prefixed form such as schema:Organization.</p>
+          <p><b>Why it matters.</b> Google says Organization markup on your home page can help it understand your administrative details and disambiguate your organization in search results, including which logo it shows (<a href="https://developers.google.com/search/docs/appearance/structured-data/organization">Google, organization structured data</a>). Schema.org lists Corporation, LocalBusiness and OnlineBusiness among the more specific types of Organization (<a href="https://schema.org/Organization">schema.org/Organization</a>).</p>
+          <p><b>How to fix it.</b> Declare the entity that owns the site on the homepage. JSON-LD lets one node carry several types, so a nonprofit can write <code>"@type": ["Organization", "NGO"]</code> and keep its specific type (<a href="https://www.w3.org/TR/json-ld11/">JSON-LD 1.1</a>).</p>
+
+          <h2 id="same-as">Entity identity links are declared</h2>
+          <p class="check-facts" data-check="same-as" data-lane="Entity" data-severity="medium"><span>Entity</span><span>Medium severity</span><span>3 of 90 points</span><span>id: same-as</span></p>
+          <p class="check-report"><b>Repair shown in the report:</b> Add verified public identity URLs through sameAs on the primary entity.</p>
+          <p><b>The rule.</b> Passes when any parsed node has a non-empty <code>sameAs</code>: a URL string, or an array with at least one entry. The scanner records that the links exist; it does not fetch them.</p>
+          <p><b>Why it matters.</b> Schema.org defines sameAs as the "URL of a reference Web page that unambiguously indicates the item's identity", such as a Wikipedia page, a Wikidata entry or an official website (<a href="https://schema.org/sameAs">schema.org/sameAs</a>). Google's organization documentation describes it as a page on another site with more information about your organization, such as a social or review profile, and accepts several URLs.</p>
+          <p><b>How to fix it.</b> Add sameAs to the primary entity node with profiles you control. Mark up only what the page shows: Google's guidelines say not to mark up content that is hidden from readers, irrelevant or misleading (<a href="https://developers.google.com/search/docs/appearance/structured-data/sd-policies">Google, general structured data guidelines</a>).</p>
+          <pre><code>{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Example Co",
+  "url": "https://www.example.com/",
+  "logo": "https://www.example.com/logo.png",
+  "sameAs": ["https://profiles.example.net/example-co"]
+}</code></pre>
+
+          <h2>More check references</h2>
+          <ul>
+            <li><a href="/checks/page-access">Page access and indexing</a>: Status code, HTTPS, noindex, canonical, viewport, language and HTML weight.</li>
+            <li><a href="/checks/crawler-access">Crawler access</a>: How robots.txt is read for OAI-SearchBot, Claude-SearchBot, PerplexityBot and Googlebot.</li>
+            <li><a href="/checks/discovery-files">Discovery files</a>: Whether robots.txt, sitemap.xml and llms.txt answer at the site root.</li>
+            <li><a href="/checks/metadata">Titles, descriptions and share metadata</a>: Title and description length, Open Graph, X card and favicon.</li>
+            <li><a href="/checks/content-structure">Headings, content and links</a>: One H1, two H2 sections, 300 words, three internal links and image alt attributes.</li>
+            <li><a href="/checks/retrieval-chunks">Retrieval chunk size</a>: Whether every heading section fits in one 375-word retrieval chunk.</li>
+          </ul>
+          <h2>Related Suede guides</h2>
+          <ul>
+            <li><a href="https://signal.suedeai.ai/articles/json-ld-for-ai-visibility">How JSON-LD Helps AI Engines Understand Your Brand</a>: Suede Signal on using JSON-LD to clarify brand identity and connect official profiles.</li>
+            <li><a href="https://seo.suedeai.ai/schema-entity-optimization">Schema Markup Implementation Services</a>: JSON-LD implemented around approved facts and verified against the published content.</li>
+          </ul>
+
+          <p class="doc-meta">Every rule on this page is read from the scoring code in <a href="https://github.com/JasonColapietro/suede-scan/blob/main/lib/engine.mjs">lib/engine.mjs</a>. If the code changes, this reference changes with it.</p>
+        </div>
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-grid">
+      <div class="footer-brand">
+        <span>Suede Audit</span>
+        <p>Public-site evidence for search and answer-engine readiness.</p>
+      </div>
+      <div><b>Product</b><a href="https://seo.suedeai.ai/">Suede SEO practice</a><a href="https://suedeai.ai/">Suede AI</a><a href="https://suedeai.ai/founder">About the founder</a></div>
+      <div><b>Evidence</b><a href="https://github.com/JasonColapietro/suede-scan">Source code</a><a href="/method">Method</a><a href="/checks">Check reference</a></div>
+      <div><b>Company</b><a href="/privacy">Privacy</a><a href="mailto:info@suedeai.ai">Contact</a></div>
+      <div class="footer-note"><span>Point-in-time public signals</span><span>No citation or ranking guarantee</span></div>
+    </div>
+  </footer>
+
+  <a class="contact-fab" href="mailto:info@suedeai.ai" aria-label="Contact Suede AI by email at info@suedeai.ai">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="4.5" width="19" height="15" rx="2"/><path d="m3 6 9 6.5L21 6"/></svg>
+    <span class="contact-fab-text">Contact</span>
+  </a>
+</body>
+</html>
