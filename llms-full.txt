@@ -1,41 +1,838 @@
-# Suede Audit (full)
+# Suede Audit: full text
 
-Suede Audit is a public-site audit for crawler access, entity schema, metadata, content structure, and answer-engine discovery signals. It is built by Suede AI (https://suedeai.ai/), founded by Jason Colapietro (https://suedeai.ai/founder).
+> The complete readable text of every public page on optimize.suedeai.ai, the free
+> AI visibility and SEO readiness audit from Suede AI (https://suedeai.ai/), founded
+> by Jason Colapietro. Pages appear in sitemap order; each section gives the page URL,
+> its last update and its summary, then the page text.
 
-## Primary URLs
+Index: https://optimize.suedeai.ai/llms.txt
+Sitemap: https://optimize.suedeai.ai/sitemap.xml
+Audit source code: https://github.com/JasonColapietro/suede-scan
+Implementation service: https://seo.suedeai.ai/
 
-- Product: https://optimize.suedeai.ai/
-- Method: https://optimize.suedeai.ai/method
-- Check reference: https://optimize.suedeai.ai/checks
-- Privacy: https://optimize.suedeai.ai/privacy
-- Source: https://github.com/JasonColapietro/suede-scan
-- Implementation service: https://seo.suedeai.ai/
+## Suede Audit | AI Discovery and SEO Readiness
 
-## What an audit does
+URL: https://optimize.suedeai.ai/
+Updated: 2026-10-11
+Summary: Free AI visibility audit: check crawler access, entity schema, metadata, content structure and answer-engine signals. Get a score and prioritized repairs.
 
-Each audit fetches one public homepage plus three root discovery files on the same domain: robots.txt, llms.txt, and sitemap.xml. It does not log in and does not crawl beyond those four documents. Weighted checks are grouped into scoring pillars, and every failed check names a repair.
+Public-signal audit
 
-Search-discovery checks use OAI-SearchBot, Claude-SearchBot, PerplexityBot, and Googlebot. GPTBot, ClaudeBot, and Google-Extended are reported separately as non-scoring training or AI-use controls.
+## See what answer engines can actually read.
 
-## Scoring
+Suede inspects public HTML, crawler rules, entity schema, sitemap coverage, metadata, and content structure. Each failed check points to a repair.
+Public-site discovery and answer-readiness analysis
+How it works
 
-The public audit runs 28 checks. High severity counts 5 points, medium 3 and low 1, for 90 points in total: 10 high checks (50 points), 11 medium checks (33 points) and 7 low checks (7 points). The readiness score is the share of those points a page earns, rounded to a whole number. Pillars: Discoverability (13 checks, 49 points), Entity evidence (3 checks, 13 points), Content clarity (12 checks, 28 points). Grades: A from 90, B from 80, C from 70, D from 55, F below 55.
+### Three steps. No account.
 
-## Check reference
+- 01 Enter a public URL
+- 02 Suede inspects the evidence
+- 03 Leave with repairs
+What it checks
 
-- [Check reference](https://optimize.suedeai.ai/checks): All 28 weighted checks with severity, points, pass rule and repair; 90 points in total.
-- [Page access and indexing](https://optimize.suedeai.ai/checks/page-access): HTTP status, HTTPS, noindex, canonical, viewport, html lang and HTML weight.
-- [Crawler access](https://optimize.suedeai.ai/checks/crawler-access): How robots.txt is read for OAI-SearchBot, Claude-SearchBot, PerplexityBot and Googlebot; GPTBot, ClaudeBot and Google-Extended are reported without scoring.
-- [Discovery files](https://optimize.suedeai.ai/checks/discovery-files): When /robots.txt, /sitemap.xml and /llms.txt pass.
-- [Structured data and entity](https://optimize.suedeai.ai/checks/structured-data): Valid JSON-LD, a primary Organization, Corporation, LocalBusiness, OnlineBusiness or Person type, and sameAs.
-- [Titles, descriptions and share metadata](https://optimize.suedeai.ai/checks/metadata): Title 15 to 60 characters, description 50 to 160, Open Graph, twitter:card and favicon.
-- [Headings, content and links](https://optimize.suedeai.ai/checks/content-structure): One H1, two or more H2, 300 words, three internal links and image alt attributes.
-- [Retrieval chunk size](https://optimize.suedeai.ai/checks/retrieval-chunks): Every heading section must hold 375 words or fewer, about one 500-token retrieval chunk.
+### A report built from inspectable signals.
 
-## What a score does not prove
+Suede separates public-site readiness from actual AI recommendations. The score covers what the audit can verify.
 
-The report does not run buyer prompts inside ChatGPT, Perplexity, Gemini, or another answer engine. A high readiness score does not guarantee citations, recommendations, or rankings.
+#### Discovery access
 
-## Open source
+HTTP status, HTTPS, indexability, canonical routing, mobile viewport, robots.txt, and sitemap.xml.
 
-The scoring code is public, so any result can be traced to the check that produced it: https://github.com/JasonColapietro/suede-scan
+#### Answer-engine crawl policy
+
+Homepage access for OAI-SearchBot, Claude-SearchBot, PerplexityBot, and Googlebot, with the exact policy state shown.
+
+#### Entity and content evidence
+
+JSON-LD, primary entity type, sameAs links, headings, section length against the retrieval chunk limit, internal evidence links, page depth, and social metadata.
+Why this differs
+
+### A checklist guesses. An audit observes.
+
+Generic advice assumes a state. Suede reports the state it measured, then names the repair.
+Generic SEO checklists compared with the Suede Audit
+- Generic SEO checklist | Suede Audit
+- Tells you to add schema. | Shows the JSON-LD it parsed and the primary entity type it found.
+- Assumes answer engines can reach you. | Reports the robots.txt policy state for each named answer-engine crawler.
+- Scores each item equally. | Weights blockers above polish, so a blocked crawler outranks a missing preview image.
+- Ends at a list of problems. | Ends at one repair per failed signal, with the observed value attached.
+Example report
+
+### What you get back.
+
+A shortened example of the report layout. Run the audit to see your own measured values.
+Sample data Illustration only. Not a live audit, and not a real domain.
+example-saas.com
+Public-site discovery and answer-readiness report
+
+#### Crawler access
+
+- Googlebot Allowed
+- OAI-SearchBot Allowed
+- Claude-SearchBot Blocked in robots.txt
+- PerplexityBot Blocked in robots.txt
+
+#### Prioritized repairs
+
+- Claude-SearchBot and PerplexityBot are disallowed. Observed: `Disallow: /` under both user-agents. Repair: remove those two disallow rules from robots.txt.
+- No Organization JSON-LD on the homepage. Observed: no `@type: Organization` node. Repair: add Organization schema with name, url, and sameAs links.
+- sitemap.xml is not referenced in robots.txt. Observed: sitemap reachable, no `Sitemap:` line. Repair: add the absolute sitemap URL to robots.txt.
+Method before score
+
+### Truth stays attached to the artifact.
+
+The audit fetches one public page plus root discovery files. It scores weighted checks, shows the measured value, and names the repair for each failed signal.
+A high score is not proof of an AI citation. Buyer-prompt evidence requires separate, timestamped runs inside each answer engine.
+Questions
+
+### What the free audit actually checks.
+
+Q: What does the free audit check?
+The audit inspects your public homepage plus root discovery files: robots.txt, llms.txt, and sitemap.xml. It scores crawler access, entity and content evidence, and answer-engine crawl policy, then names a repair for each failed signal.
+
+Q: Does a high score mean AI engines will cite my site?
+No. A high score is not proof of an AI citation. Buyer-prompt evidence requires separate, timestamped runs inside each answer engine, which this audit does not run.
+
+Q: How many free audits can I run?
+One free audit per browser, on a public website. No account is created. You confirm a working email with a 6-digit code and the report unlocks on screen.
+
+Q: Why do you ask for my email?
+The report unlocks with a one-time code sent to your address, which proves the email is real. We use it to send that code and to know who ran the audit. It is not stored in a database, added to a mailing list, or shared.
+
+Q: What happens after I get my results?
+The report shows a weighted readiness score, a prioritized repair list, and a full findings ledger. Suede SEO can package the repairs as implementation-ready fixes or ship the edits with before-and-after evidence.
+Who built this
+
+### The method is public. It should be checkable.
+
+Suede Audit is built by Jason Colapietro, founder of Suede AI. The scoring code is open source, so any result on this page can be traced to the check that produced it.
+If a score looks wrong, read the source and tell us. That is a better contract than a number you cannot inspect.
+- Open source Each weighted check in this audit is published in the public repository.
+- 54 merged pull requests Across 46 external repositories, including Backstage and Jest.
+- Suede AI Founded 2024. Admitted to Stripe Startups in 2026.
+Talk to a person
+
+### Questions about a score, or work you want quoted?
+
+Send the domain you audited and the check you are asking about. Mail goes to the Suede Labs inbox.
+Run it
+
+### See what answer engines read on your site.
+
+One free audit per browser. Public websites only. No signup, no credit card. A verified email unlocks your report.
+
+---
+
+## Method | Suede Audit
+
+URL: https://optimize.suedeai.ai/method
+Updated: 2026-10-11
+Summary: How Suede Audit calculates a readiness score: what it fetches, how severity is weighted, the three scoring pillars, and what a score does not prove.
+
+Method
+
+## How Suede Audit calculates a readiness score.
+
+Each audit fetches one public page, the homepage you submit, plus three discovery files already public on that domain: robots.txt, llms.txt, and sitemap.xml. Suede Audit does not log in, does not crawl beyond those four documents, and does not run prompts inside ChatGPT, Perplexity, Gemini, or any other answer engine.
+
+### How the score is weighted
+
+Each check carries a severity: high, medium, or low. High-severity checks count five times toward the score, medium-severity checks count three times, and low-severity checks count once. The readiness score is the percentage of weighted checks a site passes, rounded to the nearest whole number.
+The 28 checks add up to 90 points. The check reference lists every one with its severity, its exact pass rule, and the repair for a failure, grouped into page access, crawler access, discovery files, structured data, metadata, content structure, and retrieval chunk size.
+- 90 and above – A
+- 80–89 – B
+- 70–79 – C
+- 55–69 – D
+- Below 55 – F
+
+### Three pillars
+
+Each check rolls up into one of three pillars, each scored the same way as the overall report:
+- Discoverability – reachability, crawl policy, canonical routing, and the public discovery files (robots.txt, llms.txt, sitemap.xml).
+- Entity evidence – structured identity data: JSON-LD presence, organization type, and verified identity links.
+- Content clarity – page meaning, supporting content, share metadata, and response weight.
+
+### What the score does not prove
+
+A high score is not proof of an AI citation. Buyer-prompt evidence requires separate, timestamped runs inside each answer engine, which this audit does not run. The score measures whether an answer engine can technically reach and parse a page – not whether it will recommend, rank, or cite it.
+
+### Image alternatives and page evidence
+
+The image check tests whether each image declares an alt attribute. Empty alt text can be correct for decorative images; the report counts empty, non-empty, and missing attributes separately and flags empty alternatives for manual review. It does not certify that descriptions are accurate or that the page is accessible. See the [W3C guidance on decorative images](https://www.w3.org/WAI/tutorials/images/decorative/).
+The evidence summary reports title, description, main heading, language, canonical declaration, schema types, and entries in the root sitemap. These are page declarations, not verified business facts. A sitemap index counts child sitemaps, not their pages; no sitemap count proves indexing.
+
+### Limits and caching
+
+Each browser gets one free audit. The finished report is cached in that browser's local storage, so its report link can reopen without using another scan. Suede Audit accepts public HTTP and HTTPS URLs only; it will not inspect private, internal, or non-routable addresses.
+Read the full audit source on [GitHub](https://github.com/JasonColapietro/suede-scan). For a deeper check that runs real buyer prompts inside answer engines, see [Suede SEO](https://seo.suedeai.ai/#library).
+
+---
+
+## Audit Checks Reference | Suede Audit
+
+URL: https://optimize.suedeai.ai/checks
+Updated: 2026-10-11
+Summary: All 28 weighted checks in a Suede Audit report: what each one tests, its severity and points, the exact pass rule, and how to repair a failure.
+
+Check reference
+
+## Every check in the audit, and the rule behind it.
+
+A Suede Audit report runs 28 weighted checks against one public homepage and three root discovery files. This reference documents each one: the signal it reads, the exact rule the scanner applies, why search engines and AI crawlers care, and how to clear a failure. Every rule is read from the open scoring code.
+
+### How the weights add up
+
+Each check carries a severity. High counts 5 points, medium 3 and low 1. The 28 checks add up to 90 points: 10 high checks worth 50, 11 medium checks worth 33, and 7 low checks worth 7. The readiness score is the share of those points a page earns, rounded to a whole number. One failed high check costs about 5.6 points of the score, a medium check about 3.3, and a low check about 1.1.
+Checks roll up into three pillars, scored the same way: Discoverability (13 checks, 49 points), Entity evidence (3 checks, 13 points) and Content clarity (12 checks, 28 points). Grades use the same bands everywhere: A from 90, B from 80, C from 70, D from 55, and F below 55. The method page covers what the audit fetches and how results are cached.
+
+### Discoverability: 13 checks, 49 points
+
+- Check | Lane | Severity, points | Passes when
+- Page returns a successful response | Access | High, 5 | Final response is 2xx
+- Page is served over HTTPS | Access | High, 5 | Final URL uses https
+- Page can be indexed | Access | High, 5 | Robots meta has no noindex
+- Document language is declared | Access | Low, 1 | html tag has a lang attribute
+- Canonical link is declared | Technical | Medium, 3 | A rel="canonical" link exists
+- Mobile viewport is declared | Technical | High, 5 | A viewport meta tag exists
+- robots.txt is available | Technical | Low, 1 | /robots.txt returns 2xx
+- XML sitemap is available | Technical | Medium, 3 | /sitemap.xml returns 2xx
+- OpenAI search crawler can access the homepage | AI discovery | High, 5 | OAI-SearchBot not blocked from /
+- Claude search crawler can access the homepage | AI discovery | High, 5 | Claude-SearchBot not blocked from /
+- Perplexity crawler can access the homepage | AI discovery | High, 5 | PerplexityBot not blocked from /
+- Google discovery crawler can access the homepage | AI discovery | High, 5 | Googlebot not blocked from /
+- llms.txt evidence index is available | AI discovery | Low, 1 | /llms.txt returns 2xx with text
+
+### Entity evidence: 3 checks, 13 points
+
+- Check | Lane | Severity, points | Passes when
+- Valid JSON-LD is present | Entity | High, 5 | One JSON-LD block parses
+- A primary entity type is declared | Entity | High, 5 | Organization, Corporation, LocalBusiness, OnlineBusiness or Person declared
+- Entity identity links are declared | Entity | Medium, 3 | A node declares sameAs
+
+### Content clarity: 12 checks, 28 points
+
+- Check | Lane | Severity, points | Passes when
+- Title is specific and scannable | Metadata | Medium, 3 | Title is 15 to 60 characters
+- Meta description explains the page | Metadata | Medium, 3 | Description is 50 to 160 characters
+- Open Graph title and image are present | Metadata | Low, 1 | og:title and og:image present
+- X card metadata is present | Metadata | Low, 1 | twitter:card present
+- A favicon is declared | Metadata | Low, 1 | icon or shortcut icon link present
+- Page has exactly one H1 | Content | Medium, 3 | Exactly one H1
+- Images declare alt attributes | Content | Low, 1 | No img without an alt attribute
+- Page has substantive readable content | Content | Medium, 3 | 300 words or more
+- Page uses explanatory H2 sections | Content | Medium, 3 | Two or more H2
+- Page sections fit one retrieval chunk | Content | Medium, 3 | No heading section over 375 words
+- Page points to supporting internal evidence | Content | Medium, 3 | Three or more same-host links
+- HTML response stays under 300 KB | Performance | Medium, 3 | HTML is 300 KB or less
+
+### Reported beside the score
+
+Three crawler tokens that control model training or AI use, GPTBot, ClaudeBot and Google-Extended, are read from the same robots.txt with the same rule and shown in their own panel. They never change the score; the crawler access page explains why. The evidence summary, which lists the title, description, language, canonical, schema types, image alt counts and sitemap entries the audit found, is reported without scoring too.
+
+### Reference pages
+
+- Page access and indexing: Status code, HTTPS, noindex, canonical, viewport, language and HTML weight.
+- Crawler access: How robots.txt is read for OAI-SearchBot, Claude-SearchBot, PerplexityBot and Googlebot.
+- Discovery files: Whether robots.txt, sitemap.xml and llms.txt answer at the site root.
+- Structured data and entity: Valid JSON-LD, a primary entity type, and sameAs identity links.
+- Titles, descriptions and share metadata: Title and description length, Open Graph, X card and favicon.
+- Headings, content and links: One H1, two H2 sections, 300 words, three internal links and image alt attributes.
+- Retrieval chunk size: Whether every heading section fits in one 375-word retrieval chunk.
+
+### Related Suede guides
+
+- [Scoring and lanes, Suede Signal Docs](https://signal.suedeai.ai/docs/scoring): the Suede Signal methodology: five weighted lanes, 26 deterministic checks, and A to F grade bands.
+- [Technical SEO Services: Fix Crawl and Indexing Gaps](https://seo.suedeai.ai/technical-seo): Suede AI fixes crawlability, indexing, canonicals, internal links and performance in your CMS or codebase.
+Every rule on this page is read from the scoring code in [lib/engine.mjs](https://github.com/JasonColapietro/suede-scan/blob/main/lib/engine.mjs). If the code changes, this reference changes with it.
+
+---
+
+## Page Access and Indexing Checks | Suede Audit
+
+URL: https://optimize.suedeai.ai/checks/page-access
+Updated: 2026-10-11
+Summary: Seven checks that decide whether crawlers can fetch and index your homepage: status, HTTPS, noindex, canonical, viewport, language and HTML weight.
+
+Check reference
+
+## Can a crawler fetch and index the page?
+
+These seven checks read the homepage response itself. Two of them can stop indexing outright: a final status outside 2xx and a noindex directive. Google says a page must be indexed and eligible for a snippet before it can appear as a supporting link in AI Overviews or AI Mode ([Google Search Central, AI features and your website](https://developers.google.com/search/docs/appearance/ai-features)). Together the seven checks carry 27 of the 90 points.
+
+### Page returns a successful response
+
+Access High severity 5 of 90 points id: status
+Repair shown in the report: Return a 2xx status for the public page.
+The rule. The scanner requests the URL you submit, follows up to five redirects, and reads the status of the final response. Any status from 200 to 299 passes. Anything else fails, and the observed value shows the code received, such as HTTP 404. A sixth redirect stops the audit with an error, and so does a response that declares a non-HTML content type.
+Why it matters. Google does not use content from URLs that return 4xx codes, and it removes already indexed URLs that start returning them. Even a 2xx only makes the content eligible: the indexing systems may index it, but that is not guaranteed ([Google, how HTTP status codes affect its crawlers](https://developers.google.com/crawling/docs/troubleshooting/http-status-codes)).
+How to fix it. Serve the canonical homepage with 200. Point old addresses at it with one permanent redirect rather than a chain, and make error templates return 404 or 410 instead of 200 so they are not mistaken for content.
+
+### Page is served over HTTPS
+
+Access High severity 5 of 90 points id: https
+Repair shown in the report: Serve the page over HTTPS and redirect the HTTP version.
+The rule. Passes when the final URL, after redirects, uses https. A bare domain such as example.com is requested over HTTPS first. If you submit an http:// address, the check passes only when the server redirects it to an https:// URL.
+Why it matters. Google's page experience guidance asks whether your pages are served in a secure fashion and points site owners to the Search Console HTTPS report ([Google, understanding page experience](https://developers.google.com/search/docs/appearance/page-experience)).
+How to fix it. Install a certificate, redirect every http:// URL to its https:// twin with a permanent redirect, and use https:// addresses in canonical tags, sitemap entries and internal links.
+
+### Page can be indexed
+
+Access High severity 5 of 90 points id: noindex
+Repair shown in the report: Remove the noindex directive if the page should be discovered.
+The rule. The scanner reads the first meta tag named robots in the HTML. The check fails when its content contains noindex in any letter case. The observed value shows the directive found, or "No robots meta block" when the tag is absent. This check reads the generic robots tag in the HTML; review the X-Robots-Tag response header and crawler-specific tags such as googlebot in the same pass.
+Why it matters. Google's robots meta specification defines noindex as "Do not show this page, media, or resource in search results" ([Google, robots meta tag specifications](https://developers.google.com/search/docs/crawling-indexing/robots-meta-tag)). A noindex homepage cannot be indexed, so it cannot be a supporting link in Google's AI features either.
+How to fix it. Remove noindex from every page you want found. If a staging or preview build sets it, make sure the production build drops it, then rerun the audit against the live domain.
+
+### Canonical link is declared
+
+Technical Medium severity 3 of 90 points id: canonical
+Repair shown in the report: Add a canonical URL for the preferred page version.
+The rule. Passes when any link element lists canonical among its rel values. The check confirms the tag exists. The evidence summary at the top of the report shows the href it points to, so you can confirm it names the version you want indexed.
+Why it matters. Google treats a rel="canonical" link as a strong signal that the named URL should become canonical, alongside redirects, while sitemap inclusion is a weak signal ([Google, how to specify a canonical](https://developers.google.com/search/docs/crawling-indexing/consolidate-duplicate-urls)).
+How to fix it. Add `<link rel="canonical" href="https://www.example.com/">` to the head, using the absolute URL of the preferred version. Keep it consistent with your redirects and sitemap entries so the signals agree.
+
+### Mobile viewport is declared
+
+Technical High severity 5 of 90 points id: viewport
+Repair shown in the report: Add a responsive viewport meta tag.
+The rule. Passes when the page has a meta tag named viewport with a non-empty content value.
+Why it matters. Google uses the mobile version of a site's content, crawled with the smartphone agent, for indexing and ranking ([Google, mobile-first indexing best practices](https://developers.google.com/search/docs/crawling-indexing/mobile/mobile-sites-mobile-first-indexing)). Its page experience guidance also asks whether your content displays well on mobile devices. The audit weights this check high.
+How to fix it. Add `<meta name="viewport" content="width=device-width, initial-scale=1">` to the head of every template, then confirm the layout reads cleanly at phone width.
+
+### Document language is declared
+
+Access Low severity 1 of 90 points id: language
+Repair shown in the report: Set the html lang attribute.
+The rule. Passes when the opening html tag carries a quoted lang attribute with any value. The observed value shows the code found, such as en or en-US. Quote the value: an unquoted lang=en is not read.
+Why it matters. Google says it determines language from the visible content of a page and does not use lang attributes ([Google, managing multilingual sites](https://developers.google.com/search/docs/specialty/international/managing-multi-regional-sites)). The attribute serves people and their tools: WCAG 2.2 Success Criterion 3.1.1 requires that the default human language of each page can be programmatically determined, so screen readers pronounce the text correctly ([W3C, Understanding SC 3.1.1](https://www.w3.org/WAI/WCAG22/Understanding/language-of-page.html)). The audit weights it low.
+How to fix it. Set `<html lang="en">`, or the code for your page's language, in the base template.
+
+### HTML response stays under 300 KB
+
+Performance Medium severity 3 of 90 points id: html-weight
+Repair shown in the report: Reduce server-rendered HTML and inline payloads below 300 KB.
+The rule. The scanner measures the HTML document it received in UTF-8 bytes, divides by 1,024 and rounds. 300 KB or less passes. The observed value also counts script tags and inline style attributes to show where the weight sits; those counts are not scored. The scanner reads at most 1.5 MB of HTML, and a larger page stops the audit with an error.
+Why it matters. When crawling for Google Search, Googlebot fetches the first 2 MB of an HTML file, measured uncompressed, and sends only the part it downloaded before the cutoff for indexing consideration ([Google, what is Googlebot](https://developers.google.com/search/docs/crawling-indexing/googlebot)). The 300 KB threshold is the audit's own rule and sits well inside that cutoff.
+How to fix it. Move inline scripts and data blobs into cached external files, remove unused markup from templates, and avoid embedding images as data URIs in the HTML.
+
+### More check references
+
+- Crawler access: How robots.txt is read for OAI-SearchBot, Claude-SearchBot, PerplexityBot and Googlebot.
+- Discovery files: Whether robots.txt, sitemap.xml and llms.txt answer at the site root.
+- Structured data and entity: Valid JSON-LD, a primary entity type, and sameAs identity links.
+- Titles, descriptions and share metadata: Title and description length, Open Graph, X card and favicon.
+- Headings, content and links: One H1, two H2 sections, 300 words, three internal links and image alt attributes.
+- Retrieval chunk size: Whether every heading section fits in one 375-word retrieval chunk.
+
+### Related Suede guides
+
+- [Technical SEO Services: Fix Crawl and Indexing Gaps](https://seo.suedeai.ai/technical-seo): Suede AI fixes crawlability, indexing, canonicals, internal links and performance in your CMS or codebase.
+- [Indexing and Sitemap Optimization](https://seo.suedeai.ai/indexing-and-sitemap-optimization): align canonical URLs, indexing directives and XML sitemaps with a validated URL inventory.
+Every rule on this page is read from the scoring code in [lib/engine.mjs](https://github.com/JasonColapietro/suede-scan/blob/main/lib/engine.mjs). If the code changes, this reference changes with it.
+
+---
+
+## AI and Search Crawler Access Checks | Suede Audit
+
+URL: https://optimize.suedeai.ai/checks/crawler-access
+Updated: 2026-10-11
+Summary: How the audit reads robots.txt for OAI-SearchBot, Claude-SearchBot, PerplexityBot and Googlebot, and why training crawlers are reported unscored.
+
+Check reference
+
+## Which crawlers can reach your homepage.
+
+Four of the ten high-severity checks read one file: robots.txt. Together they are worth 20 of the 90 points. With the 1-point check that robots.txt is available, 21 of the 90 points rest on that one file, more than on sitemap.xml (3 points) or llms.txt (1 point). Each check asks whether a named search crawler may fetch the root path of your site. Three crawlers that control model training or AI use are reported beside them and never change the score.
+
+### The four crawlers that count
+
+- Check | Robots token | Stated purpose
+- OpenAI search crawler can access the homepage | `OAI-SearchBot` | "Used to surface websites in search results in ChatGPT's search features" ([OpenAI](https://developers.openai.com/api/docs/bots))
+- Claude search crawler can access the homepage | `Claude-SearchBot` | "Navigates the web to improve search result quality for users" ([Anthropic](https://support.claude.com/en/articles/8896518-does-anthropic-crawl-data-from-the-web-and-how-can-site-owners-block-the-crawler))
+- Perplexity crawler can access the homepage | `PerplexityBot` | "Designed to surface and link websites in search results on Perplexity" ([Perplexity](https://docs.perplexity.ai/docs/resources/perplexity-crawlers))
+- Google discovery crawler can access the homepage | `Googlebot` | The Google Search crawler ([Google](https://developers.google.com/crawling/docs/crawlers-fetchers/google-common-crawlers))
+
+### OpenAI search crawler can access the homepage
+
+AI discovery High severity 5 of 90 points id: crawler-openai
+Repair shown in the report: Update robots.txt so OAI-SearchBot can access the public pages you want discovered.
+OpenAI says sites opted out of OAI-SearchBot will not be shown in ChatGPT search answers, though they can still appear as navigational links. It recommends allowing OAI-SearchBot in robots.txt and allowing requests from its published IP ranges, and notes that a robots.txt change can take about 24 hours to reach its systems. GPTBot is a separate, independent setting for training ([OpenAI, overview of OpenAI crawlers](https://developers.openai.com/api/docs/bots)).
+
+### Claude search crawler can access the homepage
+
+AI discovery High severity 5 of 90 points id: crawler-anthropic
+Repair shown in the report: Update robots.txt so Claude-SearchBot can access the public pages you want discovered.
+Anthropic says disabling Claude-SearchBot prevents its system from indexing your content for search optimization, which may reduce your visibility and accuracy in user search results. ClaudeBot, the training crawler, and Claude-User, the user-initiated fetcher, are separate tokens ([Anthropic, does Anthropic crawl data from the web](https://support.claude.com/en/articles/8896518-does-anthropic-crawl-data-from-the-web-and-how-can-site-owners-block-the-crawler)).
+
+### Perplexity crawler can access the homepage
+
+AI discovery High severity 5 of 90 points id: crawler-perplexity
+Repair shown in the report: Update robots.txt so PerplexityBot can access the public pages you want discovered.
+Perplexity says PerplexityBot surfaces and links websites in Perplexity search results and is not used to crawl content for AI foundation models. It recommends allowing the bot in robots.txt and permitting its published IP ranges, and says changes can take up to 24 hours ([Perplexity, Perplexity crawlers](https://docs.perplexity.ai/docs/resources/perplexity-crawlers)).
+
+### Google discovery crawler can access the homepage
+
+AI discovery High severity 5 of 90 points id: crawler-google
+Repair shown in the report: Update robots.txt so Googlebot can access the public pages you want discovered.
+To be shown as a supporting link in AI Overviews or AI Mode, a page must be indexed and eligible for a snippet in Google Search. Google's first listed fundamental is ensuring that crawling is allowed in robots.txt and by any CDN or hosting infrastructure ([Google, AI features and your website](https://developers.google.com/search/docs/appearance/ai-features)).
+
+### How the scanner reads robots.txt
+
+- Fetch `/robots.txt` at the root of the final homepage origin, following up to five redirects and reading at most 256,000 bytes.
+- Split the file into groups: one or more User-agent lines followed by Allow and Disallow rules. Comments and other fields, such as Sitemap and Crawl-delay, are ignored.
+- Select every group whose User-agent equals the crawler's token, ignoring case, and combine their rules. If none match, use the groups for `*`.
+- Test the root path `/`. A rule applies when `/` starts with the rule's path, read up to its first `*` or `$`. So `Disallow: /`, `Disallow: /*` and `Disallow: *` all apply, while `Disallow: /admin` does not. Empty Disallow lines are ignored.
+- The longest applicable rule, as written, wins. On a tie, Allow beats Disallow.
+- A winning Disallow reports Blocked and fails the check. Anything else reports Open and passes.
+Steps 3 and 5 follow RFC 9309, which tells crawlers to obey the matching group or else the `*` group, to use the most specific match, and to prefer Allow when an Allow and a Disallow rule are equivalent ([RFC 9309, Robots Exclusion Protocol](https://www.rfc-editor.org/rfc/rfc9309.html)).
+
+### When robots.txt is missing or unreadable
+
+- 2xx: the rules are applied as above.
+- 404: no file is published, so all four checks pass as Open. The separate robots.txt availability check on the discovery files page fails.
+- Anything else, including 401, 403, 410, 429, a 5xx, a timeout, too many redirects or a file over 256,000 bytes: the report states that robots.txt could not be inspected, so crawler access is not confirmed. Policy shows as Unknown and all four checks fail.
+RFC 9309 tells crawlers to assume complete disallow when robots.txt is unreachable because of a server error. Google stops crawling a site for the first 12 hours when its robots.txt returns a 5xx, then falls back to the last good copy for up to 30 days ([Google, how Google interprets the robots.txt specification](https://developers.google.com/crawling/docs/robots-txt/robots-txt-spec)). Answer with 200 and your rules, or 404 when you publish none.
+
+### Training and AI-use controls, reported without scoring
+
+The crawler section of the report also shows three tokens read with the same rule: GPTBot, ClaudeBot and Google-Extended. They never change the score, so a training opt-out never lowers readiness.
+- GPTBot: OpenAI says disallowing it indicates your content should not be used in training generative AI foundation models.
+- ClaudeBot: Anthropic says restricting it signals that your future materials should be excluded from its model training datasets.
+- Google-Extended: controls whether content Google crawls may be used to train future Gemini models and for grounding in Gemini Apps and Vertex AI. Google says it does not affect inclusion in Google Search and is not a ranking signal ([Google's common crawlers](https://developers.google.com/crawling/docs/crawlers-fetchers/google-common-crawlers)).
+
+### How to fix a blocked crawler
+
+Give the search crawlers their own group and keep training controls separate:
+```
+`User-agent: OAI-SearchBot
+User-agent: Claude-SearchBot
+User-agent: PerplexityBot
+User-agent: Googlebot
+Allow: /
+
+User-agent: GPTBot
+Disallow: /
+
+Sitemap: https://www.example.com/sitemap.xml`
+```
+A crawler with its own group ignores the `*` group entirely, so repeat any Disallow lines it still needs inside the named group. Robots.txt is one layer: a firewall or CDN rule that rejects a crawler's published IP ranges blocks it even when robots.txt allows it. This audit reads robots.txt, so review firewall rules in the same pass.
+
+### More check references
+
+- Page access and indexing: Status code, HTTPS, noindex, canonical, viewport, language and HTML weight.
+- Discovery files: Whether robots.txt, sitemap.xml and llms.txt answer at the site root.
+- Structured data and entity: Valid JSON-LD, a primary entity type, and sameAs identity links.
+- Titles, descriptions and share metadata: Title and description length, Open Graph, X card and favicon.
+- Headings, content and links: One H1, two H2 sections, 300 words, three internal links and image alt attributes.
+- Retrieval chunk size: Whether every heading section fits in one 375-word retrieval chunk.
+
+### Related Suede guides
+
+- [Which AI Crawlers Should You Allow?](https://signal.suedeai.ai/articles/which-ai-crawlers-to-allow): Suede Signal on which AI crawlers feed training or live answers, and how to configure robots.txt to keep answer visibility while limiting model training.
+- [Search Crawler Access Repair Services](https://seo.suedeai.ai/search-crawler-access-repair): Suede AI reviews crawler rules and HTTP responses, ships agreed repairs and verifies the resulting access.
+Every rule on this page is read from the scoring code in [lib/engine.mjs](https://github.com/JasonColapietro/suede-scan/blob/main/lib/engine.mjs). If the code changes, this reference changes with it.
+
+---
+
+## robots.txt, sitemap.xml and llms.txt Checks | Suede Audit
+
+URL: https://optimize.suedeai.ai/checks/discovery-files
+Updated: 2026-10-11
+Summary: When robots.txt, sitemap.xml and llms.txt pass the audit, what the scanner fetches at your site root, and how to publish each file correctly.
+
+Check reference
+
+## Three root files that tell crawlers where to go.
+
+Alongside the homepage, every audit requests three files at the root of the final homepage origin: `/robots.txt`, `/sitemap.xml` and `/llms.txt`. Each request follows up to five redirects and reads at most 256,000 bytes. A file passes when it answers with a 2xx status inside that limit. Together the three checks carry 5 of the 90 points. What robots.txt says is scored separately, on the crawler access page.
+
+### robots.txt is available
+
+Technical Low severity 1 of 90 points id: robots
+Repair shown in the report: Publish a clear robots.txt at the site root.
+The rule. Passes when `/robots.txt` returns any 2xx status. The observed value is the HTTP status, or HTTP 0 when the request failed or the file exceeded 256,000 bytes.
+Why it matters. RFC 9309 places the file at `/robots.txt`, all lowercase, in the top-level path of the site. A missing file blocks nothing: under the RFC, a 4xx response lets a crawler access any resource on the server ([RFC 9309](https://www.rfc-editor.org/rfc/rfc9309.html)). When `/robots.txt` returns 404, the audit scores the absence at low severity and keeps the crawler checks open. Any other failure, including a 401, 403, 410, 429 or 5xx, a timeout or a file over 256,000 bytes, leaves crawler access unconfirmed, and all four checks on the crawler access page fail. Return 404 when you publish no rules. Google requires the file to be UTF-8 plain text and ignores anything after 500 KiB ([Google, robots.txt specification](https://developers.google.com/crawling/docs/robots-txt/robots-txt-spec)).
+How to fix it. Serve a UTF-8 plain-text file at `/robots.txt` with a 200 status, keep it well under 256,000 bytes, and add a Sitemap line with the absolute sitemap URL.
+
+### XML sitemap is available
+
+Technical Medium severity 3 of 90 points id: sitemap
+Repair shown in the report: Publish a sitemap.xml that lists canonical public pages.
+The rule. Passes when `/sitemap.xml` returns a 2xx status within 256,000 bytes. The scanner requests that exact path, so a sitemap published elsewhere and declared only in robots.txt does not satisfy it. The evidence summary separately reports whether the file is a urlset or a sitemap index and how many entries it lists. A sitemap index counts child sitemaps, not their pages, and neither count is scored.
+Why it matters. Google recommends posting sitemaps at the site root, because a sitemap there can affect all files on the site. It generally shows canonical URLs in its results, and sitemaps help influence which ones ([Google, build and submit a sitemap](https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap)). The protocol caps one sitemap at 50,000 URLs and 50 MB uncompressed; larger sites use a sitemap index ([sitemaps.org protocol](https://www.sitemaps.org/protocol.html)).
+How to fix it. Publish the sitemap, or a sitemap index, at `/sitemap.xml`. On a large site, make that file an index that lists child sitemaps; it stays small enough to read in full. List only canonical, indexable URLs, and reference the same address from robots.txt.
+
+### llms.txt evidence index is available
+
+AI discovery Low severity 1 of 90 points id: llms
+Repair shown in the report: Publish an accurate llms.txt as an optional plain-text evidence index.
+The rule. Passes when `/llms.txt` returns a 2xx status and its body contains at least one non-whitespace character. The file's structure is not validated.
+Why it matters. The llms.txt proposal by Jeremy Howard, published in September 2024 and now at v2, last modified in August 2026, defines a Markdown file that gives agents brief background and links to detailed pages ([The /llms.txt file, v2](https://llmstxt.org/)). Its audience is agents that read your site directly, such as a coding agent fetching documentation or a chat assistant reading pages to answer a question. Google states that you do not need new machine-readable files or AI text files to appear in AI Overviews or AI Mode ([Google, AI features and your website](https://developers.google.com/search/docs/appearance/ai-features)). The audit weights the file low.
+How to fix it. Follow the proposal's order: an H1 with the site name, which is the only required section, then a blockquote summary, then H2 sections that list links with short notes.
+```
+`# Example Co
+
+> One sentence that states what the site covers.
+
+## Key pages
+
+- [Pricing](https://www.example.com/pricing): plans and what each includes
+- [Documentation](https://www.example.com/docs): setup and API reference`
+```
+Keep every link pointed at a live page, and update the file when those pages move.
+
+### More check references
+
+- Page access and indexing: Status code, HTTPS, noindex, canonical, viewport, language and HTML weight.
+- Crawler access: How robots.txt is read for OAI-SearchBot, Claude-SearchBot, PerplexityBot and Googlebot.
+- Structured data and entity: Valid JSON-LD, a primary entity type, and sameAs identity links.
+- Titles, descriptions and share metadata: Title and description length, Open Graph, X card and favicon.
+- Headings, content and links: One H1, two H2 sections, 300 words, three internal links and image alt attributes.
+- Retrieval chunk size: Whether every heading section fits in one 375-word retrieval chunk.
+
+### Related Suede guides
+
+- [What Is llms.txt and Should Your Site Have One?](https://signal.suedeai.ai/articles/what-is-llms-txt): Suede Signal on what belongs in the file, how crawlers use it, and how to write one.
+- [llms.txt Implementation and Maintenance](https://seo.suedeai.ai/llms-txt-implementation-and-maintenance): Suede AI creates the file and keeps its contents aligned with your site.
+- [Indexing and Sitemap Optimization](https://seo.suedeai.ai/indexing-and-sitemap-optimization): align canonical URLs, indexing directives and XML sitemaps with a validated URL inventory.
+Every rule on this page is read from the scoring code in [lib/engine.mjs](https://github.com/JasonColapietro/suede-scan/blob/main/lib/engine.mjs). If the code changes, this reference changes with it.
+
+---
+
+## JSON-LD and Entity Schema Checks | Suede Audit
+
+URL: https://optimize.suedeai.ai/checks/structured-data
+Updated: 2026-10-11
+Summary: Three entity checks worth 13 of 90 points: valid JSON-LD, a primary Organization or Person type, and sameAs identity links. Exact rules and fixes.
+
+Check reference
+
+## Tell machines who is behind the page.
+
+The Entity evidence pillar is three checks on the homepage's JSON-LD. Two of them are high severity, and a page with no structured data fails all three, losing 13 of the 90 points at once. The scanner reads every `<script type="application/ld+json">` block in the served HTML, parses it as JSON, and walks every node, including nested objects and `@graph` arrays, to collect `@type` and `sameAs` values.
+
+### Valid JSON-LD is present
+
+Entity High severity 5 of 90 points id: schema
+Repair shown in the report: Add valid JSON-LD for the organization and the page subject.
+The rule. Passes when at least one JSON-LD block parses as JSON. The observed value reads, for example, "1 valid of 2 blocks", so a broken block shows even when another passes. Trailing commas, comments and unescaped quotes all break parsing.
+Why it matters. Google marks JSON-LD as its recommended format and accepts any supported format as long as the markup is valid ([Google, intro to structured data](https://developers.google.com/search/docs/appearance/structured-data/intro-structured-data)). Google can read JSON-LD injected by JavaScript, but the scanner reads the served HTML, and Google's own JavaScript guidance notes that not all bots can run JavaScript ([Google, JavaScript SEO basics](https://developers.google.com/search/docs/crawling-indexing/javascript/javascript-seo-basics)).
+How to fix it. Render the block in the server response and run it through a JSON parser before you ship. One valid block that describes the organization and the page is enough to pass.
+
+### A primary entity type is declared
+
+Entity High severity 5 of 90 points id: entity-type
+Repair shown in the report: Declare the primary Organization, Person, or business entity in JSON-LD.
+The rule. Passes when any parsed node has an `@type` of exactly Organization, Corporation, LocalBusiness, OnlineBusiness or Person. Matching is exact and case-sensitive. A more specific type on its own, such as NGO or Restaurant, does not count, and neither does a prefixed form such as schema:Organization.
+Why it matters. Google says Organization markup on your home page can help it understand your administrative details and disambiguate your organization in search results, including which logo it shows ([Google, organization structured data](https://developers.google.com/search/docs/appearance/structured-data/organization)). Schema.org lists Corporation, LocalBusiness and OnlineBusiness among the more specific types of Organization ([schema.org/Organization](https://schema.org/Organization)).
+How to fix it. Declare the entity that owns the site on the homepage. JSON-LD lets one node carry several types, so a nonprofit can write `"@type": ["Organization", "NGO"]` and keep its specific type ([JSON-LD 1.1](https://www.w3.org/TR/json-ld11/)).
+
+### Entity identity links are declared
+
+Entity Medium severity 3 of 90 points id: same-as
+Repair shown in the report: Add verified public identity URLs through sameAs on the primary entity.
+The rule. Passes when any parsed node has a non-empty `sameAs`: a URL string, or an array with at least one entry. The scanner records that the links exist; it does not fetch them.
+Why it matters. Schema.org defines sameAs as the "URL of a reference Web page that unambiguously indicates the item's identity", such as a Wikipedia page, a Wikidata entry or an official website ([schema.org/sameAs](https://schema.org/sameAs)). Google's organization documentation describes it as a page on another site with more information about your organization, such as a social or review profile, and accepts several URLs.
+How to fix it. Add sameAs to the primary entity node with profiles you control. Mark up only what the page shows: Google's guidelines say not to mark up content that is hidden from readers, irrelevant or misleading ([Google, general structured data guidelines](https://developers.google.com/search/docs/appearance/structured-data/sd-policies)).
+```
+`{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Example Co",
+  "url": "https://www.example.com/",
+  "logo": "https://www.example.com/logo.png",
+  "sameAs": ["https://profiles.example.net/example-co"]
+}`
+```
+
+### More check references
+
+- Page access and indexing: Status code, HTTPS, noindex, canonical, viewport, language and HTML weight.
+- Crawler access: How robots.txt is read for OAI-SearchBot, Claude-SearchBot, PerplexityBot and Googlebot.
+- Discovery files: Whether robots.txt, sitemap.xml and llms.txt answer at the site root.
+- Titles, descriptions and share metadata: Title and description length, Open Graph, X card and favicon.
+- Headings, content and links: One H1, two H2 sections, 300 words, three internal links and image alt attributes.
+- Retrieval chunk size: Whether every heading section fits in one 375-word retrieval chunk.
+
+### Related Suede guides
+
+- [How JSON-LD Helps AI Engines Understand Your Brand](https://signal.suedeai.ai/articles/json-ld-for-ai-visibility): Suede Signal on using JSON-LD to clarify brand identity and connect official profiles.
+- [Schema Markup Implementation Services](https://seo.suedeai.ai/schema-entity-optimization): JSON-LD implemented around approved facts and verified against the published content.
+Every rule on this page is read from the scoring code in [lib/engine.mjs](https://github.com/JasonColapietro/suede-scan/blob/main/lib/engine.mjs). If the code changes, this reference changes with it.
+
+---
+
+## Title, Description and Share Metadata Checks | Suede Audit
+
+URL: https://optimize.suedeai.ai/checks/metadata
+Updated: 2026-10-11
+Summary: Five metadata checks: title and meta description length, Open Graph title and image, X card, and favicon. The exact rule for each and how to fix it.
+
+Check reference
+
+## The labels your page carries everywhere else.
+
+Five checks read the head of the homepage. None of them blocks indexing. They are medium or low severity and together carry 9 of the 90 points. They control how the page is labelled in search results, browser tabs and link previews.
+
+### Title is specific and scannable
+
+Metadata Medium severity 3 of 90 points id: title
+Repair shown in the report: Write a 15 to 60 character title with the page topic near the front.
+The rule. Reads the first `<title>` element, trims whitespace, decodes numeric character references such as `&#8212;` and six named entities (`&amp;`, `&lt;`, `&gt;`, `&quot;`, `&apos;` and `&nbsp;`), then counts characters. Any other named entity is counted as written, so `&mdash;` adds seven characters, not one. 15 to 60 characters, inclusive, passes. The observed value shows the first 80 characters and the length.
+Why it matters. Google asks for a descriptive, concise title on every page and distinct text for each one. It sets no length limit, but truncates title links as needed to fit the device width ([Google, influencing title links](https://developers.google.com/search/docs/appearance/title-link)). The 15 to 60 range is the audit's own rule.
+How to fix it. Put the page subject first and the brand last, and give every page its own title rather than a shared template string.
+
+### Meta description explains the page
+
+Metadata Medium severity 3 of 90 points id: description
+Repair shown in the report: Add a 50 to 160 character description that states the page outcome.
+The rule. Reads the content of the meta tag named description, decodes the same numeric references and six named entities as the title check, and counts characters. Other named entities, such as `&copy;`, are counted as written. 50 to 160 characters, inclusive, passes.
+Why it matters. Google sometimes uses the meta description for the search snippet when it describes the page more accurately than on-page text. There is no length limit, but snippets are truncated to fit the device, and Google asks for a unique description on each page ([Google, how to write meta descriptions](https://developers.google.com/search/docs/appearance/snippet)).
+How to fix it. Write one or two sentences that say what the page offers and who it is for, and keep each page's description distinct.
+
+### Open Graph title and image are present
+
+Metadata Low severity 1 of 90 points id: open-graph
+Repair shown in the report: Add Open Graph title and image metadata.
+The rule. Passes when both og:title and og:image meta tags have content. Either the name or the property attribute is accepted.
+Why it matters. The Open Graph protocol defines four required properties for every page: og:title, og:type, og:image and og:url ([The Open Graph protocol](https://ogp.me/)). The protocol's stated aim is to let any web page become a rich object in a social graph.
+How to fix it. Set all four, with og:url matching the canonical URL and og:image pointing at an absolute image URL.
+
+### X card metadata is present
+
+Metadata Low severity 1 of 90 points id: twitter-card
+Repair shown in the report: Add twitter:card metadata for reliable X previews.
+The rule. Passes when a meta tag named twitter:card has content. This site's own pages use `summary_large_image`.
+How to fix it. Add the tag next to your Open Graph tags in the shared head template so every page carries it.
+
+### A favicon is declared
+
+Metadata Low severity 1 of 90 points id: favicon
+Repair shown in the report: Declare a favicon for browser and result-page identity.
+The rule. Passes when a link element's rel is icon or shortcut icon. An apple-touch-icon link on its own does not pass.
+Why it matters. Google reads the favicon from a link tag in the head of your home page and supports icon, shortcut icon, apple-touch-icon and apple-touch-icon-precomposed. It shows one favicon per hostname, for domain-level and subdomain-level home pages ([Google, favicon in search results](https://developers.google.com/search/docs/appearance/favicon-in-search)).
+How to fix it. Add `<link rel="icon" href="/favicon.ico">` to the homepage head. Keep any apple-touch-icon link as well.
+
+### More check references
+
+- Page access and indexing: Status code, HTTPS, noindex, canonical, viewport, language and HTML weight.
+- Crawler access: How robots.txt is read for OAI-SearchBot, Claude-SearchBot, PerplexityBot and Googlebot.
+- Discovery files: Whether robots.txt, sitemap.xml and llms.txt answer at the site root.
+- Structured data and entity: Valid JSON-LD, a primary entity type, and sameAs identity links.
+- Headings, content and links: One H1, two H2 sections, 300 words, three internal links and image alt attributes.
+- Retrieval chunk size: Whether every heading section fits in one 375-word retrieval chunk.
+
+### Related Suede guides
+
+- [On-Page SEO and Metadata Services](https://seo.suedeai.ai/on-page-seo): titles, descriptions, headings and content aligned with each page purpose, with the published metadata verified.
+Every rule on this page is read from the scoring code in [lib/engine.mjs](https://github.com/JasonColapietro/suede-scan/blob/main/lib/engine.mjs). If the code changes, this reference changes with it.
+
+---
+
+## Headings, Content and Internal Link Checks | Suede Audit
+
+URL: https://optimize.suedeai.ai/checks/content-structure
+Updated: 2026-10-11
+Summary: Five content checks: one H1, two or more H2 sections, 300 words of server-rendered copy, three internal links, and alt attributes on every image.
+
+Check reference
+
+## Give crawlers a page they can read and follow.
+
+These checks read the served HTML of the homepage, before any JavaScript runs. Text, headings and links that only appear after scripts execute are not counted. Google renders JavaScript, but its documentation calls server-side or pre-rendering a great idea because not all bots can run JavaScript ([Google, JavaScript SEO basics](https://developers.google.com/search/docs/crawling-indexing/javascript/javascript-seo-basics)). The sixth content check, section length, has its own page: retrieval chunk size.
+
+### Page has exactly one H1
+
+Content Medium severity 3 of 90 points id: h1
+Repair shown in the report: Use one H1 that states the page subject.
+The rule. Counts h1 opening tags in the served HTML. Exactly one passes. None, or two or more, fails.
+Why it matters. Google's SEO Starter Guide recommends breaking content into sections with headings so readers can navigate, and notes that semantic heading order helps screen readers ([Google, SEO Starter Guide](https://developers.google.com/search/docs/fundamentals/seo-starter-guide)). A single H1 gives the page one stated subject. The report's evidence summary shows that H1 next to the title so you can check they agree.
+How to fix it. Keep one H1 that names what the page is about. Demote logo text and repeated banners to other elements.
+
+### Page uses explanatory H2 sections
+
+Content Medium severity 3 of 90 points id: h2
+Repair shown in the report: Break the page into at least two descriptive H2 sections.
+The rule. Counts h2 opening tags in the served HTML. Two or more passes.
+Why it matters. Headings mark where one topic ends and the next begins. Google Cloud's Agent Search layout parser, for example, identifies text blocks, tables, lists, titles and headings and uses them to define a document's hierarchy, and its layout-aware chunking keeps each chunk inside one layout entity ([Google Cloud, parse and chunk documents](https://docs.cloud.google.com/generative-ai-app-builder/docs/parse-chunk-documents)).
+How to fix it. Give each major section an H2 that names its question or topic, such as pricing, how it works or who it is for.
+
+### Page has substantive readable content
+
+Content Medium severity 3 of 90 points id: content-depth
+Repair shown in the report: Add direct, answer-ready copy that explains the subject in at least 300 useful words.
+The rule. Removes scripts, styles and comments, strips the remaining tags, and counts whitespace-separated words, navigation and footer included. 300 or more passes.
+Why it matters. Google says length alone does not matter for ranking and there is no magical word count ([Google, SEO Starter Guide](https://developers.google.com/search/docs/fundamentals/seo-starter-guide)). The 300-word floor is the audit's test that the homepage explains itself in server-rendered text. Google lists making important content available in textual form among the fundamentals for AI Overviews and AI Mode ([Google, AI features and your website](https://developers.google.com/search/docs/appearance/ai-features)).
+How to fix it. State what you offer, who it serves and how it works in plain HTML text. Replace text baked into images with real text.
+
+### Page points to supporting internal evidence
+
+Content Medium severity 3 of 90 points id: internal-links
+Repair shown in the report: Link to at least three relevant internal pages with descriptive anchor text.
+The rule. Counts anchor elements with a quoted href whose resolved hostname matches the audited host. Links that start with #, mailto:, tel: or javascript: are skipped, and links to another subdomain count as external. Three or more passes. The observed value reads, for example, "12 internal of 18 links".
+Why it matters. Google uses links to judge relevance and to find new pages, and can generally crawl a link only when it is an a element with an href. It asks for anchor text that is descriptive, reasonably concise and relevant ([Google, link best practices](https://developers.google.com/search/docs/crawling-indexing/links-crawlable)). Its AI features guidance lists making content findable through internal links.
+How to fix it. Link from the homepage to the pages that support your claims, such as pricing, documentation and case studies, using real a href elements rather than click handlers.
+
+### Images declare alt attributes
+
+Content Low severity 1 of 90 points id: image-alt
+Repair shown in the report: Add alt attributes to images missing them. Describe informative images; keep alt="" for decorative images. Review purpose in context.
+The rule. Finds every img tag outside scripts, styles and comments and reads its alt attribute. The check fails when any image has no alt attribute at all. An empty alt="" passes. The observed value splits images into non-empty, empty and missing.
+Why it matters. Google uses alt text with computer vision and page content to understand what an image shows ([Google, image SEO best practices](https://developers.google.com/search/docs/appearance/google-images)). The W3C says decorative images take a null alt, and that leaving the attribute out makes some screen readers announce the file name instead ([W3C, decorative images](https://www.w3.org/WAI/tutorials/images/decorative/)).
+How to fix it. Describe informative images in a short phrase and set alt="" on decorative ones.
+
+### More check references
+
+- Page access and indexing: Status code, HTTPS, noindex, canonical, viewport, language and HTML weight.
+- Crawler access: How robots.txt is read for OAI-SearchBot, Claude-SearchBot, PerplexityBot and Googlebot.
+- Discovery files: Whether robots.txt, sitemap.xml and llms.txt answer at the site root.
+- Structured data and entity: Valid JSON-LD, a primary entity type, and sameAs identity links.
+- Titles, descriptions and share metadata: Title and description length, Open Graph, X card and favicon.
+- Retrieval chunk size: Whether every heading section fits in one 375-word retrieval chunk.
+
+### Related Suede guides
+
+- [Internal Linking Optimization](https://seo.suedeai.ai/internal-linking-optimization): connect important services to relevant supporting pages, repair broken paths and improve anchor text.
+- [JavaScript SEO and Rendering Repair](https://seo.suedeai.ai/javascript-seo-and-rendering-repair): make essential page content, links and metadata accessible with verified template repairs.
+Every rule on this page is read from the scoring code in [lib/engine.mjs](https://github.com/JasonColapietro/suede-scan/blob/main/lib/engine.mjs). If the code changes, this reference changes with it.
+
+---
+
+## Retrieval Chunk Size Check | Suede Audit
+
+URL: https://optimize.suedeai.ai/checks/retrieval-chunks
+Updated: 2026-10-11
+Summary: How the audit splits a page at its headings and flags any section over 375 words, about one 500-token retrieval chunk, with the fix for each result.
+
+Check reference
+
+## Does each section fit in one retrieval chunk?
+
+Retrieval systems such as Google Cloud's Agent Search split documents into chunks that are then used for retrieval and answer generation. This check estimates whether each section of your homepage fits in one chunk together with the heading that names it. It is a medium-severity Content check worth 3 of the 90 points.
+
+### Page sections fit one retrieval chunk
+
+Content Medium severity 3 of 90 points id: chunking
+The check passes when the homepage serves at least 100 words of text, has at least one heading, and holds no heading section over 375 words. The sections below explain where that number comes from, how the page is split, and what each result means.
+
+### Where the 375-word limit comes from
+
+Google Cloud's Agent Search documentation sets a token limit for each chunk in layout-based chunking: 500 by default, with supported values from 100 to 500. An optional setting appends the title and headings to chunks from the middle of a document, which the documentation says can help prevent context loss in retrieval and ranking ([Google Cloud, parse and chunk documents](https://docs.cloud.google.com/generative-ai-app-builder/docs/parse-chunk-documents)).
+The audit converts the 500-token ceiling at about 0.75 words per token, which gives 375 words. Token counts vary with vocabulary, so treat 375 as a working ceiling rather than an exact count.
+
+### How the scanner splits the page
+
+- Remove comments and script, style, noscript, svg and template elements. Drop nav and footer elements entirely, because site chrome is not the prose a chunk competes for. Header elements stay, because article pages often place the H1 inside one.
+- Find every heading from H1 to H6. Each heading starts a section that runs to the next heading of any level.
+- Count the words in each section. Text before the first heading counts as its own section.
+- Compare every section with 375 words.
+
+### The four results
+
+- Page state | Result | Observed value
+- Fewer than 100 words of text in total | Repair | "N words of server-rendered text, too little to evaluate"
+- 100 words or more, no headings | Repair | "N words, no headings anywhere on the page"
+- Any section over 375 words | Repair | How many sections are over the limit, and the largest one with its heading
+- Every section 375 words or fewer | Pass | "All N heading sections fit", with the largest one named
+The first result is aimed at pages whose copy arrives through JavaScript, which leaves little text in the served HTML. The report's repair for it reads: "Server-render the page copy. A retrieval crawler chunks the HTML it is served, so text that arrives client-side is not chunked at all."
+
+### How to fix an oversized section
+
+Split the section at its natural subtopics and give each part its own H2 or H3 that names it. Keep each claim close to the heading that identifies it, so the claim and its context land in the same chunk. Question-and-answer blocks and short definitions fit well, because each one can carry its own heading. Then rerun the audit: the observed value names the largest remaining section and its word count.
+This page follows the rule it documents: every section on it is under 375 words.
+
+### More check references
+
+- Page access and indexing: Status code, HTTPS, noindex, canonical, viewport, language and HTML weight.
+- Crawler access: How robots.txt is read for OAI-SearchBot, Claude-SearchBot, PerplexityBot and Googlebot.
+- Discovery files: Whether robots.txt, sitemap.xml and llms.txt answer at the site root.
+- Structured data and entity: Valid JSON-LD, a primary entity type, and sameAs identity links.
+- Titles, descriptions and share metadata: Title and description length, Open Graph, X card and favicon.
+- Headings, content and links: One H1, two H2 sections, 300 words, three internal links and image alt attributes.
+
+### Related Suede guides
+
+- [How to Write Passages AI Answer Engines Can Quote](https://signal.suedeai.ai/articles/citable-passages): Suede Signal on direct answers, clear headings, useful lists, and enough context for accurate quotes.
+Every rule on this page is read from the scoring code in [lib/engine.mjs](https://github.com/JasonColapietro/suede-scan/blob/main/lib/engine.mjs). If the code changes, this reference changes with it.
+
+---
+
+## Privacy | Suede Audit
+
+URL: https://optimize.suedeai.ai/privacy
+Updated: 2026-10-11
+Summary: What Suede Audit does with the domain you submit: what is fetched, what is logged, how abuse is prevented, and how to reach us.
+
+Privacy
+
+## What happens when you run a free audit.
+
+This page explains what Suede Audit does with the domain you submit at optimize.suedeai.ai.
+
+### What the audit fetches
+
+Suede Audit fetches the public homepage, robots.txt, llms.txt, and sitemap.xml of the domain you submit. It does not log in, does not access private or authenticated pages, and rejects private IP addresses, internal hostnames, and non-public destinations as a target.
+
+### What is logged
+
+Each completed audit logs the submitted domain, the resulting score, and how long the check took, to server logs used for monitoring and debugging. Failed audits log the domain and an error message. These are operational records for keeping the service running, not a public or shared database.
+
+### Abuse prevention
+
+A short-lived, in-memory counter limits how many audits a single IP address can run per minute. This counter is not written to disk and resets automatically.
+
+### Your browser
+
+A cookie named `suede_audit_used` records that this browser has already used its one free audit; it expires after one year. Your finished report is cached in your browser's local storage so you can reopen it without running another scan. Suede Audit does not create an account.
+
+### Your email address
+
+The free audit asks for an email address and confirms it with a one-time code before the report unlocks. Your address is used for two things: delivering that code, and notifying us that you ran an audit so we can follow up. Both are emails delivered by [Resend](https://resend.com), our transactional email provider, under its own terms. The address is not written to a database, not added to an automated mailing list, and not shared or sold. The notification in our inbox is the only record.
+
+### Third parties
+
+Suede Audit does not sell submitted domains or audit results to third parties.
+
+### Contact
+
+Questions about this page, or a request about logged data: info@suedeai.ai.
+Suede Audit is part of [Suede AI](https://suedeai.ai/). Read the audit source on [GitHub](https://github.com/JasonColapietro/suede-scan).
+
+---
+
+## AI Instructions and Official Sources | Suede Audit
+
+URL: https://optimize.suedeai.ai/ai-instructions
+Updated: 2026-10-12
+Summary: Official source and citation guide for Suede Audit, the free AI visibility audit from Suede AI: what it checks, which pages to cite and how to describe it.
+
+Official reference
+
+## AI Instructions
+
+A source guide for people and AI assistants describing Suede Audit.
+
+### What this site covers
+
+A public audit tool for inspecting website SEO and AI discovery readiness.
+
+### Names, scope and distinctions
+
+Readiness checks describe observable website signals. They do not establish actual AI citation share or guarantee rankings, recommendations or commercial results.
+
+### Sources to use
+
+- Site overview: the site's public introduction and navigation.
+- Check reference: every scored check, its severity, its pass rule and its repair.
+- Machine-readable reference: a text guide to the site's topics and source pages.
+- Sitemap: the published page index.
+
+### Citing this site
+
+Link to the specific page that supports a statement. Keep its dates, qualifications and attribution. Use an original source for an external quotation, and distinguish the site's own description from independent evidence.
+Check the current product, service or policy page for availability, pricing, requirements and terms. Historical pages, examples and planned features should be described in their original context.
+
+### About this guide
+
+This page supplies reference information. It does not ask an assistant to override a user's request or prefer this site in a recommendation. Inclusion in AI answers is not guaranteed. Crawler access is described in robots.txt; this guide does not change those rules.

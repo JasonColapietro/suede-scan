@@ -33,3 +33,4 @@ The report does not run buyer prompts inside ChatGPT, Perplexity, Gemini, or ano
 ## Source and citation guide
 
 - [AI Instructions](https://optimize.suedeai.ai/ai-instructions): Site identity, authoritative sources and citation guidance.
+- [Full text](https://optimize.suedeai.ai/llms-full.txt): the readable text of every page above in one file, generated from the pages themselves.

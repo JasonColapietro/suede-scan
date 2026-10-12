@@ -32,22 +32,152 @@
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "WebApplication",
-    "name": "Suede Audit",
-    "url": "https://optimize.suedeai.ai/",
-    "applicationCategory": "BusinessApplication",
-    "operatingSystem": "Web",
-    "description": "A public-site audit for crawler access, entity schema, metadata, content structure, and answer-engine discovery signals.",
-    "isPartOf": {
-      "@type": "Organization",
-      "@id": "https://suedeai.ai/#organization",
-      "name": "Suede AI",
-      "url": "https://suedeai.ai/",
-      "founder": {
-        "@id": "https://suedeai.ai/founder#person"
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://optimize.suedeai.ai/#website",
+        "url": "https://optimize.suedeai.ai/",
+        "name": "Suede Audit",
+        "inLanguage": "en-US",
+        "publisher": {
+          "@id": "https://suedeai.ai/#organization"
+        }
+      },
+      {
+        "@type": "WebPage",
+        "@id": "https://optimize.suedeai.ai/#webpage",
+        "url": "https://optimize.suedeai.ai/",
+        "name": "Suede Audit | AI Discovery and SEO Readiness",
+        "description": "Free AI visibility audit: check crawler access, entity schema, metadata, content structure and answer-engine signals. Get a score and prioritized repairs.",
+        "inLanguage": "en-US",
+        "datePublished": "2026-07-13",
+        "dateModified": "2026-10-11",
+        "isPartOf": {
+          "@id": "https://optimize.suedeai.ai/#website"
+        },
+        "about": {
+          "@id": "https://optimize.suedeai.ai/#app"
+        },
+        "mainEntity": {
+          "@id": "https://optimize.suedeai.ai/#app"
+        },
+        "publisher": {
+          "@id": "https://suedeai.ai/#organization"
+        },
+        "primaryImageOfPage": {
+          "@type": "ImageObject",
+          "url": "https://optimize.suedeai.ai/og-suede-audit.png",
+          "width": 1200,
+          "height": 630
+        }
+      },
+      {
+        "@type": "WebApplication",
+        "name": "Suede Audit",
+        "url": "https://optimize.suedeai.ai/",
+        "applicationCategory": "BusinessApplication",
+        "operatingSystem": "Web",
+        "description": "A public-site audit for crawler access, entity schema, metadata, content structure, and answer-engine discovery signals.",
+        "isPartOf": {
+          "@id": "https://optimize.suedeai.ai/#website"
+        },
+        "codeRepository": "https://github.com/JasonColapietro/suede-scan",
+        "@id": "https://optimize.suedeai.ai/#app",
+        "publisher": {
+          "@id": "https://suedeai.ai/#organization"
+        },
+        "provider": {
+          "@id": "https://suedeai.ai/#organization"
+        },
+        "isAccessibleForFree": true
+      },
+      {
+        "@type": "FAQPage",
+        "@id": "https://optimize.suedeai.ai/#faq",
+        "isPartOf": {
+          "@id": "https://optimize.suedeai.ai/#webpage"
+        },
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "What does the free audit check?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "The audit inspects your public homepage plus root discovery files: robots.txt, llms.txt, and sitemap.xml. It scores crawler access, entity and content evidence, and answer-engine crawl policy, then names a repair for each failed signal."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Does a high score mean AI engines will cite my site?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No. A high score is not proof of an AI citation. Buyer-prompt evidence requires separate, timestamped runs inside each answer engine, which this audit does not run."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "How many free audits can I run?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "One free audit per browser, on a public website. No account is created. You confirm a working email with a 6-digit code and the report unlocks on screen."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Why do you ask for my email?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "The report unlocks with a one-time code sent to your address, which proves the email is real. We use it to send that code and to know who ran the audit. It is not stored in a database, added to a mailing list, or shared."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What happens after I get my results?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "The report shows a weighted readiness score, a prioritized repair list, and a full findings ledger. Suede SEO can package the repairs as implementation-ready fixes or ship the edits with before-and-after evidence."
+            }
+          }
+        ]
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://suedeai.ai/#organization",
+        "name": "Suede AI",
+        "alternateName": [
+          "Suede Labs AI",
+          "Suede Labs"
+        ],
+        "url": "https://suedeai.ai/",
+        "foundingDate": "2024",
+        "founder": {
+          "@id": "https://suedeai.ai/founder#person"
+        },
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://suedeai.ai/suede-ai-logo-transparent.png",
+          "width": 400,
+          "height": 400
+        },
+        "sameAs": [
+          "https://suedeai.org/",
+          "https://github.com/Suede-AI",
+          "https://x.com/AISUEDE",
+          "https://www.linkedin.com/company/suede-labs",
+          "https://www.wikidata.org/wiki/Q141169484"
+        ]
+      },
+      {
+        "@type": "Person",
+        "@id": "https://suedeai.ai/founder#person",
+        "name": "Jason Colapietro",
+        "alternateName": "Johnny Suede",
+        "url": "https://suedeai.ai/founder",
+        "worksFor": {
+          "@id": "https://suedeai.ai/#organization"
+        }
       }
-    },
-    "codeRepository": "https://github.com/JasonColapietro/suede-scan"
+    ]
   }
   </script>
 </head>

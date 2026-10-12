@@ -85,3 +85,12 @@ test('uses one local 1200x630 social card across every public audit document', a
     assert.ok(!html.includes('raw.githubusercontent.com'), `${page} still hotlinks GitHub raw`);
   }
 });
+
+test('serves the shared IndexNow key at the site root, body exactly the key', async () => {
+  const key = '4c265a375effa42521f5b88bb3c28501';
+  const body = await readFile(new URL(`../${key}.txt`, import.meta.url), 'utf8');
+  assert.equal(body, key);
+  const server = await readFile(new URL('../server.mjs', import.meta.url), 'utf8');
+  assert.match(server, new RegExp(`new URL\\('\\./${key}\\.txt', import\\.meta\\.url\\)`));
+  assert.ok(server.includes(`['/${key}.txt', [INDEXNOW_KEY_TXT, 'text/plain; charset=utf-8']]`));
+});

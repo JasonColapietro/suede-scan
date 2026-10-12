@@ -5,7 +5,7 @@ import { runTier } from './lib/engine.mjs';
 import { handleOperatorAudit, handleTier } from './lib/handler.mjs';
 
 const PORT = process.env.PORT || 3400;
-const [INDEX_HTML, STYLES_CSS, CLIENT_JS, THEME_TOGGLE_JS, ROBOTS_TXT, LLMS_TXT, LLMS_FULL_TXT, SITEMAP_XML, METHOD_HTML, PRIVACY_HTML, OG_IMAGE_PNG, LOGO_PNG, FAVICON_ICO, AI_INSTRUCTIONS_HTML] = await Promise.all([
+const [INDEX_HTML, STYLES_CSS, CLIENT_JS, THEME_TOGGLE_JS, ROBOTS_TXT, LLMS_TXT, LLMS_FULL_TXT, SITEMAP_XML, METHOD_HTML, PRIVACY_HTML, OG_IMAGE_PNG, LOGO_PNG, FAVICON_ICO, AI_INSTRUCTIONS_HTML, INDEXNOW_KEY_TXT] = await Promise.all([
   readFile(new URL('./index.html', import.meta.url)),
   readFile(new URL('./styles.css', import.meta.url)),
   readFile(new URL('./client.js', import.meta.url)),
@@ -20,6 +20,8 @@ const [INDEX_HTML, STYLES_CSS, CLIENT_JS, THEME_TOGGLE_JS, ROBOTS_TXT, LLMS_TXT,
   readFile(new URL('./suede-ai-logo.png', import.meta.url)),
   readFile(new URL('./favicon.ico', import.meta.url)),
   readFile(new URL('./ai-instructions.html', import.meta.url)),
+  // IndexNow key shared across the Suede estate. The body must equal the key.
+  readFile(new URL('./4c265a375effa42521f5b88bb3c28501.txt', import.meta.url)),
 ]);
 // Check reference pages. Each file is read through a literal URL so Vercel
 // traces it into the function bundle. Unknown /checks/<slug> paths fall
@@ -46,6 +48,7 @@ const STATIC_FILES = new Map([
   ['/client.js', [CLIENT_JS, 'text/javascript; charset=utf-8']],
   ['/theme-toggle.js', [THEME_TOGGLE_JS, 'text/javascript; charset=utf-8']],
   ['/robots.txt', [ROBOTS_TXT, 'text/plain; charset=utf-8']],
+  ['/4c265a375effa42521f5b88bb3c28501.txt', [INDEXNOW_KEY_TXT, 'text/plain; charset=utf-8']],
   ['/llms.txt', [LLMS_TXT, 'text/plain; charset=utf-8']],
   ['/llms-full.txt', [LLMS_FULL_TXT, 'text/plain; charset=utf-8']],
   ['/sitemap.xml', [SITEMAP_XML, 'application/xml; charset=utf-8']],
