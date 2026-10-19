@@ -13,7 +13,7 @@ Implementation service: https://seo.suedeai.ai/
 ## Suede Audit | AI Discovery and SEO Readiness
 
 URL: https://optimize.suedeai.ai/
-Updated: 2026-10-11
+Updated: 2026-10-19
 Summary: Free AI visibility audit: check crawler access, entity schema, metadata, content structure and answer-engine signals. Get a score and prioritized repairs.
 
 Public-signal audit
@@ -83,7 +83,7 @@ Method before score
 ### Truth stays attached to the artifact.
 
 The audit fetches one public page plus root discovery files. It scores weighted checks, shows the measured value, and names the repair for each failed signal.
-A high score is not proof of an AI citation. Buyer-prompt evidence requires separate, timestamped runs inside each answer engine.
+The score measures readiness: whether answer engines can reach, parse and quote the page. Citation evidence comes from timestamped buyer-question runs inside each engine, which the [AI citation check](https://seo.suedeai.ai/ai-citation-check) captures.
 Questions
 
 ### What the free audit actually checks.
@@ -91,8 +91,8 @@ Questions
 Q: What does the free audit check?
 The audit inspects your public homepage plus root discovery files: robots.txt, llms.txt, and sitemap.xml. It scores crawler access, entity and content evidence, and answer-engine crawl policy, then names a repair for each failed signal.
 
-Q: Does a high score mean AI engines will cite my site?
-No. A high score is not proof of an AI citation. Buyer-prompt evidence requires separate, timestamped runs inside each answer engine, which this audit does not run.
+Q: What does a high score tell me about AI citations?
+A high score means answer engines can reach, parse and quote your homepage and discovery files, the groundwork every citation depends on. To see which engines cite you today, run the AI citation check at [seo.suedeai.ai/ai-citation-check](https://seo.suedeai.ai/ai-citation-check). It asks buyer questions inside the answer engines and records the sources they cite.
 
 Q: How many free audits can I run?
 One free audit per browser, on a public website. No account is created. You confirm a working email with a 6-digit code and the report unlocks on screen.
@@ -127,8 +127,8 @@ One free audit per browser. Public websites only. No signup, no credit card. A v
 ## Method | Suede Audit
 
 URL: https://optimize.suedeai.ai/method
-Updated: 2026-10-11
-Summary: How Suede Audit calculates a readiness score: what it fetches, how severity is weighted, the three scoring pillars, and what a score does not prove.
+Updated: 2026-10-19
+Summary: How Suede Audit calculates a readiness score: what it fetches, how severity is weighted, the three scoring pillars, and what a score measures.
 
 Method
 
@@ -153,9 +153,9 @@ Each check rolls up into one of three pillars, each scored the same way as the o
 - Entity evidence – structured identity data: JSON-LD presence, organization type, and verified identity links.
 - Content clarity – page meaning, supporting content, share metadata, and response weight.
 
-### What the score does not prove
+### What the score measures
 
-A high score is not proof of an AI citation. Buyer-prompt evidence requires separate, timestamped runs inside each answer engine, which this audit does not run. The score measures whether an answer engine can technically reach and parse a page – not whether it will recommend, rank, or cite it.
+The score measures whether an answer engine can reach, parse and quote a page: the groundwork every citation depends on. Citations themselves are measured with timestamped buyer-question runs inside each answer engine. To see which engines cite you today, run the [AI citation check](https://seo.suedeai.ai/ai-citation-check).
 
 ### Image alternatives and page evidence
 
@@ -165,7 +165,7 @@ The evidence summary reports title, description, main heading, language, canonic
 ### Limits and caching
 
 Each browser gets one free audit. The finished report is cached in that browser's local storage, so its report link can reopen without using another scan. Suede Audit accepts public HTTP and HTTPS URLs only; it will not inspect private, internal, or non-routable addresses.
-Read the full audit source on [GitHub](https://github.com/JasonColapietro/suede-scan). For a deeper check that runs real buyer prompts inside answer engines, see [Suede SEO](https://seo.suedeai.ai/#library).
+Read the full audit source on [GitHub](https://github.com/JasonColapietro/suede-scan). To run real buyer questions inside answer engines, use the [AI citation check](https://seo.suedeai.ai/ai-citation-check).
 
 ---
 

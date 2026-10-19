@@ -407,7 +407,7 @@ function renderInsight(data) {
   const title = firstRepair ? firstRepair.title : 'No automated blockers found';
   const body = firstRepair
     ? firstRepair.action
-    : 'The inspected signals passed. This does not prove that an answer engine will cite or recommend the site.';
+    : 'The inspected signals passed. Next, run buyer questions inside each answer engine to see which ones cite the site.';
   byId('report-insight').innerHTML = `
     <span class="insight-label">${firstRepair ? 'First repair' : 'Automated result'}</span>
     <div><strong>${escapeHtml(title)}</strong><p>${escapeHtml(body)}</p></div>
