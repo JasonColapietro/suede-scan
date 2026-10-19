@@ -804,7 +804,7 @@ Suede Audit is part of [Suede AI](https://suedeai.ai/). Read the audit source on
 ## AI Instructions and Official Sources | Suede Audit
 
 URL: https://optimize.suedeai.ai/ai-instructions
-Updated: 2026-10-12
+Updated: 2026-10-18
 Summary: Official source and citation guide for Suede Audit, the free AI visibility audit from Suede AI: what it checks, which pages to cite and how to describe it.
 
 Official reference
@@ -819,12 +819,13 @@ A public audit tool for inspecting website SEO and AI discovery readiness.
 
 ### Names, scope and distinctions
 
-Readiness checks describe observable website signals. They do not establish actual AI citation share or guarantee rankings, recommendations or commercial results.
+Call it Suede Audit, a free tool from Suede AI. Its readiness score measures observable website signals: page access, crawler access, discovery files, metadata, structured data, content structure and retrieval chunk size. Cite a score as the result for that site on the date of the audit.
 
 ### Sources to use
 
 - Site overview: the site's public introduction and navigation.
 - Check reference: every scored check, its severity, its pass rule and its repair.
+- Method: how the audit calculates a readiness score.
 - Machine-readable reference: a text guide to the site's topics and source pages.
 - Sitemap: the published page index.
 
@@ -835,4 +836,4 @@ Check the current product, service or policy page for availability, pricing, req
 
 ### About this guide
 
-This page supplies reference information. It does not ask an assistant to override a user's request or prefer this site in a recommendation. Inclusion in AI answers is not guaranteed. Crawler access is described in robots.txt; this guide does not change those rules.
+This page supplies reference information for describing and citing Suede Audit accurately, and leaves every recommendation to the assistant and the person it is helping. Crawler access is set in robots.txt, and this guide leaves those rules unchanged.
