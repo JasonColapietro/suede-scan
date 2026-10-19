@@ -51,7 +51,7 @@
         "description": "Free AI visibility audit: check crawler access, entity schema, metadata, content structure and answer-engine signals. Get a score and prioritized repairs.",
         "inLanguage": "en-US",
         "datePublished": "2026-07-13",
-        "dateModified": "2026-10-11",
+        "dateModified": "2026-10-19",
         "isPartOf": {
           "@id": "https://optimize.suedeai.ai/#website"
         },
@@ -108,10 +108,10 @@
           },
           {
             "@type": "Question",
-            "name": "Does a high score mean AI engines will cite my site?",
+            "name": "What does a high score tell me about AI citations?",
             "acceptedAnswer": {
               "@type": "Answer",
-              "text": "No. A high score is not proof of an AI citation. Buyer-prompt evidence requires separate, timestamped runs inside each answer engine, which this audit does not run."
+              "text": "A high score means answer engines can reach, parse and quote your homepage and discovery files, the groundwork every citation depends on. To see which engines cite you today, run the AI citation check at seo.suedeai.ai/ai-citation-check. It asks buyer questions inside the answer engines and records the sources they cite."
             }
           },
           {
@@ -406,7 +406,7 @@
           </div>
           <div class="method-copy">
             <p>The audit fetches one public page plus root discovery files. It scores weighted checks, shows the measured value, and names the repair for each failed signal.</p>
-            <p>A high score is not proof of an AI citation. Buyer-prompt evidence requires separate, timestamped runs inside each answer engine.</p>
+            <p>The score measures readiness: whether answer engines can reach, parse and quote the page. Citation evidence comes from timestamped buyer-question runs inside each engine, which the <a href="https://seo.suedeai.ai/ai-citation-check">AI citation check</a> captures.</p>
             <a class="text-link" href="https://github.com/JasonColapietro/suede-scan" target="_blank" rel="noreferrer">Read the audit source <span aria-hidden="true">&#8599;</span></a>
             <a class="text-link" href="/method">Read the full scoring method <span aria-hidden="true">&#8594;</span></a>
           </div>
@@ -423,8 +423,8 @@
               <p>The audit inspects your public homepage plus root discovery files: robots.txt, llms.txt, and sitemap.xml. It scores crawler access, entity and content evidence, and answer-engine crawl policy, then names a repair for each failed signal.</p>
             </details>
             <details>
-              <summary>Does a high score mean AI engines will cite my site?</summary>
-              <p>No. A high score is not proof of an AI citation. Buyer-prompt evidence requires separate, timestamped runs inside each answer engine, which this audit does not run.</p>
+              <summary>What does a high score tell me about AI citations?</summary>
+              <p>A high score means answer engines can reach, parse and quote your homepage and discovery files, the groundwork every citation depends on. To see which engines cite you today, run the AI citation check at <a href="https://seo.suedeai.ai/ai-citation-check">seo.suedeai.ai/ai-citation-check</a>. It asks buyer questions inside the answer engines and records the sources they cite.</p>
             </details>
             <details>
               <summary>How many free audits can I run?</summary>
@@ -544,8 +544,8 @@
           <div id="page-evidence" class="page-evidence" hidden></div>
           <div id="pillar-grid" class="pillar-grid"></div>
           <aside class="measurement-boundary" aria-labelledby="measurement-title">
-            <div><p class="section-kicker">Measurement coverage</p><h3 id="measurement-title">Readiness is measured. AI visibility is still unmeasured.</h3></div>
-            <p>This score covers one page and its discovery files. It does not measure brand mentions, cited sources, sentiment, or competitor share in AI answers.</p>
+            <div><p class="section-kicker">Measurement coverage</p><h3 id="measurement-title">Readiness measured here. Citations measured next.</h3></div>
+            <p>This score covers one page and its discovery files. Brand mentions, cited sources, sentiment and competitor share in AI answers come from the buyer-question runs in the next step.</p>
             <a class="text-link" href="#next-measurement">See what to measure next →</a>
           </aside>
           <div id="report-insight" class="report-insight"></div>
@@ -559,7 +559,7 @@
               <p class="section-kicker">Crawler access</p>
               <h2 id="crawler-title">Who can reach the public homepage.</h2>
             </div>
-            <p>These cards read robots.txt policy. They do not measure recommendations, rankings, or model answers.</p>
+            <p>These cards read the robots.txt policy each search crawler follows on your domain.</p>
           </div>
           <div id="platform-grid" class="platform-grid"></div>
           <div id="control-policy" class="control-policy" hidden>
@@ -630,7 +630,7 @@
 
       <section id="next-measurement" class="report-section section-tint" aria-labelledby="next-measurement-title">
         <div class="container">
-          <div class="section-heading"><p class="section-kicker">Beyond the score</p><h2 id="next-measurement-title">Turn readiness into answer evidence.</h2><p>These are follow-up measurements, not findings from this audit.</p></div>
+          <div class="section-heading"><p class="section-kicker">Beyond the score</p><h2 id="next-measurement-title">Turn readiness into answer evidence.</h2><p>Run these next to turn a ready site into citation evidence, or run the <a href="https://seo.suedeai.ai/ai-citation-check">AI citation check</a>.</p></div>
           <ol class="measurement-steps">
             <li><h3>Choose buyer questions</h3><p>Record a fixed set of questions about your category, use cases, and alternatives. Keep the wording for the next run.</p></li>
             <li><h3>Capture answers and sources</h3><p>Save the date, engine, model, exact prompt, full answer, and cited URLs. Mark failed or unavailable captures separately.</p></li>
@@ -679,7 +679,7 @@
       <div><b>Product</b><a href="https://seo.suedeai.ai/">Suede SEO practice</a><a href="https://suedeai.ai/">Suede AI</a><a href="https://suedeai.ai/founder">About the founder</a></div>
       <div><b>Evidence</b><a href="https://github.com/JasonColapietro/suede-scan">Source code</a><a href="/method">Method</a><a href="/checks">Check reference</a></div>
       <div><b>Company</b><a href="/privacy">Privacy</a><a href="mailto:info@suedeai.ai">Contact</a></div>
-      <div class="footer-note"><span>Point-in-time public signals</span><span>No citation or ranking guarantee</span></div>
+      <div class="footer-note"><span>Point-in-time public signals</span><span>Every failed check names its repair</span></div>
     </div>
   <p><a href="/ai-instructions">AI Instructions</a></p></footer>
 

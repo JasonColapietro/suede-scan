@@ -5,14 +5,14 @@
   <script>(function(){try{var t=localStorage.getItem('suede-audit-theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Method | Suede Audit</title>
-  <meta name="description" content="How Suede Audit calculates a readiness score: what it fetches, how severity is weighted, the three scoring pillars, and what a score does not prove.">
+  <meta name="description" content="How Suede Audit calculates a readiness score: what it fetches, how severity is weighted, the three scoring pillars, and what a score measures.">
   <meta name="keywords" content="ai visibility audit methodology, AI readiness score, SEO audit scoring, generative engine optimization, answer engine optimization, AI crawler access, robots.txt, llms.txt, sitemap.xml, entity schema, Suede AI, Suede Audit">
   <link rel="canonical" href="https://optimize.suedeai.ai/method">
   <meta name="robots" content="index, follow, max-image-preview:large">
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Suede Audit">
   <meta property="og:title" content="Method | Suede Audit">
-  <meta property="og:description" content="How Suede Audit calculates a readiness score: what it fetches, how severity is weighted, and what a score does not prove.">
+  <meta property="og:description" content="How Suede Audit calculates a readiness score: what it fetches, how severity is weighted, and what a score measures.">
   <meta property="og:url" content="https://optimize.suedeai.ai/method">
   <meta property="og:image" content="https://optimize.suedeai.ai/og-suede-audit.png">
   <meta property="og:image:width" content="1200">
@@ -21,7 +21,7 @@
   <meta property="og:image:alt" content="Suede AI logo">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Method | Suede Audit">
-  <meta name="twitter:description" content="How Suede Audit calculates a readiness score, and what a score does not prove.">
+  <meta name="twitter:description" content="How Suede Audit calculates a readiness score, and what a score measures.">
   <meta name="twitter:image" content="https://optimize.suedeai.ai/og-suede-audit.png">
   <link rel="icon" href="/favicon.ico" sizes="any">
   <link rel="icon" type="image/png" href="/suede-ai-logo.png">
@@ -38,10 +38,10 @@
         "@id": "https://optimize.suedeai.ai/method#webpage",
         "url": "https://optimize.suedeai.ai/method",
         "name": "Method | Suede Audit",
-        "description": "How Suede Audit calculates a readiness score: what it fetches, how severity is weighted, the three scoring pillars, and what a score does not prove.",
+        "description": "How Suede Audit calculates a readiness score: what it fetches, how severity is weighted, the three scoring pillars, and what a score measures.",
         "inLanguage": "en-US",
         "datePublished": "2026-07-16",
-        "dateModified": "2026-10-11",
+        "dateModified": "2026-10-19",
         "isPartOf": {
           "@id": "https://optimize.suedeai.ai/#website"
         },
@@ -180,8 +180,8 @@
             <li><b>Content clarity</b> &mdash; page meaning, supporting content, share metadata, and response weight.</li>
           </ul>
 
-          <h2>What the score does not prove</h2>
-          <p>A high score is not proof of an AI citation. Buyer-prompt evidence requires separate, timestamped runs inside each answer engine, which this audit does not run. The score measures whether an answer engine can technically reach and parse a page &mdash; not whether it will recommend, rank, or cite it.</p>
+          <h2>What the score measures</h2>
+          <p>The score measures whether an answer engine can reach, parse and quote a page: the groundwork every citation depends on. Citations themselves are measured with timestamped buyer-question runs inside each answer engine. To see which engines cite you today, run the <a href="https://seo.suedeai.ai/ai-citation-check">AI citation check</a>.</p>
 
           <h2>Image alternatives and page evidence</h2>
           <p>The image check tests whether each image declares an alt attribute. Empty alt text can be correct for decorative images; the report counts empty, non-empty, and missing attributes separately and flags empty alternatives for manual review. It does not certify that descriptions are accurate or that the page is accessible. See the <a href="https://www.w3.org/WAI/tutorials/images/decorative/">W3C guidance on decorative images</a>.</p>
@@ -190,7 +190,7 @@
           <h2>Limits and caching</h2>
           <p>Each browser gets one free audit. The finished report is cached in that browser's local storage, so its report link can reopen without using another scan. Suede Audit accepts public HTTP and HTTPS URLs only; it will not inspect private, internal, or non-routable addresses.</p>
 
-          <p class="doc-meta">Read the full audit source on <a href="https://github.com/JasonColapietro/suede-scan" target="_blank" rel="noreferrer">GitHub</a>. For a deeper check that runs real buyer prompts inside answer engines, see <a href="https://seo.suedeai.ai/#library">Suede SEO</a>.</p>
+          <p class="doc-meta">Read the full audit source on <a href="https://github.com/JasonColapietro/suede-scan" target="_blank" rel="noreferrer">GitHub</a>. To run real buyer questions inside answer engines, use the <a href="https://seo.suedeai.ai/ai-citation-check">AI citation check</a>.</p>
         </div>
       </div>
     </section>
@@ -205,7 +205,7 @@
       <div><b>Product</b><a href="https://seo.suedeai.ai/">Suede SEO practice</a><a href="https://suedeai.ai/">Suede AI</a><a href="https://suedeai.ai/founder">About the founder</a></div>
       <div><b>Evidence</b><a href="https://github.com/JasonColapietro/suede-scan">Source code</a><a href="/method">Method</a><a href="/checks">Check reference</a></div>
       <div><b>Company</b><a href="/privacy">Privacy</a><a href="mailto:info@suedeai.ai">Contact</a></div>
-      <div class="footer-note"><span>Point-in-time public signals</span><span>No citation or ranking guarantee</span></div>
+      <div class="footer-note"><span>Point-in-time public signals</span><span>Every failed check names its repair</span></div>
     </div>
   </footer>
 
