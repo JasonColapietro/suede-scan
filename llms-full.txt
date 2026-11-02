@@ -13,7 +13,7 @@ Implementation service: https://seo.suedeai.ai/
 ## Suede Audit | AI Discovery and SEO Readiness
 
 URL: https://optimize.suedeai.ai/
-Updated: 2026-10-19
+Updated: 2026-10-24
 Summary: Free AI visibility audit: check crawler access, entity schema, metadata, content structure and answer-engine signals. Get a score and prioritized repairs.
 
 Public-signal audit
