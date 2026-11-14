@@ -30,6 +30,13 @@ The readiness score measures whether answer engines can reach, parse and quote a
 - [Headings, content and links](https://optimize.suedeai.ai/checks/content-structure): One H1, two or more H2, 300 words, three internal links and image alt attributes.
 - [Retrieval chunk size](https://optimize.suedeai.ai/checks/retrieval-chunks): Every heading section must hold 375 words or fewer, about one 500-token retrieval chunk.
 
+## Notes from Suede AI
+
+- [Notes](https://optimize.suedeai.ai/notes): Articles by Jason Colapietro, founder of Suede AI in West Palm Beach, Florida, on AI readiness for Palm Beach County businesses.
+- [What an AI readiness score measures, and what it can't](https://optimize.suedeai.ai/notes/what-an-ai-readiness-score-measures): What the 28 weighted checks read, the three questions behind the number, what no outside audit can observe, and how to order repairs by points.
+- [The five fixes we make first on West Palm Beach and Jupiter business websites](https://optimize.suedeai.ai/notes/five-website-fixes-west-palm-beach-jupiter): The order Suede AI repairs a local site in: open the door to search crawlers, say who you are in schema, fix titles, put copy in the HTML, and keep sections short.
+- [How Suede AI SEO ranked #1 among Palm Beach County companies on The Manifest, and what it means](https://optimize.suedeai.ai/notes/manifest-palm-beach-county-ai-deployment-ranking): The date, category and geography behind the ranking, how to check it yourself, why third-party listings feed entity evidence, and how to weigh any agency ranking.
+
 ## Source and citation guide
 
 - [AI Instructions](https://optimize.suedeai.ai/ai-instructions): Site identity, authoritative sources and citation guidance.

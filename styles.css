@@ -1141,6 +1141,27 @@ p { overflow-wrap: anywhere; }
 .footer-grid a { color: var(--color-text-secondary); font-size: .82rem; text-decoration: none; }
 .footer-grid a:hover { color: var(--color-accent); text-decoration: underline; }
 .footer-note { color: var(--color-text-tertiary); font: 500 .65rem/1.5 var(--font-data); text-transform: uppercase; }
+.built-by { display: grid; gap: 10px; margin-top: 36px; padding-top: 24px; border-top: 1px solid var(--color-border); }
+.built-by p { max-width: 96ch; margin: 0; color: var(--color-text-secondary); font-size: .82rem; }
+.built-by a { color: var(--color-text-secondary); text-decoration: underline; text-underline-offset: 3px; }
+.built-by a:hover { color: var(--color-accent); }
+.built-by-links { display: flex; flex-wrap: wrap; align-items: baseline; gap: 6px 18px; }
+.built-by-links span { color: var(--color-text-tertiary); font: 500 .65rem/1.5 var(--font-data); text-transform: uppercase; }
+
+/* Notes: article list, byline and author box. */
+.doc-prose .note-byline { margin: -8px 0 24px; color: var(--color-text-tertiary); font: 500 .74rem/1.5 var(--font-data); text-transform: uppercase; letter-spacing: .03em; }
+.doc-prose .note-byline a { color: inherit; text-underline-offset: 3px; }
+.doc-prose a { text-underline-offset: 3px; }
+.doc-prose .notes-list { padding-left: 0; list-style: none; }
+.doc-prose .notes-list li { margin: 0; padding: 18px 0; border-top: 1px solid var(--color-border); }
+.doc-prose .notes-list li:last-child { border-bottom: 1px solid var(--color-border); }
+.doc-prose .notes-list > li > a { color: var(--color-text-primary); font-size: 1.08rem; font-weight: 600; text-decoration: none; }
+.doc-prose .notes-list > li > a:hover { color: var(--color-accent); text-decoration: underline; }
+.doc-prose .notes-list p { margin: 6px 0 0; font-size: .94rem; }
+.doc-prose .author-box { margin: 36px 0 8px; padding: 20px 22px; border: 1px solid var(--color-border); border-radius: var(--radius-md); background: var(--color-surface-soft); }
+.doc-prose .author-box p { margin: 0 0 8px; font-size: .92rem; }
+.doc-prose .author-box p:last-child { margin-bottom: 0; }
+.doc-prose .author-box .author-name { color: var(--color-text-primary); }
 
 @media (max-width: 980px) {
   .landing-grid { grid-template-columns: 1fr; }
