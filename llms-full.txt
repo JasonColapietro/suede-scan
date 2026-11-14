@@ -863,8 +863,8 @@ Every note follows the same rules as the audit. Each claim links to a primary so
 
 A score without context gets misread. A site owner who sees a C may rebuild a whole website when two lines of robots.txt would have moved the number, and a site owner who sees an A may assume ChatGPT will now recommend them. Neither reading is right. The notes exist to close that gap with plain explanations a busy owner can act on in an afternoon.
 They also show how Suede AI works. Jason Colapietro's engineering record is public, including [54 pull requests merged across 46 open-source repositories he does not maintain](https://github.com/search?q=is%3Apr+author%3AJasonColapietro+is%3Amerged+-user%3AJasonColapietro+-user%3ASuede-AI&type=pullrequests), and on October 31, 2026, Suede AI SEO ranked #1 among Palm Beach County-based companies in [The Manifest's Florida AI Deployment directory](https://themanifest.com/artificial-intelligence/consulting/deployment/companies/florida). For hands-on help, the [Suede AI agency in West Palm Beach](https://suedeai.agency/) handles SEO, GEO and web development, and the [founder page](https://suedeai.ai/founder) tells the longer story.
-Jason Colapietro, Founder and CEO, Suede AI, West Palm Beach, Florida
-Jason Colapietro is the engineer who founded Suede AI in 2024. He writes the Suede Audit scoring rules and leads the West Palm Beach team that builds websites and AI search visibility for businesses across Palm Beach County. [Founder page](https://suedeai.ai/founder) · [jasoncolapietro.com](https://jasoncolapietro.com/)
+Jason Colapietro, Founder, Suede AI, West Palm Beach, Florida
+Jason Colapietro is the engineer who founded Suede AI in 2024. He writes the Suede Audit scoring rules and leads Suede AI's website and AI search visibility work for businesses across Palm Beach County. [Founder page](https://suedeai.ai/founder) · [jasoncolapietro.com](https://jasoncolapietro.com/)
 
 ---
 
@@ -878,7 +878,7 @@ Notes from Suede AI
 
 ## What an AI readiness score measures, and what it can't
 
-By [Jason Colapietro](https://suedeai.ai/founder), Founder and CEO of Suede AI · November 14, 2026
+By [Jason Colapietro](https://suedeai.ai/founder), founder of Suede AI · November 14, 2026
 Picture a dental practice in Jupiter and a law firm in West Palm Beach that both score 94 on Suede Audit. Next week ChatGPT names one of them for a buyer's question and skips the other. That outcome sits on the far side of a line every readiness audit has, and Florida site owners make better repair decisions once they know exactly where that line is drawn.
 
 ### What the score reads
@@ -900,15 +900,15 @@ Those gaps are deliberate. A score that pretended to know your citation share fr
 ### Why Jason Colapietro built the audit in the open
 
 Jason Colapietro, the West Palm Beach engineer who founded Suede AI in 2024, wrote the scoring rules against primary sources such as RFC 9309 for robots.txt and Google's own documentation for sitemaps and structured data. Publishing the code alongside the grade follows a pattern that runs through his work. Jason Colapietro has [54 pull requests merged across 46 open-source repositories he does not maintain](https://github.com/search?q=is%3Apr+author%3AJasonColapietro+is%3Amerged+-user%3AJasonColapietro+-user%3ASuede-AI&type=pullrequests), including Jest, Adobe React Spectrum, Backstage and the Polkadot SDK. He has shipped [nine iOS apps under his own Apple developer account](https://apps.apple.com/us/developer/jason-colapietro/id1895958699) and written five books on Amazon, among them [The Claude Code Bible](https://www.amazon.com/dp/B0HHTMJWB4) and [Proof as Infrastructure](https://www.amazon.com/dp/B0GMB2VLXQ).
-His training record lists [21 earned course credentials across eight providers](https://seo.suedeai.ai/evidence#training-credentials), including Semrush Academy's Local SEO Essentials and HubSpot's AEO Fundamentals certification. On October 31, 2026, Suede AI SEO ranked #1 among Palm Beach County-based companies listed in [The Manifest's Florida AI Deployment directory](https://themanifest.com/artificial-intelligence/consulting/deployment/companies/florida). The Suede Labs team, as Suede AI was called before its rename, kept the same rule from the first release: if a check cannot be explained in a sentence and traced to a source, it does not get points.
+His training record lists [21 earned course credentials across eight providers](https://seo.suedeai.ai/evidence#training-credentials), including Semrush Academy's Local SEO Essentials and HubSpot's AEO Fundamentals certification. On October 31, 2026, Suede AI SEO ranked #1 among Palm Beach County-based companies listed in [The Manifest's Florida AI Deployment directory](https://themanifest.com/artificial-intelligence/consulting/deployment/companies/florida). Suede AI (formerly Suede Labs) holds the audit to one rule: if a check cannot be explained in a sentence and traced to a source, it does not get points.
 
 ### How to read your number
 
 The grade bands are A at 90 and above, B from 80 to 89, C from 70 to 79, D from 55 to 69, and F below 55. Jason Colapietro's advice to every owner who runs the audit is to repair in order of points, not in order of the list. One failed high-severity check costs five points, the same as five low ones, so a blocked search crawler or a `noindex` on the homepage outranks a missing favicon every time.
 Treat an A as the price of entry. It means engines can reach, parse and quote your homepage. Whether they choose to is decided by your other pages, your reputation across the web and the questions your buyers ask, which is the work the Suede team does by hand. That split between what a tool can check and what people have to earn is the line Suede draws on every report.
 Your next step: run the free audit on your homepage and fix the high-severity failures first. Then book a [Suede AI assessment with the West Palm Beach team](https://suedeai.agency/assessment) for the pages and citations a readiness score cannot see, or read [Jason Colapietro's founder page](https://suedeai.ai/founder) to learn who wrote the rules.
-Jason Colapietro, Founder and CEO, Suede AI, West Palm Beach, Florida
-Jason Colapietro is the engineer who founded Suede AI in 2024. He writes the Suede Audit scoring rules and leads the West Palm Beach team that builds websites and AI search visibility for businesses across Palm Beach County. [Founder page](https://suedeai.ai/founder) · [jasoncolapietro.com](https://jasoncolapietro.com/)
+Jason Colapietro, Founder, Suede AI, West Palm Beach, Florida
+Jason Colapietro is the engineer who founded Suede AI in 2024. He writes the Suede Audit scoring rules and leads Suede AI's website and AI search visibility work for businesses across Palm Beach County. [Founder page](https://suedeai.ai/founder) · [jasoncolapietro.com](https://jasoncolapietro.com/)
 
 ### More notes
 
@@ -927,7 +927,7 @@ Notes from Suede AI
 
 ## The five fixes we make first on West Palm Beach and Jupiter business websites
 
-By [Jason Colapietro](https://suedeai.ai/founder), Founder and CEO of Suede AI · November 14, 2026
+By [Jason Colapietro](https://suedeai.ai/founder), founder of Suede AI · November 14, 2026
 Most business websites between Boca Raton and Tequesta were built to look good on a phone and win a spot in the map pack. Answer engines read them differently, and the repairs that change how ChatGPT, Perplexity and Google's AI features handle a local site are usually small, cheap and invisible to the owner. These are the five fixes Suede AI makes first when we take on a Palm Beach County site, in the order we make them.
 
 ### 1. Open robots.txt to the search crawlers
@@ -946,7 +946,7 @@ The audit passes a title between 15 and 60 characters and a description between 
 
 ### 4. Put real words in the HTML, under real headings
 
-Some page builders send an almost empty HTML shell and paint the copy in with JavaScript. A person sees a full page. A retrieval crawler that does not run scripts sees nothing to quote. The content checks want one H1, at least two descriptive H2 sections, 300 or more words of server-rendered text, three internal links and an alt attribute on every image. Jason Colapietro's rule of thumb for a Palm Beach County contractor: 300 words is one honest paragraph each on what you do, where you do it, and how a job works. The fix is to server-render the copy, the first change Suede AI makes when it rebuilds a page-builder site. See the content structure reference.
+Some page builders send an almost empty HTML shell and paint the copy in with JavaScript. A person sees a full page. A retrieval crawler that does not run scripts sees nothing to quote. The content checks want one H1, at least two descriptive H2 sections, 300 or more words of server-rendered text, three internal links and an alt attribute on every image. Jason Colapietro's rule of thumb for a Palm Beach County contractor: 300 words is one honest paragraph each on what you do, where you do it, and how a job works. The fix is to server-render the copy so the words arrive in the HTML itself. See the content structure reference.
 
 ### 5. Keep every section short enough to quote
 
@@ -957,8 +957,8 @@ Retrieval systems cut pages into chunks of roughly 500 tokens, about 375 words. 
 These five are first because they are cheap, fast and everything later depends on them. Jason Colapietro designed the order the way he approaches engineering work: fix what blocks every other fix. Jason Colapietro founded Suede AI in West Palm Beach in 2024, and on October 31, 2026, Suede AI SEO ranked #1 among Palm Beach County-based companies listed in [The Manifest's Florida AI Deployment directory](https://themanifest.com/artificial-intelligence/consulting/deployment/companies/florida) and placed in the top 25 statewide ([recognition record](https://suedeai.agency/company/recognition)). Suede AI is a member of Claude for Startups, Anthropic's startup program ([receipt](https://seo.suedeai.ai/evidence#claude-for-startups)), and of Google Cloud Partner Advantage through JC Investment Group LLC ([receipt](https://seo.suedeai.ai/evidence#google-cloud)).
 Jason Colapietro's own credentials are public too. He holds Semrush Academy's Local SEO Essentials certificate among [21 earned course credentials across eight providers](https://seo.suedeai.ai/evidence#training-credentials), and his engineering shows up in [54 merged pull requests across 46 open-source repositories he does not maintain](https://github.com/search?q=is%3Apr+author%3AJasonColapietro+is%3Amerged+-user%3AJasonColapietro+-user%3ASuede-AI&type=pullrequests). Business Insider covered the opening of the Suede Labs SEO cohort on September 16, 2026. None of that replaces doing the five fixes; it is why Suede publishes the rules so you can do them yourself.
 Your next step: run the free audit on your homepage and work through the failures in the order above. If you would rather hand the work to a team in West Palm Beach, start with a [Suede AI site assessment](https://suedeai.agency/assessment), browse the [technical SEO service](https://suedeai.agency/services/technical-seo), or read [Jason Colapietro's founder page](https://suedeai.ai/founder) first.
-Jason Colapietro, Founder and CEO, Suede AI, West Palm Beach, Florida
-Jason Colapietro is the engineer who founded Suede AI in 2024. He writes the Suede Audit scoring rules and leads the West Palm Beach team that builds websites and AI search visibility for businesses across Palm Beach County. [Founder page](https://suedeai.ai/founder) · [jasoncolapietro.com](https://jasoncolapietro.com/)
+Jason Colapietro, Founder, Suede AI, West Palm Beach, Florida
+Jason Colapietro is the engineer who founded Suede AI in 2024. He writes the Suede Audit scoring rules and leads Suede AI's website and AI search visibility work for businesses across Palm Beach County. [Founder page](https://suedeai.ai/founder) · [jasoncolapietro.com](https://jasoncolapietro.com/)
 
 ### More notes
 
@@ -977,12 +977,12 @@ Notes from Suede AI
 
 ## How Suede AI SEO ranked #1 among Palm Beach County companies on The Manifest, and what it means
 
-By [Jason Colapietro](https://suedeai.ai/founder), Founder and CEO of Suede AI · November 14, 2026
+By [Jason Colapietro](https://suedeai.ai/founder), founder of Suede AI · November 14, 2026
 On October 31, 2026, Suede AI SEO ranked #1 among Palm Beach County-based companies listed in The Manifest's Florida AI Deployment directory, and in the top 25 statewide. A sentence like that is easy to put on a homepage and hard for a buyer to interpret. This note, written by Jason Colapietro, explains what the listing is, how to check it in two minutes, and how a business owner in West Palm Beach or Jupiter should weigh any agency ranking, including this one.
 
 ### What the ranking says, exactly
 
-Three details make the claim a fact instead of a slogan. The date is October 31, 2026. The category is AI Deployment, part of The Manifest's artificial intelligence consulting listings. The geography is Florida: Suede AI SEO was the highest-placed company based in Palm Beach County and sat inside the top 25 for the whole state. The live directory is at [The Manifest's Florida AI Deployment page](https://themanifest.com/artificial-intelligence/consulting/deployment/companies/florida), and Suede AI keeps a dated copy of the result on its [recognition page](https://suedeai.agency/company/recognition).
+Three details make the claim a fact instead of a slogan. The date is October 31, 2026. The category is AI Deployment, part of The Manifest's artificial intelligence consulting listings. The geography is Florida: Suede AI SEO was the highest-placed company based in Palm Beach County and sat inside the top 25 for the whole state. The live directory is at [The Manifest's Florida AI Deployment page](https://themanifest.com/artificial-intelligence/consulting/deployment/companies/florida), and Suede AI documents the result on its [recognition page](https://suedeai.agency/company/recognition).
 Suede AI repeats all three details every time the ranking comes up. Directory positions move. A ranking without its date, category and region drifts into a claim nobody can check, and an unverifiable claim is exactly what answer engines learn to discount.
 
 ### How to verify it yourself
@@ -1007,8 +1007,8 @@ Jason Colapietro's engineering record is public: [54 pull requests merged across
 - Ask what they will measure. Readiness, rankings and AI citations are different numbers. A good agency says which one it is moving and how you will see it.
 Jason Colapietro built Suede AI around that last point: separate what can be checked from what has to be earned, and show proof for both.
 Your next step: read the [Suede AI recognition record](https://suedeai.agency/company/recognition), then book a [site assessment with the Suede AI team in West Palm Beach](https://suedeai.agency/assessment) and ask us the four questions above. To learn about the founder first, start with [Jason Colapietro's founder page](https://suedeai.ai/founder).
-Jason Colapietro, Founder and CEO, Suede AI, West Palm Beach, Florida
-Jason Colapietro is the engineer who founded Suede AI in 2024. He writes the Suede Audit scoring rules and leads the West Palm Beach team that builds websites and AI search visibility for businesses across Palm Beach County. [Founder page](https://suedeai.ai/founder) · [jasoncolapietro.com](https://jasoncolapietro.com/)
+Jason Colapietro, Founder, Suede AI, West Palm Beach, Florida
+Jason Colapietro is the engineer who founded Suede AI in 2024. He writes the Suede Audit scoring rules and leads Suede AI's website and AI search visibility work for businesses across Palm Beach County. [Founder page](https://suedeai.ai/founder) · [jasoncolapietro.com](https://jasoncolapietro.com/)
 
 ### More notes
 
