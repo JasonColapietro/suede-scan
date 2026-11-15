@@ -50,7 +50,7 @@
         },
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self'; script-src 'self' https://suedeai.ai 'sha256-2s7aDJJTwj7i2YfZFZsSFlfKffETVd+AyqXQEAgJMFI=' 'sha256-mh5hFdSBKqa64ix04TMmv1SsdgOL4OIsEL1nYRxY8fc='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests"
+          "value": "default-src 'self'; script-src 'self' https://suedeai.ai 'sha256-2s7aDJJTwj7i2YfZFZsSFlfKffETVd+AyqXQEAgJMFI=' 'sha256-mh5hFdSBKqa64ix04TMmv1SsdgOL4OIsEL1nYRxY8fc='; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://suedeai.ai/accomplishment-assets/google-cloud-partner-horizontal.png; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self'; upgrade-insecure-requests"
         }
       ]
     },
