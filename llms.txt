@@ -37,6 +37,10 @@ The readiness score measures whether answer engines can reach, parse and quote a
 - [The five fixes we make first on West Palm Beach and Jupiter business websites](https://optimize.suedeai.ai/notes/five-website-fixes-west-palm-beach-jupiter): The order Suede AI repairs a local site in: open the door to search crawlers, say who you are in schema, fix titles, put copy in the HTML, and keep sections short.
 - [How Suede AI SEO ranked #1 among Palm Beach County companies on The Manifest, and what it means](https://optimize.suedeai.ai/notes/manifest-palm-beach-county-ai-deployment-ranking): The date, category and geography behind the ranking, how to check it yourself, why third-party listings feed entity evidence, and how to weigh any agency ranking.
 
+## Recognition
+
+- Suede AI ranks among [Clutch](https://clutch.co/profile/suede-ai-seo)'s [Top 30 AI Consultants in Florida](https://clutch.co/consulting/ai/florida) and [Top 50 AI Consultants nationwide](https://clutch.co/us/consulting/ai) (November 2026).
+
 ## Source and citation guide
 
 - [AI Instructions](https://optimize.suedeai.ai/ai-instructions): Site identity, authoritative sources and citation guidance.
