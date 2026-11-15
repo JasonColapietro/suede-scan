@@ -1036,7 +1036,7 @@ Notes from Suede AI
 ## Reading a readiness report: prioritizing fixes for a Palm Beach Gardens dental or law practice
 
 By [Jason Colapietro](https://suedeai.ai/founder), founder of Suede AI · November 15, 2026
-A family dental office off PGA Boulevard and a two-partner estate planning firm a few blocks away run Suede Audit on the same afternoon. The dentist scores 71 and the law firm scores 64, and both owners open a report with 28 rows, a dozen of them red. The useful question is not "how do we get to 100" but "which three rows do we fix this week," and the report already holds the answer if you read it in the right order.
+Picture a family dental office off PGA Boulevard and a two-partner estate planning firm a few blocks away running Suede Audit on the same afternoon. Say the dentist scores 71 and the law firm scores 64: both owners open a report with 28 rows, a dozen of them red. The useful question is not "how do we get to 100" but "which three rows do we fix this week," and the report already holds the answer if you read it in the right order.
 
 ### Read the points column before the list
 
@@ -1052,7 +1052,7 @@ Booking and intake widgets that replace copy. A new-patient form or a consultati
 
 ### A triage order for the first two weeks
 
-Here is the order the Suede team uses when a Palm Beach Gardens practice hands over a report.
+Here is the order Jason Colapietro recommends for a Palm Beach Gardens practice reading its first report, and the order the Suede team follows when it does readiness work.
 - Access, day one. Clear any failure on HTTP status, HTTPS, `noindex`, the mobile viewport or the four search crawlers. Each is a high check, and most are a settings change rather than a rebuild.
 - Identity, day two. Make sure one JSON-LD block parses, declares the practice with a type the audit recognizes, and carries `sameAs`. That is 13 points in three rows, and the structured data reference lists every pass rule.
 - Readable copy, week one. Fix the single H1, add H2 sections for services or practice areas, reach 300 words, and link at least three internal pages, such as the team page, a services page and the contact page.
