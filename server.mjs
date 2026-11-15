@@ -42,6 +42,8 @@ const NOTE_PAGES = await Promise.all([
   ['/notes/what-an-ai-readiness-score-measures', readFile(new URL('./notes/what-an-ai-readiness-score-measures.html', import.meta.url))],
   ['/notes/five-website-fixes-west-palm-beach-jupiter', readFile(new URL('./notes/five-website-fixes-west-palm-beach-jupiter.html', import.meta.url))],
   ['/notes/manifest-palm-beach-county-ai-deployment-ranking', readFile(new URL('./notes/manifest-palm-beach-county-ai-deployment-ranking.html', import.meta.url))],
+  ['/notes/readiness-report-fixes-palm-beach-gardens-dental-law', readFile(new URL('./notes/readiness-report-fixes-palm-beach-gardens-dental-law.html', import.meta.url))],
+  ['/notes/structured-data-answer-engines-use-vs-ignore', readFile(new URL('./notes/structured-data-answer-engines-use-vs-ignore.html', import.meta.url))],
 ].map(async ([route, body]) => [route, await body]));
 const STATIC_FILES = new Map([
   ...[...CHECK_PAGES, ...NOTE_PAGES].flatMap(([route, body]) => [

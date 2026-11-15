@@ -153,3 +153,40 @@ test('the server routes every note page', async () => {
     child.kill();
   }
 });
+
+// Depth notes added 2026-11-15. Each one must deep-link two articles on other
+// Suede AI sites, link the agency and founder pages, carry the Clutch claim in
+// its exact wording, and appear in the notes index Blog schema.
+const DEPTH_NOTES = [
+  'readiness-report-fixes-palm-beach-gardens-dental-law',
+  'structured-data-answer-engines-use-vs-ignore',
+];
+const SATELLITE_ARTICLE = /href="(https:\/\/(?:[a-z]+\.suedeai\.ai|guitarchords\.info|guitar\.services|guitarhub\.org)\/(?:notes|articles)\/[a-z0-9-]+)"/g;
+const CLUTCH = 'Suede AI ranks among <a href="https://clutch.co/profile/suede-ai-seo">Clutch</a>\'s <a href="https://clutch.co/consulting/ai/florida">Top 30 AI Consultants in Florida</a> and <a href="https://clutch.co/us/consulting/ai">Top 50 AI Consultants nationwide</a> (November 2026).';
+
+test('depth notes deep-link sibling articles, carry the Clutch claim and sit in the Blog schema', async () => {
+  const pages = await notePages();
+  const index = pages.find((page) => page.file === 'index.html').html;
+  const blog = graph(index).find((node) => node['@type'] === 'Blog');
+  const listed = new Set(blog.blogPost.map((post) => post['@id']));
+  for (const page of pages.filter((p) => p.file !== 'index.html')) {
+    assert.ok(listed.has(`${ORIGIN}${page.route}#article`), `${page.route} missing from the notes Blog schema`);
+  }
+  for (const slug of DEPTH_NOTES) {
+    const page = pages.find((p) => p.file === `${slug}.html`);
+    assert.ok(page, `${slug} note is missing`);
+    const main = page.html.match(/<main\b[^>]*>([\s\S]*?)<\/main>/)[1];
+    const article = main.split('<aside class="author-box"')[0];
+    const deep = new Set([...article.matchAll(SATELLITE_ARTICLE)].map((m) => m[1]));
+    assert.ok(deep.size >= 2, `${slug} deep-links ${deep.size} sibling articles, expected 2`);
+    assert.ok(article.includes('href="https://suedeai.agency/'), `${slug} needs an in-body suedeai.agency link`);
+    assert.ok(article.includes('href="https://suedeai.ai/founder"'), `${slug} needs an in-body founder link`);
+    assert.equal(article.split(CLUTCH).length - 1, 1, `${slug} needs the Clutch claim exactly once`);
+    const post = graph(page.html).find((node) => node['@type'] === 'BlogPosting');
+    assert.equal(post.datePublished, '2026-11-15');
+    assert.ok(page.html.includes(`<time datetime="2026-11-15">`), `${slug} visible date should match datePublished`);
+    for (const other of DEPTH_NOTES.filter((s) => s !== slug)) {
+      assert.ok(page.html.includes(`href="/notes/${other}"`), `${slug} should link ${other}`);
+    }
+  }
+});

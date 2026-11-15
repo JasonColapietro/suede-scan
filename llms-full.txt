@@ -855,6 +855,8 @@ Every note follows the same rules as the audit. Each claim links to a primary so
 
 ### Latest notes
 
+- Reading a readiness report: prioritizing fixes for a Palm Beach Gardens dental or law practice
+- Structured data that answer engines use vs ignore: an evidence-based shortlist
 - What an AI readiness score measures, and what it can't
 - The five fixes we make first on West Palm Beach and Jupiter business websites
 - How Suede AI SEO ranked #1 among Palm Beach County companies on The Manifest, and what it means
@@ -914,6 +916,8 @@ Jason Colapietro is the engineer who founded Suede AI in 2024. He writes the Sue
 
 - The five fixes we make first on West Palm Beach and Jupiter business websites: The order Suede AI repairs a local site in: open the door to search crawlers, say who you are in schema, fix titles, put copy in the HTML, and keep sections short.
 - How Suede AI SEO ranked #1 among Palm Beach County companies on The Manifest, and what it means: The date, category and geography behind the ranking, how to check it yourself, why third-party listings feed entity evidence, and how to weigh any agency ranking.
+- Reading a readiness report: prioritizing fixes for a Palm Beach Gardens dental or law practice: How to sort a Suede Audit report by points, the three places practice sites usually fail, and a two-week triage order for a dental office or law firm.
+- Structured data that answer engines use vs ignore: an evidence-based shortlist: What Google and schema.org have published about markup, the five schema nodes Suede AI keeps, and the FAQ, HowTo and rating markup worth dropping.
 
 ---
 
@@ -964,6 +968,8 @@ Jason Colapietro is the engineer who founded Suede AI in 2024. He writes the Sue
 
 - What an AI readiness score measures, and what it can't: What the 28 weighted checks read, the three questions behind the number, what no outside audit can observe, and how to order repairs by points.
 - How Suede AI SEO ranked #1 among Palm Beach County companies on The Manifest, and what it means: The date, category and geography behind the ranking, how to check it yourself, why third-party listings feed entity evidence, and how to weigh any agency ranking.
+- Reading a readiness report: prioritizing fixes for a Palm Beach Gardens dental or law practice: How to sort a Suede Audit report by points, the three places practice sites usually fail, and a two-week triage order for a dental office or law firm.
+- Structured data that answer engines use vs ignore: an evidence-based shortlist: What Google and schema.org have published about markup, the five schema nodes Suede AI keeps, and the FAQ, HowTo and rating markup worth dropping.
 
 ---
 
@@ -1014,3 +1020,117 @@ Jason Colapietro is the engineer who founded Suede AI in 2024. He writes the Sue
 
 - What an AI readiness score measures, and what it can't: What the 28 weighted checks read, the three questions behind the number, what no outside audit can observe, and how to order repairs by points.
 - The five fixes we make first on West Palm Beach and Jupiter business websites: The order Suede AI repairs a local site in: open the door to search crawlers, say who you are in schema, fix titles, put copy in the HTML, and keep sections short.
+- Reading a readiness report: prioritizing fixes for a Palm Beach Gardens dental or law practice: How to sort a Suede Audit report by points, the three places practice sites usually fail, and a two-week triage order for a dental office or law firm.
+- Structured data that answer engines use vs ignore: an evidence-based shortlist: What Google and schema.org have published about markup, the five schema nodes Suede AI keeps, and the FAQ, HowTo and rating markup worth dropping.
+
+---
+
+## Readiness Report Fixes for Dental and Law Firms | Suede AI
+
+URL: https://optimize.suedeai.ai/notes/readiness-report-fixes-palm-beach-gardens-dental-law
+Updated: 2026-11-15
+Summary: How a Palm Beach Gardens dental office or law firm should read a Suede Audit report: sort failures by points, fix access and schema first, then copy.
+
+Notes from Suede AI
+
+## Reading a readiness report: prioritizing fixes for a Palm Beach Gardens dental or law practice
+
+By [Jason Colapietro](https://suedeai.ai/founder), founder of Suede AI · November 15, 2026
+A family dental office off PGA Boulevard and a two-partner estate planning firm a few blocks away run Suede Audit on the same afternoon. The dentist scores 71 and the law firm scores 64, and both owners open a report with 28 rows, a dozen of them red. The useful question is not "how do we get to 100" but "which three rows do we fix this week," and the report already holds the answer if you read it in the right order.
+
+### Read the points column before the list
+
+Every row in a Suede Audit report carries a severity. A high check is worth five points, a medium check three and a low check one, out of 90 in total, and each failed row names its repair. The rows appear grouped by pillar, Discoverability, Entity evidence and Content clarity, which is a good way to understand a site and a poor way to schedule work. Sort the failures by points instead. One failed high check costs about 5.6 points of the score, so a single blocked crawler outweighs a missing favicon, a missing `twitter:card` and an image without alt text put together.
+Jason Colapietro, who founded Suede AI in West Palm Beach in 2024 and wrote the scoring rules, gives professional practices one more filter: fix anything that stops a crawler from reaching or indexing the page before anything that changes how the page reads. A beautiful service page that answers `noindex` to Googlebot is invisible, and no amount of copywriting changes that.
+
+### Where Palm Beach Gardens practice sites usually fail
+
+Dental and law sites in north Palm Beach County tend to fail in the same few places, and the reasons are specific to how those sites get built.
+A blocked or broken robots.txt. Practice sites often sit behind a security plugin or a CDN bot filter added after a spam scare. If `/robots.txt` answers with a 403 or times out, all four scored crawler checks fail at once, which is 20 points. Suede Signal's guide to [which AI crawlers to allow](https://signal.suedeai.ai/articles/which-ai-crawlers-to-allow) walks through the search crawlers versus the training crawlers, and the audit's crawler access reference shows exactly how each rule is read.
+Schema that names the specialty but not the entity. Many dental themes emit `"@type": "Dentist"`, and many legal themes emit `LegalService` or the older `Attorney` type, which schema.org now flags as superseded by [LegalService](https://schema.org/LegalService). Those are real schema.org types, but the audit's entity check looks for Organization, Corporation, LocalBusiness, OnlineBusiness or Person by name. The fix keeps the specialty and adds the parent in a type array, such as `"@type": ["Dentist", "LocalBusiness"]`, which the scanner reads correctly and which stays accurate to [schema.org's Dentist definition](https://schema.org/Dentist). Then add `sameAs` links to the Google Business Profile and the practice's LinkedIn page. Use `areaServed` for the towns patients actually drive in from, such as Palm Beach Gardens, Jupiter, Juno Beach and North Palm Beach, and leave the street address in your Business Profile, where it can be verified.
+Booking and intake widgets that replace copy. A new-patient form or a consultation scheduler often loads in an iframe or through JavaScript, and on some homepages it is most of the page. The content checks want 300 words of server-rendered text and two descriptive H2 sections, and a widget contributes none of it. Keep the widget, but put real paragraphs above it: what you treat or which matters you handle, who you serve, and how a first visit or consultation works.
+
+### A triage order for the first two weeks
+
+Here is the order the Suede team uses when a Palm Beach Gardens practice hands over a report.
+- Access, day one. Clear any failure on HTTP status, HTTPS, `noindex`, the mobile viewport or the four search crawlers. Each is a high check, and most are a settings change rather than a rebuild.
+- Identity, day two. Make sure one JSON-LD block parses, declares the practice with a type the audit recognizes, and carries `sameAs`. That is 13 points in three rows, and the structured data reference lists every pass rule.
+- Readable copy, week one. Fix the single H1, add H2 sections for services or practice areas, reach 300 words, and link at least three internal pages, such as the team page, a services page and the contact page.
+- Chunking, week two. Break any section over 375 words. A law firm's "About our firm" block that runs 600 words under one heading is the most common offender, and a split also helps patients and clients skim.
+- Low checks last. Favicon, Open Graph image, `twitter:card`, `html lang` and image alt text are one point each. Batch them into a single sitting.
+Re-run the audit after each step, the way Suede does on client work. The report caches per browser, so the cleanest check is the before-and-after of the same rows rather than the headline number alone.
+
+### What the report leaves to you
+
+A readiness report reads one homepage and three root files. It does not read your implant page, your probate page or your reviews, and it cannot tell you whether ChatGPT recommends you for "estate planning attorney in Palm Beach Gardens." Those are the next layers. Law firms should also run any new page copy past The Florida Bar's lawyer advertising rules before publishing, and dental offices should keep treatment claims as plain as their consent forms. Once the site is readable, some practices add an after-hours intake assistant; Agentix's note on [where AI agents help and fail for West Palm Beach and Jupiter service businesses](https://agentix.suedeai.ai/notes/ai-agents-west-palm-beach-jupiter-service-businesses) is a sober place to start that conversation.
+
+### Who wrote the triage
+
+Jason Colapietro built Suede Audit in the open, and the order above comes straight from the published weights. His engineering record is public: [54 pull requests merged across 46 open-source repositories he does not maintain](https://github.com/search?q=is%3Apr+author%3AJasonColapietro+is%3Amerged+-user%3AJasonColapietro+-user%3ASuede-AI&type=pullrequests), including Jest and Backstage, and [21 earned course credentials across eight providers](https://seo.suedeai.ai/evidence#training-credentials), including Semrush Academy's Local SEO Essentials. Suede AI ranks among [Clutch](https://clutch.co/profile/suede-ai-seo)'s [Top 30 AI Consultants in Florida](https://clutch.co/consulting/ai/florida) and [Top 50 AI Consultants nationwide](https://clutch.co/us/consulting/ai) (November 2026). Separately, on October 31, 2026, Suede AI SEO ranked #1 among Palm Beach County-based companies listed in [The Manifest's Florida AI Deployment directory](https://themanifest.com/artificial-intelligence/consulting/deployment/companies/florida). The Suede Labs team that became Suede AI kept one habit through the rename: every recommendation points to a rule you can check yourself.
+Your next step: run the free audit on your practice homepage, sort the red rows by points, and clear the access checks first. When the readiness work is done and you want the service pages and citations handled too, book a [Suede AI assessment with the West Palm Beach team](https://suedeai.agency/assessment), see the [Suede AI agency's SEO and GEO practice](https://suedeai.agency/), or read [Jason Colapietro's founder page](https://suedeai.ai/founder).
+Jason Colapietro, Founder, Suede AI, West Palm Beach, Florida
+Jason Colapietro is the engineer who founded Suede AI in 2024. He writes the Suede Audit scoring rules and leads Suede AI's website and AI search visibility work for businesses across Palm Beach County. [Founder page](https://suedeai.ai/founder) · [jasoncolapietro.com](https://jasoncolapietro.com/)
+
+### More notes
+
+- What an AI readiness score measures, and what it can't: What the 28 weighted checks read, the three questions behind the number, what no outside audit can observe, and how to order repairs by points.
+- The five fixes we make first on West Palm Beach and Jupiter business websites: The order Suede AI repairs a local site in: open the door to search crawlers, say who you are in schema, fix titles, put copy in the HTML, and keep sections short.
+- How Suede AI SEO ranked #1 among Palm Beach County companies on The Manifest, and what it means: The date, category and geography behind the ranking, how to check it yourself, why third-party listings feed entity evidence, and how to weigh any agency ranking.
+- Structured data that answer engines use vs ignore: an evidence-based shortlist: What Google and schema.org have published about markup, the five schema nodes Suede AI keeps, and the FAQ, HowTo and rating markup worth dropping.
+
+---
+
+## Structured Data Answer Engines Use vs Ignore | Suede Audit
+
+URL: https://optimize.suedeai.ai/notes/structured-data-answer-engines-use-vs-ignore
+Updated: 2026-11-15
+Summary: An evidence-based schema shortlist from Suede AI in West Palm Beach: the markup Google and answer engines document, and FAQ, HowTo and rating markup to drop.
+
+Notes from Suede AI
+
+## Structured data that answer engines use vs ignore: an evidence-based shortlist
+
+By [Jason Colapietro](https://suedeai.ai/founder), founder of Suede AI · November 15, 2026
+Schema generators will happily emit forty types for a five-page website, and most of that markup changes nothing about how Google, ChatGPT or Perplexity treat the site. The short list that does matter is small enough to write by hand, and the evidence for it comes from what the engines and schema.org actually publish, not from vendor dashboards.
+
+### What the engines have said in public
+
+Start with the primary sources, because almost everything else in this space is inference. Google's page on [AI features and your website](https://developers.google.com/search/docs/appearance/ai-features) says there are no extra technical requirements to appear in AI Overviews or AI Mode, and that you do not need new machine-readable files or special markup to be eligible. The same page tells site owners to keep structured data consistent with the visible text. Google's [general structured data guidelines](https://developers.google.com/search/docs/appearance/structured-data/sd-policies) say not to mark up content that is hidden from readers, irrelevant or misleading.
+Google has also narrowed what markup earns a visible result. In August 2023 it [limited FAQ rich results to well-known, authoritative government and health sites and wound down HowTo rich results](https://developers.google.com/search/blog/2023/08/howto-faq-changes). In 2019 it [stopped showing review stars for self-serving reviews](https://developers.google.com/search/blog/2019/09/making-review-rich-results-more-helpful) that a LocalBusiness or Organization publishes about itself. OpenAI, Anthropic and Perplexity document their crawlers in detail, and as of November 2026 none of them has published how much weight schema.org markup carries in their answers. Jason Colapietro treats that silence as a fact to plan around, not a gap to fill with guesses.
+
+### The shortlist Suede AI keeps
+
+Given those sources, Suede AI writes a small graph that does one job: tell any parser, with no ambiguity, who publishes the page and what the page is.
+- One primary entity with a stable `@id`. An Organization, LocalBusiness or Person node with the exact public name, canonical `url` and a logo. Google's [organization documentation](https://developers.google.com/search/docs/appearance/structured-data/organization) says this helps it understand administrative details and disambiguate the business. Reuse the same `@id` on every page. This site references `https://suedeai.ai/#organization` everywhere and never mints a second one.
+- `sameAs` to profiles you control. Schema.org defines it as a page that unambiguously indicates the item's identity. For a Jupiter contractor that means the Google Business Profile, a LinkedIn company page and one or two directories where the name is spelled identically.
+- WebSite and WebPage nodes tied to the entity by `publisher`. They cost a dozen lines and give every page a clean answer to "whose site is this."
+- BlogPosting or Article with an author `@id`. For any page with a byline, link the author to the same Person node your About or founder page declares, with `datePublished` that matches the visible date.
+- BreadcrumbList. It states where the page sits in the site, which helps any reader that lands deep in the structure.
+Suede Signal's guide to [how JSON-LD helps AI engines understand your brand](https://signal.suedeai.ai/articles/json-ld-for-ai-visibility) has copy-ready examples of the entity and WebSite graph. For a worked case on a larger catalog, Suede DNA's note on [structuring a 409-rig archive for AI answers](https://dna.suedeai.ai/articles/rig-archive-structured-data-for-ai-answers) shows the same rules applied to hundreds of pages with one publisher id.
+
+### What to drop or deprioritize
+
+FAQPage as a rich result play. Outside government and health sites it no longer earns the expandable result in Google. Keep FAQ markup only where the page visibly shows the same questions and answers word for word, as a clean parsing aid. This site's homepage FAQ is tested so its JSON-LD matches the visible text exactly.
+HowTo markup. The rich result is gone. A numbered list in the HTML carries the same steps to any reader.
+Self-published ratings. An `aggregateRating` a West Palm Beach business writes about itself will not show stars, and it is the kind of unsupported claim Google's guidelines warn against. Leave ratings to the platforms that collect them.
+Type stuffing. Declaring a business as Organization, LocalBusiness, ProfessionalService, Corporation and three subtypes on one node adds nothing. Pick the most specific accurate type, plus a parent the tools recognize if you need one.
+Markup the page cannot back up. Awards, prices, hours and service areas that the visible page does not state are a liability. If a claim is worth marking up, it is worth showing a reader with a link to the proof.
+
+### How Suede Audit scores this
+
+The audit's entity pillar mirrors the shortlist. It carries 13 of the 90 points in three checks: one JSON-LD block that parses, a primary entity type, and `sameAs` on a node. It does not reward extra types, FAQ blocks or ratings, by design. The structured data reference lists every pass rule with its source. Jason Colapietro wrote those rules against Google's documentation and schema.org, and the scoring code is open so anyone can check that no hidden bonus exists for markup volume.
+The same standard of evidence applies to the company. Jason Colapietro has [54 pull requests merged across 46 open-source repositories he does not maintain](https://github.com/search?q=is%3Apr+author%3AJasonColapietro+is%3Amerged+-user%3AJasonColapietro+-user%3ASuede-AI&type=pullrequests), including the Polkadot SDK and Adobe React Spectrum, and has written five books on Amazon, including [Proof as Infrastructure](https://www.amazon.com/dp/B0GMB2VLXQ). Suede AI ranks among [Clutch](https://clutch.co/profile/suede-ai-seo)'s [Top 30 AI Consultants in Florida](https://clutch.co/consulting/ai/florida) and [Top 50 AI Consultants nationwide](https://clutch.co/us/consulting/ai) (November 2026). Suede AI (formerly Suede Labs) is also a member of Claude for Startups, Anthropic's startup program ([receipt](https://seo.suedeai.ai/evidence#claude-for-startups)). Every one of those claims links to its source, which is the whole argument of this note applied to Suede itself.
+
+### A one-hour schema cleanup
+
+Open your homepage source and paste each JSON-LD block into a JSON parser. Delete FAQ and HowTo blocks that the visible page does not mirror, and any rating you wrote about yourself. Confirm one entity node with a stable `@id`, `sameAs` and a logo, then point every author and publisher reference at it. Run the result through the schema.org validator and the free audit.
+Your next step: run the free audit to see your three entity rows, then book a [Suede AI assessment](https://suedeai.agency/assessment) if you want the [technical SEO team in West Palm Beach](https://suedeai.agency/services/technical-seo) to rebuild the graph across every page. To see who stands behind the rules, read [Jason Colapietro's founder page](https://suedeai.ai/founder).
+Jason Colapietro, Founder, Suede AI, West Palm Beach, Florida
+Jason Colapietro is the engineer who founded Suede AI in 2024. He writes the Suede Audit scoring rules and leads Suede AI's website and AI search visibility work for businesses across Palm Beach County. [Founder page](https://suedeai.ai/founder) · [jasoncolapietro.com](https://jasoncolapietro.com/)
+
+### More notes
+
+- What an AI readiness score measures, and what it can't: What the 28 weighted checks read, the three questions behind the number, what no outside audit can observe, and how to order repairs by points.
+- The five fixes we make first on West Palm Beach and Jupiter business websites: The order Suede AI repairs a local site in: open the door to search crawlers, say who you are in schema, fix titles, put copy in the HTML, and keep sections short.
+- How Suede AI SEO ranked #1 among Palm Beach County companies on The Manifest, and what it means: The date, category and geography behind the ranking, how to check it yourself, why third-party listings feed entity evidence, and how to weigh any agency ranking.
+- Reading a readiness report: prioritizing fixes for a Palm Beach Gardens dental or law practice: How to sort a Suede Audit report by points, the three places practice sites usually fail, and a two-week triage order for a dental office or law firm.
