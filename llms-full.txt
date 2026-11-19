@@ -10,7 +10,7 @@ Sitemap: https://optimize.suedeai.ai/sitemap.xml
 Audit source code: https://github.com/JasonColapietro/suede-scan
 Implementation service: https://seo.suedeai.ai/
 
-## Suede Audit | AI Discovery and SEO Readiness
+## AI Visibility Audit for ChatGPT & Google | Suede Audit
 
 URL: https://optimize.suedeai.ai/
 Updated: 2026-11-14
@@ -18,7 +18,7 @@ Summary: Free AI visibility audit: check crawler access, entity schema, metadata
 
 Public-signal audit
 
-## See what answer engines can actually read.
+## AI visibility audit: see what answer engines can actually read.
 
 Suede inspects public HTML, crawler rules, entity schema, sitemap coverage, metadata, and content structure. Each failed check points to a repair.
 Public-site discovery and answer-readiness analysis

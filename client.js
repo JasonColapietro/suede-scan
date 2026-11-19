@@ -751,7 +751,7 @@ function resetAudit({ updateHistory = true, focus = true } = {}) {
   setReportNavigation(false);
   clearError();
   hideCodePanel();
-  document.title = 'Suede Audit | AI Discovery and SEO Readiness';
+  document.title = 'AI Visibility Audit for ChatGPT & Google | Suede Audit';
   if (updateHistory) history.pushState({}, '', '/');
   window.scrollTo({ top: 0, behavior: reduceMotion ? 'auto' : 'smooth' });
   if (focus) window.setTimeout(() => urlInput.focus(), reduceMotion ? 0 : 250);
