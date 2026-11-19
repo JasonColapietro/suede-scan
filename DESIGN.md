@@ -1,6 +1,6 @@
 # Design System: Suede Audit
 
-Reference: Suede AI Agent Studio (https://agents.suedeai.ai), tokens read from
+Reference: Suede AI Agent Studio (https://suedeai.app), tokens read from
 `suede-agent-studio/src/styles/tokens.css` on 2026-08-31. The earlier
 searchfit-derived system it replaced is recorded in git history.
 

@@ -18,7 +18,7 @@ test('homepage, method and llms files state what the score measures without hedg
 
 test('the citation question points buyers at the AI citation check', () => {
   for (const file of ['index.html', 'method.html', 'llms.txt']) {
-    assert.match(read(file), /https:\/\/seo\.suedeai\.ai\/ai-citation-check/, `${file} names the next step`);
+    assert.match(read(file), /https:\/\/suedeai\.ai\/seo\/ai-citation-check/, `${file} names the next step`);
   }
 });
 

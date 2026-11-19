@@ -163,7 +163,7 @@ export function renderLlmsFull() {
     'Index: https://optimize.suedeai.ai/llms.txt',
     'Sitemap: https://optimize.suedeai.ai/sitemap.xml',
     'Audit source code: https://github.com/JasonColapietro/suede-scan',
-    'Implementation service: https://seo.suedeai.ai/',
+    'Implementation service: https://suedeai.ai/seo',
     '',
     sections.join('\n\n---\n\n'),
     '',
