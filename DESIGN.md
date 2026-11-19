@@ -142,7 +142,7 @@ twin of its light-theme counterpart. Full set in `styles.css`.
 
 ### Hero and CTA variants
 
-- Outcome-led, selected: `See what answer engines can actually read.`
+- Outcome-led, selected: `AI visibility audit: see what answer engines can actually read.`
 - Problem-led: `Your site may be public. Its evidence may still be invisible.`
 - Mechanism-led: `One public-site audit. Every discovery signal, scored.`
 - Primary CTA, selected: `Run the audit`.
