@@ -6,7 +6,7 @@
 
 - Product: https://optimize.suedeai.ai/
 - Source: https://github.com/JasonColapietro/suede-scan
-- Implementation service: https://seo.suedeai.ai/
+- Implementation service: https://suedeai.ai/seo
 - Suede AI: https://suedeai.ai/
 
 ## Method
@@ -17,7 +17,7 @@ Search-discovery checks use OAI-SearchBot, Claude-SearchBot, PerplexityBot, and 
 
 Each browser receives one free audit. The result is cached in that browser so its report route can reopen without another scan.
 
-The readiness score measures whether answer engines can reach, parse and quote a site's pages, the groundwork every citation depends on. Citation evidence comes from buyer-question runs inside ChatGPT, Perplexity, Gemini and the other answer engines; the AI citation check at https://seo.suedeai.ai/ai-citation-check runs them and records the cited sources.
+The readiness score measures whether answer engines can reach, parse and quote a site's pages, the groundwork every citation depends on. Citation evidence comes from buyer-question runs inside ChatGPT, Perplexity, Gemini and the other answer engines; the AI citation check at https://suedeai.ai/seo/ai-citation-check runs them and records the cited sources.
 
 ## Check reference
 
