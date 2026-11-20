@@ -482,6 +482,14 @@ How to fix it. Follow the proposal's order: an H1 with the site name, which is t
 ```
 Keep every link pointed at a live page, and update the file when those pages move.
 
+### What to inspect when all three files pass
+
+Suppose a shop moves its repair booking page from `/appointments` to `/repairs/book`. All three discovery files may still return 200. To find out whether they send visitors and crawlers to the right place, trace that one booking URL by hand:
+- Start with the sitemap entry. Open the listed booking URL. If it redirects, compare its final address with the canonical on the destination page. If the new page is the intended public version, replace the old entry rather than listing both.
+- Check the new path against robots.txt. A rule for `/repairs/` can cover the new booking page even if the old one was accessible. Read the rule for the crawler you care about. Keep any restrictions on customer-only repair records intact.
+- Follow the link in llms.txt. Does it land on the public booking instructions, or on an account login? Pick a page a new customer can read without signing in. Label the link by what it helps them do.
+Keep the old URL, the intended destination and the observed destination in your change note. Rerun the audit to confirm that the files still load. Reopening the actual booking link is the separate check that verifies the repair.
+
 ### More check references
 
 - Page access and indexing: Status code, HTTPS, noindex, canonical, viewport, language and HTML weight.
@@ -741,6 +749,14 @@ The first result is aimed at pages whose copy arrives through JavaScript, which 
 
 Split the section at its natural subtopics and give each part its own H2 or H3 that names it. Keep each claim close to the heading that identifies it, so the claim and its context land in the same chunk. Question-and-answer blocks and short definitions fit well, because each one can carry its own heading. Then rerun the audit: the observed value names the largest remaining section and its word count.
 This page follows the rule it documents: every section on it is under 375 words.
+
+### Worked example: split a service policy without losing its exceptions
+
+Imagine a repair shop whose homepage has one long “Our policies” section covering estimates, deposits and cancellations. A search for “Will I lose my deposit if I cancel?” needs the cancellation rule and its exception together. Cutting the section into three equal lengths could separate them.
+- Before: “A deposit is required. See exceptions below.” Several paragraphs later: “This does not apply if we cancel.” Read on its own, the exception does not say what happens to the money.
+- After: Use a heading such as “Who receives a deposit refund?” In the first sentence, name the service, who cancelled and the outcome. For example: “If the shop cancels your repair appointment, the shop refunds your deposit.” Put the customer-cancellation rule immediately after it.
+Use the shop's actual policy, not the example terms. Then copy just that heading and its text into a blank document. Can a reader tell which payment is at stake, which appointment it covers and when the exception applies? If not, restore the missing noun or condition before you shorten anything else.
+Finally rerun the scan and compare the largest section with the previous result. A smaller section tests the edit against this scanner's rule. It does not show that an answer engine retrieved the policy or quoted it correctly.
 
 ### More check references
 

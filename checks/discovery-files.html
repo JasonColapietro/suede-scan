@@ -249,6 +249,15 @@
 - [Documentation](https://www.example.com/docs): setup and API reference</code></pre>
           <p>Keep every link pointed at a live page, and update the file when those pages move.</p>
 
+          <h2>What to inspect when all three files pass</h2>
+          <p>Suppose a shop moves its repair booking page from <code>/appointments</code> to <code>/repairs/book</code>. All three discovery files may still return 200. To find out whether they send visitors and crawlers to the right place, trace that one booking URL by hand:</p>
+          <ol>
+            <li><b>Start with the sitemap entry.</b> Open the listed booking URL. If it redirects, compare its final address with the canonical on the destination page. If the new page is the intended public version, replace the old entry rather than listing both.</li>
+            <li><b>Check the new path against robots.txt.</b> A rule for <code>/repairs/</code> can cover the new booking page even if the old one was accessible. Read the rule for the crawler you care about. Keep any restrictions on customer-only repair records intact.</li>
+            <li><b>Follow the link in llms.txt.</b> Does it land on the public booking instructions, or on an account login? Pick a page a new customer can read without signing in. Label the link by what it helps them do.</li>
+          </ol>
+          <p>Keep the old URL, the intended destination and the observed destination in your change note. Rerun the audit to confirm that the files still load. Reopening the actual booking link is the separate check that verifies the repair.</p>
+
           <h2>More check references</h2>
           <ul>
             <li><a href="/checks/page-access">Page access and indexing</a>: Status code, HTTPS, noindex, canonical, viewport, language and HTML weight.</li>
