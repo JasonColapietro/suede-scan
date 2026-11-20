@@ -248,6 +248,24 @@
   "sameAs": ["https://profiles.example.net/example-co"]
 }</code></pre>
 
+          <h2>Worked example: one valid block does not validate the page</h2>
+          <p>Suppose a homepage has valid WebSite markup and a separate Organization block with a trailing comma. The report can show <b>1 valid of 2 blocks</b> and pass the JSON-LD presence check. It still cannot read the Organization block. Fix that block without removing the valid WebSite markup.</p>
+          <pre><code>{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "@id": "https://example.com/#organization",
+  "name": "Example Repair Co.",
+  "url": "https://example.com/",
+  "sameAs": ["https://social.example.com/example-repair"]
+}</code></pre>
+          <p>These URLs are illustrative. Use your canonical homepage and a profile that identifies the same organization. Reuse the organization identifier when another block, such as WebSite, refers to it.</p>
+          <ol>
+            <li><b>Check syntax.</b> Parse each JSON-LD block from the served homepage, not just the first one. If these are the only two blocks, rerunning the scan should now show <b>2 valid of 2 blocks</b>.</li>
+            <li><b>Check identity.</b> Compare the organization name and homepage in the markup with what a visitor sees. Confirm other blocks refer to the same identifier rather than accidentally creating a duplicate organization.</li>
+            <li><b>Check profile links.</b> Open each <code>sameAs</code> URL and confirm it reaches the intended organization, not a login wall or an unrelated profile. The scan measures presence, not whether those URLs work.</li>
+          </ol>
+          <p>Use <a href="https://developers.google.com/search/docs/appearance/structured-data/organization">Google's Organization guidance</a> for supported properties and <a href="https://www.w3.org/TR/json-ld11/">JSON-LD 1.1</a> for identifiers. A syntax pass is not a check of rich-result eligibility.</p>
+
           <h2>More check references</h2>
           <ul>
             <li><a href="/checks/page-access">Page access and indexing</a>: Status code, HTTPS, noindex, canonical, viewport, language and HTML weight.</li>

@@ -254,6 +254,20 @@
           <p><b>Why it matters.</b> Google uses alt text with computer vision and page content to understand what an image shows (<a href="https://developers.google.com/search/docs/appearance/google-images">Google, image SEO best practices</a>). The W3C says decorative images take a null alt, and that leaving the attribute out makes some screen readers announce the file name instead (<a href="https://www.w3.org/WAI/tutorials/images/decorative/">W3C, decorative images</a>).</p>
           <p><b>How to fix it.</b> Describe informative images in a short phrase and set alt="" on decorative ones.</p>
 
+          <h2>Which alt text should this image have?</h2>
+          <p>The scan checks for the attribute, not whether the text serves the reader. Review each image in context using the <a href="https://www.w3.org/WAI/tutorials/images/decision-tree/">W3C alt decision tree</a>:</p>
+          <dl>
+            <dt><b>Decorative image</b></dt>
+            <dd>If a flourish adds no information or function, use <code>alt=""</code> so assistive technology can skip it.</dd>
+            <dt><b>Informative image</b></dt>
+            <dd>Describe the information that would otherwise be missing. On a product page, “Adapter with two USB-C ports” tells a reader more than “Product image.”</dd>
+            <dt><b>Image-only link or button</b></dt>
+            <dd>Name the destination or action, not the artwork. For example, use “Book a repair” for a linked calendar icon if no other text in the control names it.</dd>
+            <dt><b>Chart or other complex image</b></dt>
+            <dd>Give the image a short label, such as “Monthly repair bookings, January to June.” Provide the takeaway and underlying values in adjacent text or a labeled table rather than packing them into the attribute.</dd>
+          </dl>
+          <p>Rerun the scan to confirm there are no missing attributes. Then check the page with the images hidden or with a screen reader: can you still identify the controls and get the important information?</p>
+
           <h2>More check references</h2>
           <ul>
             <li><a href="/checks/page-access">Page access and indexing</a>: Status code, HTTPS, noindex, canonical, viewport, language and HTML weight.</li>
