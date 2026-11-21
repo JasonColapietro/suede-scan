@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { readFileSync } from 'node:fs';
+import { readdirSync, readFileSync } from 'node:fs';
 import test from 'node:test';
 
 const root = new URL('../', import.meta.url);
@@ -36,4 +36,31 @@ test('FAQ JSON-LD answers match the visible FAQ word for word', () => {
     faq.mainEntity.map((q) => ({ q: q.name, a: q.acceptedAnswer.text })),
     visible,
   );
+});
+
+// The company is "Suede" (owner direction, 2026-11-21). "Suede AI" and
+// "Suede Labs" survive only as schema alternateName values and one
+// "formerly known as" alias line per discovery file. The verbatim Google
+// search query quoted in the Manifest note is a third-party record.
+const RETIRED_NAME = /\bsuede[\s\u00a0](?:ai|labs)\b/i;
+const NAME_EXEMPT = [
+  /"alternateName"\s*:\s*(?:\[[^\]]*\]|"[^"]*")/g,
+  /^.*formerly known as Suede AI and Suede Labs\..*$/gm,
+  /search for "Suede labs ai review,"/g,
+];
+
+test('public copy names the company Suede, never Suede AI or Suede Labs', () => {
+  const dirs = ['', 'checks/', 'notes/'];
+  const files = dirs.flatMap((dir) => readdirSync(new URL(dir || './', root))
+    .filter((name) => /\.(?:html|txt|xml|json)$/.test(name) && name !== 'package.json' && name !== 'package-lock.json')
+    .map((name) => dir + name));
+  const hits = [];
+  for (const file of files) {
+    let text = read(file);
+    for (const exempt of NAME_EXEMPT) text = text.replace(exempt, '');
+    text.split('\n').forEach((line, i) => {
+      if (RETIRED_NAME.test(line)) hits.push(`${file}:${i + 1}`);
+    });
+  }
+  assert.deepEqual(hits, [], `retired company name in public copy: ${hits.join(', ')}`);
 });

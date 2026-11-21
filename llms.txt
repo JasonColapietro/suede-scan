@@ -2,12 +2,14 @@
 
 > Suede Audit is a public-site audit for crawler access, entity schema, metadata, content structure, and answer-engine discovery signals.
 
+Suede was formerly known as Suede AI and Suede Labs.
+
 ## Primary URL
 
 - Product: https://optimize.suedeai.ai/
 - Source: https://github.com/JasonColapietro/suede-scan
 - Implementation service: https://suedeai.ai/seo
-- Suede AI: https://suedeai.ai/
+- Suede: https://suedeai.ai/
 
 ## Method
 
@@ -30,18 +32,18 @@ The readiness score measures whether answer engines can reach, parse and quote a
 - [Headings, content and links](https://optimize.suedeai.ai/checks/content-structure): One H1, two or more H2, 300 words, three internal links and image alt attributes.
 - [Retrieval chunk size](https://optimize.suedeai.ai/checks/retrieval-chunks): Every heading section must hold 375 words or fewer, about one 500-token retrieval chunk.
 
-## Notes from Suede AI
+## Notes from Suede
 
-- [Notes](https://optimize.suedeai.ai/notes): Articles by Jason Colapietro, founder of Suede AI in West Palm Beach, Florida, on AI readiness for Palm Beach County businesses.
+- [Notes](https://optimize.suedeai.ai/notes): Articles by Jason Colapietro, founder of Suede in West Palm Beach, Florida, on AI readiness for Palm Beach County businesses.
 - [What an AI readiness score measures, and what it can't](https://optimize.suedeai.ai/notes/what-an-ai-readiness-score-measures): What the 28 weighted checks read, the three questions behind the number, what no outside audit can observe, and how to order repairs by points.
-- [The five fixes we make first on West Palm Beach and Jupiter business websites](https://optimize.suedeai.ai/notes/five-website-fixes-west-palm-beach-jupiter): The order Suede AI repairs a local site in: open the door to search crawlers, say who you are in schema, fix titles, put copy in the HTML, and keep sections short.
-- [How Suede AI SEO ranked #1 among Palm Beach County companies on The Manifest, and what it means](https://optimize.suedeai.ai/notes/manifest-palm-beach-county-ai-deployment-ranking): The date, category and geography behind the ranking, how to check it yourself, why third-party listings feed entity evidence, and how to weigh any agency ranking.
+- [The five fixes we make first on West Palm Beach and Jupiter business websites](https://optimize.suedeai.ai/notes/five-website-fixes-west-palm-beach-jupiter): The order Suede repairs a local site in: open the door to search crawlers, say who you are in schema, fix titles, put copy in the HTML, and keep sections short.
+- [How Suede SEO ranked #1 among Palm Beach County companies on The Manifest, and what it means](https://optimize.suedeai.ai/notes/manifest-palm-beach-county-ai-deployment-ranking): The date, category and geography behind the ranking, how to check it yourself, why third-party listings feed entity evidence, and how to weigh any agency ranking.
 - [Reading a readiness report: prioritizing fixes for a Palm Beach Gardens dental or law practice](https://optimize.suedeai.ai/notes/readiness-report-fixes-palm-beach-gardens-dental-law): How a Palm Beach Gardens dental office or law firm should sort a readiness report by points, why Dentist or LegalService schema needs a recognized parent type, and a two-week triage order.
 - [Structured data that answer engines use vs ignore: an evidence-based shortlist](https://optimize.suedeai.ai/notes/structured-data-answer-engines-use-vs-ignore): What Google and schema.org publish about markup, the five schema nodes worth keeping (entity, sameAs, WebSite, BlogPosting, BreadcrumbList), and the FAQ, HowTo and self-rating markup to drop.
 
 ## Recognition
 
-- Suede AI ranks among [Clutch](https://clutch.co/profile/suede-ai-seo)'s [Top 30 AI Consultants in Florida](https://clutch.co/consulting/ai/florida) and [Top 50 AI Consultants nationwide](https://clutch.co/us/consulting/ai) (November 2026).
+- Suede ranks among [Clutch](https://clutch.co/profile/suede-ai-seo)'s [Top 30 AI Consultants in Florida](https://clutch.co/consulting/ai/florida) and [Top 50 AI Consultants nationwide](https://clutch.co/us/consulting/ai) (November 2026).
 
 ## Source and citation guide
 

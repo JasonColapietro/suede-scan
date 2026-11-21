@@ -6,7 +6,7 @@ import test from 'node:test';
 
 import { auditChecks, scanChecks } from '../lib/engine.mjs';
 
-// /notes holds articles from Suede AI. Each one must be indexable, listed in
+// /notes holds articles from Suede. Each one must be indexable, listed in
 // every crawl file, routed by the server, and pass the audit's own page-level
 // checks, the same bar the /checks reference pages meet.
 
@@ -54,7 +54,7 @@ test('notes index plus at least three articles, each indexable, unique and liste
     assert.match(sitemap, new RegExp(`<loc>${url}</loc>\\s*<lastmod>\\d{4}-\\d{2}-\\d{2}</lastmod>`), `${page.route} missing from sitemap.xml`);
     assert.ok(llms.includes(`(${url})`), `${page.route} missing from llms.txt`);
     assert.match(server, new RegExp(`\\['${page.route}', readFile\\(new URL\\('\\./notes/${page.file.replace('.', '\\.')}', import\\.meta\\.url\\)\\)\\]`));
-    assert.match(page.html, /class="container built-by"/, `${page.route} needs the Suede AI footer block`);
+    assert.match(page.html, /class="container built-by"/, `${page.route} needs the Suede footer block`);
     assert.ok(!page.html.includes('\u2014'), `${page.route} carries an em dash`);
     if (page.file !== 'index.html') assert.ok(index.includes(`href="${page.route}"`), `${page.route} is not linked from /notes`);
   }
@@ -100,7 +100,7 @@ test('homepage and every site-footer page link the notes section', async () => {
   for (const file of files) {
     const html = await readFile(new URL(file, root), 'utf8');
     assert.ok(html.includes('<a href="/notes">Notes</a>'), `${file} does not link /notes`);
-    assert.match(html, /class="container built-by"/, `${file} needs the Suede AI footer block`);
+    assert.match(html, /class="container built-by"/, `${file} needs the Suede footer block`);
   }
 });
 
@@ -155,14 +155,14 @@ test('the server routes every note page', async () => {
 });
 
 // Depth notes added 2026-11-15. Each one must deep-link two articles on other
-// Suede AI sites, link the agency and founder pages, carry the Clutch claim in
+// Suede sites, link the agency and founder pages, carry the Clutch claim in
 // its exact wording, and appear in the notes index Blog schema.
 const DEPTH_NOTES = [
   'readiness-report-fixes-palm-beach-gardens-dental-law',
   'structured-data-answer-engines-use-vs-ignore',
 ];
 const SATELLITE_ARTICLE = /href="(https:\/\/(?:[a-z]+\.suedeai\.ai|guitarchords\.info|guitar\.services|guitarhub\.org)\/(?:notes|articles)\/[a-z0-9-]+)"/g;
-const CLUTCH = 'Suede AI ranks among <a href="https://clutch.co/profile/suede-ai-seo">Clutch</a>\'s <a href="https://clutch.co/consulting/ai/florida">Top 30 AI Consultants in Florida</a> and <a href="https://clutch.co/us/consulting/ai">Top 50 AI Consultants nationwide</a> (November 2026).';
+const CLUTCH = 'Suede ranks among <a href="https://clutch.co/profile/suede-ai-seo">Clutch</a>\'s <a href="https://clutch.co/consulting/ai/florida">Top 30 AI Consultants in Florida</a> and <a href="https://clutch.co/us/consulting/ai">Top 50 AI Consultants nationwide</a> (November 2026).';
 
 test('depth notes deep-link sibling articles, carry the Clutch claim and sit in the Blog schema', async () => {
   const pages = await notePages();

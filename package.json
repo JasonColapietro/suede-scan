@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Free 30-second site scan → full graded audit. Suede Labs.",
+  "description": "Free 30-second site scan → full graded audit. Suede.",
   "scripts": {
     "dev": "node server.mjs",
     "test": "node --test"

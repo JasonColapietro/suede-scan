@@ -49,7 +49,7 @@ test('keyword lists include brand terms, dedupe, and avoid the retired company n
     const lower = terms.map((term) => term.toLowerCase());
     assert.equal(new Set(lower).size, lower.length, `${page} has duplicate keywords`);
     for (const brand of BRAND_KEYWORDS) assert.ok(terms.includes(brand), `${page} missing brand term ${brand}`);
-    assert.ok(!lower.some((term) => term.includes('suede labs')), `${page} uses the retired company name`);
+    assert.ok(!lower.some((term) => /suede (ai|labs)\b/.test(term)), `${page} uses a retired company name`);
     assert.ok(terms.length >= 4 && terms.length <= 20, `${page} keyword count out of range`);
   }
 });

@@ -36,7 +36,7 @@ const CHECK_PAGES = await Promise.all([
   ['/checks/content-structure', readFile(new URL('./checks/content-structure.html', import.meta.url))],
   ['/checks/retrieval-chunks', readFile(new URL('./checks/retrieval-chunks.html', import.meta.url))],
 ].map(async ([route, body]) => [route, await body]));
-// Notes: articles from Suede AI, read through literal URLs like the check pages.
+// Notes: articles from Suede, read through literal URLs like the check pages.
 const NOTE_PAGES = await Promise.all([
   ['/notes', readFile(new URL('./notes/index.html', import.meta.url))],
   ['/notes/what-an-ai-readiness-score-measures', readFile(new URL('./notes/what-an-ai-readiness-score-measures.html', import.meta.url))],

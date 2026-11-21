@@ -156,7 +156,7 @@ export function renderLlmsFull() {
     '# Suede Audit: full text',
     '',
     '> The complete readable text of every public page on optimize.suedeai.ai, the free',
-    '> AI visibility and SEO readiness audit from Suede AI (https://suedeai.ai/), founded',
+    '> AI visibility and SEO readiness audit from Suede (https://suedeai.ai/), founded',
     '> by Jason Colapietro. Pages appear in sitemap order; each section gives the page URL,',
     '> its last update and its summary, then the page text.',
     '',
