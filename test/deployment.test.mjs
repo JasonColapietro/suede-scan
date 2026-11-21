@@ -80,7 +80,7 @@ test('uses one local 1200x630 social card across every public audit document', a
     // The mark is served from this host. It used to be hotlinked from
     // raw.githubusercontent.com, pinned to a commit SHA.
     assert.match(html, /<link rel="icon" href="\/favicon\.ico" sizes="any">/);
-    assert.match(html, /<link rel="icon" type="image\/png" href="\/suede-ai-logo\.png">/);
+    assert.doesNotMatch(html, /<link rel="icon"[^>]*suede-ai-logo\.png/);
     assert.match(html, /<img src="\/suede-ai-logo\.png" alt="" width="36" height="36">/);
     assert.ok(!html.includes('raw.githubusercontent.com'), `${page} still hotlinks GitHub raw`);
   }
